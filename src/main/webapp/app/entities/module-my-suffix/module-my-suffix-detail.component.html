@@ -1,0 +1,42 @@
+
+<div *ngIf="module">
+    <h2><span jhiTranslate="dematNotesApp.module.detail.title">Module</span> {{module.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.module.yearPeriod">Year Period</span></dt>
+        <dd>
+            <span>{{module.yearPeriod}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.module.optionModule">Option Module</span></dt>
+        <dd>
+            <span>{{module.optionModule}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.module.course">Course</span></dt>
+        <dd>
+            <div *ngIf="module.courseId">
+                <a [routerLink]="['/course-my-suffix', module.courseId]">{{module.courseId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.module.school">School</span></dt>
+        <dd>
+            <div *ngIf="module.schoolId">
+                <a [routerLink]="['/school-my-suffix', module.schoolId]">{{module.schoolId}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'module-my-suffix/'+ module.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

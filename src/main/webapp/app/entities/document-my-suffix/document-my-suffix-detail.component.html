@@ -1,0 +1,44 @@
+
+<div *ngIf="document">
+    <h2><span jhiTranslate="dematNotesApp.document.detail.title">Document</span> {{document.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.document.entitled">Entitled</span></dt>
+        <dd>
+            <span>{{document.entitled}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.document.type">Type</span></dt>
+        <dd>
+            <span>{{document.type}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.document.visible">Visible</span></dt>
+        <dd>
+            <span>{{document.visible}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.document.url">Url</span></dt>
+        <dd>
+            <span>{{document.url}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.document.student">Student</span></dt>
+        <dd>
+            <div *ngIf="document.studentId">
+                <a [routerLink]="['/student-my-suffix', document.studentId]">{{document.studentId}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'document-my-suffix/'+ document.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

@@ -1,0 +1,46 @@
+
+<div *ngIf="inscriptionModule">
+    <h2><span jhiTranslate="dematNotesApp.inscriptionModule.detail.title">Inscription Module</span> {{inscriptionModule.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.inscriptionModule.inscriptionDate">Inscription Date</span></dt>
+        <dd>
+            <span>{{inscriptionModule.inscriptionDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.inscriptionModule.validation">Validation</span></dt>
+        <dd>
+            <span>{{inscriptionModule.validation}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.inscriptionModule.yearPeriod">Year Period</span></dt>
+        <dd>
+            <span>{{inscriptionModule.yearPeriod}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.inscriptionModule.module">Module</span></dt>
+        <dd>
+            <div *ngIf="inscriptionModule.moduleId">
+                <a [routerLink]="['/module-my-suffix', inscriptionModule.moduleId]">{{inscriptionModule.moduleId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.inscriptionModule.student">Student</span></dt>
+        <dd>
+            <div *ngIf="inscriptionModule.studentId">
+                <a [routerLink]="['/student-my-suffix', inscriptionModule.studentId]">{{inscriptionModule.studentId}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'inscription-module-my-suffix/'+ inscriptionModule.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

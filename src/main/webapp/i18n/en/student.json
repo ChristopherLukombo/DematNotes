@@ -1,0 +1,37 @@
+
+{
+    "dematNotesApp": {
+        "student" : {
+            "home": {
+                "title": "Students",
+                "createLabel": "Create a new Student",
+                "createOrEditLabel": "Create or edit a Student"
+            },
+            "created": "A new Student is created with identifier {{ param }}",
+            "updated": "A Student is updated with identifier {{ param }}",
+            "deleted": "A Student is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Student {{ id }}?"
+            },
+            "detail": {
+                "title": "Student"
+            },
+            "ine": "Ine",
+            "email": "Email",
+            "mobilePhoneNumber": "Mobile Phone Number",
+            "fixePhoneNumber": "Fixe Phone Number",
+            "address": "Address",
+            "city": "City",
+            "postalCode": "Postal Code",
+            "dateOfBirth": "Date Of Birth",
+            "placeOfBirth": "Place Of Birth",
+            "absences": "Absences",
+            "delaystudents": "Delaystudents",
+            "documents": "Documents",
+            "user": "User",
+            "schoolYear": "School Year",
+            "classroom": "Classroom",
+            "school": "School"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+
+{
+    "dematNotesApp": {
+        "manager" : {
+            "home": {
+                "title": "Managers",
+                "createLabel": "Créer un nouveau Manager",
+                "createOrEditLabel": "Créer ou éditer un Manager"
+            },
+            "created": "Un nouveau Manager a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Manager avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Manager avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Manager {{ id }} ?"
+            },
+            "detail": {
+                "title": "Manager"
+            },
+            "email": "Email",
+            "mobilePhoneNumber": "Mobile Phone Number",
+            "fixePhoneNumber": "Fixe Phone Number",
+            "address": "Address",
+            "city": "City",
+            "postalCode": "Postal Code",
+            "dateOfBirth": "Date Of Birth",
+            "placeOfBirth": "Place Of Birth",
+            "user": "User"
+        }
+    }
+}

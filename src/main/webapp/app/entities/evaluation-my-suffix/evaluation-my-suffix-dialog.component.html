@@ -1,0 +1,98 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myEvaluationLabel" jhiTranslate="dematNotesApp.evaluation.home.createOrEditLabel">Create or edit a Evaluation</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!evaluation.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="evaluation.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.evaluation.average" for="field_average">Average</label>
+            <input type="number" class="form-control" name="average" id="field_average"
+                [(ngModel)]="evaluation.average" required/>
+            <div [hidden]="!(editForm.controls.average?.dirty && editForm.controls.average?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.average?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.average?.errors?.number" jhiTranslate="entity.validation.number">
+                    This field should be a number.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.evaluation.coefficient" for="field_coefficient">Coefficient</label>
+            <input type="number" class="form-control" name="coefficient" id="field_coefficient"
+                [(ngModel)]="evaluation.coefficient" required/>
+            <div [hidden]="!(editForm.controls.coefficient?.dirty && editForm.controls.coefficient?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.coefficient?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.coefficient?.errors?.number" jhiTranslate="entity.validation.number">
+                    This field should be a number.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.evaluation.evaluationDate" for="field_evaluationDate">Evaluation Date</label>
+            <div class="d-flex">
+                <input id="field_evaluationDate" type="datetime-local" class="form-control" name="evaluationDate" [(ngModel)]="evaluation.evaluationDate"
+                required/>
+            </div>
+            <div [hidden]="!(editForm.controls.evaluationDate?.dirty && editForm.controls.evaluationDate?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.evaluationDate?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.evaluationDate?.errors?.ZonedDateTimelocal" jhiTranslate="entity.validation.ZonedDateTimelocal">
+                    This field should be a date and time.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.evaluation.comment" for="field_comment">Comment</label>
+            <input type="text" class="form-control" name="comment" id="field_comment"
+                [(ngModel)]="evaluation.comment" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.evaluation.module" for="field_module">Module</label>
+            <select class="form-control" id="field_module" name="module" [(ngModel)]="evaluation.moduleId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="moduleOption.id" *ngFor="let moduleOption of modules; trackBy: trackModuleById">{{moduleOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.evaluation.student" for="field_student">Student</label>
+            <select class="form-control" id="field_student" name="student" [(ngModel)]="evaluation.studentId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="studentOption.id" *ngFor="let studentOption of students; trackBy: trackStudentById">{{studentOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.evaluation.schoolReport" for="field_schoolReport">School Report</label>
+            <select class="form-control" id="field_schoolReport" name="schoolReport" [(ngModel)]="evaluation.schoolReportId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="schoolReportOption.id" *ngFor="let schoolReportOption of schoolreports; trackBy: trackSchoolReportById">{{schoolReportOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,23 @@
+
+{
+    "dematNotesApp": {
+        "schoolYear" : {
+            "home": {
+                "title": "School Years",
+                "createLabel": "Create a new School Year",
+                "createOrEditLabel": "Create or edit a School Year"
+            },
+            "created": "A new School Year is created with identifier {{ param }}",
+            "updated": "A School Year is updated with identifier {{ param }}",
+            "deleted": "A School Year is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete School Year {{ id }}?"
+            },
+            "detail": {
+                "title": "School Year"
+            },
+            "startDate": "Start Date",
+            "endDate": "End Date"
+        }
+    }
+}

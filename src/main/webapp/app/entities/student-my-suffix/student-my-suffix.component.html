@@ -1,0 +1,96 @@
+<div>
+    <h2>
+        <span jhiTranslate="dematNotesApp.student.home.title">Students</span>
+        <button class="btn btn-primary float-right jh-create-entity create-student-my-suffix" [routerLink]="['/', { outlets: { popup: ['student-my-suffix-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span  jhiTranslate="dematNotesApp.student.home.createLabel">
+            Create new Student
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="students">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.ine">Ine</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.email">Email</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.mobilePhoneNumber">Mobile Phone Number</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.fixePhoneNumber">Fixe Phone Number</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.address">Address</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.city">City</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.postalCode">Postal Code</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.dateOfBirth">Date Of Birth</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.placeOfBirth">Place Of Birth</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.user">User</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.schoolYear">School Year</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.classroom">Classroom</span></th>
+            <th><span jhiTranslate="dematNotesApp.student.school">School</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let student of students ;trackBy: trackId">
+                <td><a [routerLink]="['../student-my-suffix', student.id ]">{{student.id}}</a></td>
+                <td>{{student.ine}}</td>
+                <td>{{student.email}}</td>
+                <td>{{student.mobilePhoneNumber}}</td>
+                <td>{{student.fixePhoneNumber}}</td>
+                <td>{{student.address}}</td>
+                <td>{{student.city}}</td>
+                <td>{{student.postalCode}}</td>
+                <td>{{student.dateOfBirth | date:'mediumDate'}}</td>
+                <td>{{student.placeOfBirth}}</td>
+                <td>
+                    {{student.userId}}
+                </td>
+                <td>
+                    <div *ngIf="student.schoolYearId">
+                        <a [routerLink]="['../school-year-my-suffix', student.schoolYearId  ]" >{{student.schoolYearId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="student.classroomId">
+                        <a [routerLink]="['../classroom-my-suffix', student.classroomId  ]" >{{student.classroomId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="student.schoolId">
+                        <a [routerLink]="['../school-my-suffix', student.schoolId  ]" >{{student.schoolId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../student-my-suffix', student.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'student-my-suffix/'+ student.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'student-my-suffix/'+ student.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

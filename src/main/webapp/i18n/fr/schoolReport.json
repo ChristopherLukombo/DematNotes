@@ -1,0 +1,26 @@
+
+{
+    "dematNotesApp": {
+        "schoolReport" : {
+            "home": {
+                "title": "SchoolReports",
+                "createLabel": "Créer un nouveau School Report",
+                "createOrEditLabel": "Créer ou éditer un School Report"
+            },
+            "created": "Un nouveau School Report a été créé avec l'identifiant {{ param }}",
+            "updated": "Le School Report avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le School Report avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le School Report {{ id }} ?"
+            },
+            "detail": {
+                "title": "School Report"
+            },
+            "yearPeriod": "Year Period",
+            "gradeAword": "Grade Aword",
+            "comment": "Comment",
+            "creationDate": "Creation Date",
+            "evaluations": "Evaluations"
+        }
+    }
+}

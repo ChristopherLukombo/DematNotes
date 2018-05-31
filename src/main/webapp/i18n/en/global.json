@@ -7,6 +7,21 @@
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
             "entities": {
                 "main": "Entities",
+                "studentMySuffix": "Student",
+                "inscriptionModuleMySuffix": "Inscription Module",
+                "managerMySuffix": "Manager",
+                "teacherMySuffix": "Teacher",
+                "absenceMySuffix": "Absence",
+                "delayStudentMySuffix": "Delay Student",
+                "interventionMySuffix": "Intervention",
+                "courseMySuffix": "Course",
+                "moduleMySuffix": "Module",
+                "evaluationMySuffix": "Evaluation",
+                "schoolReportMySuffix": "School Report",
+                "schoolMySuffix": "School",
+                "classroomMySuffix": "Classroom",
+                "schoolYearMySuffix": "School Year",
+                "documentMySuffix": "Document",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

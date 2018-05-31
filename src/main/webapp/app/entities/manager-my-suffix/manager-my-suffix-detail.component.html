@@ -1,0 +1,58 @@
+
+<div *ngIf="manager">
+    <h2><span jhiTranslate="dematNotesApp.manager.detail.title">Manager</span> {{manager.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.manager.email">Email</span></dt>
+        <dd>
+            <span>{{manager.email}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.manager.mobilePhoneNumber">Mobile Phone Number</span></dt>
+        <dd>
+            <span>{{manager.mobilePhoneNumber}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.manager.fixePhoneNumber">Fixe Phone Number</span></dt>
+        <dd>
+            <span>{{manager.fixePhoneNumber}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.manager.address">Address</span></dt>
+        <dd>
+            <span>{{manager.address}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.manager.city">City</span></dt>
+        <dd>
+            <span>{{manager.city}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.manager.postalCode">Postal Code</span></dt>
+        <dd>
+            <span>{{manager.postalCode}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.manager.dateOfBirth">Date Of Birth</span></dt>
+        <dd>
+            <span>{{manager.dateOfBirth | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.manager.placeOfBirth">Place Of Birth</span></dt>
+        <dd>
+            <span>{{manager.placeOfBirth}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.manager.user">User</span></dt>
+        <dd>
+            {{manager.userId}}
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'manager-my-suffix/'+ manager.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

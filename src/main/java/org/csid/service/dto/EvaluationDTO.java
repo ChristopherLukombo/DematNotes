@@ -1,0 +1,130 @@
+package org.csid.service.dto;
+
+
+import java.time.ZonedDateTime;
+import javax.validation.constraints.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Objects;
+
+/**
+ * A DTO for the Evaluation entity.
+ */
+public class EvaluationDTO implements Serializable {
+
+    private Long id;
+
+    @NotNull
+    private Double average;
+
+    @NotNull
+    private Float coefficient;
+
+    @NotNull
+    private ZonedDateTime evaluationDate;
+
+    private String comment;
+
+    private Long moduleId;
+
+    private Long studentId;
+
+    private Long schoolReportId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getAverage() {
+        return average;
+    }
+
+    public void setAverage(Double average) {
+        this.average = average;
+    }
+
+    public Float getCoefficient() {
+        return coefficient;
+    }
+
+    public void setCoefficient(Float coefficient) {
+        this.coefficient = coefficient;
+    }
+
+    public ZonedDateTime getEvaluationDate() {
+        return evaluationDate;
+    }
+
+    public void setEvaluationDate(ZonedDateTime evaluationDate) {
+        this.evaluationDate = evaluationDate;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Long getModuleId() {
+        return moduleId;
+    }
+
+    public void setModuleId(Long moduleId) {
+        this.moduleId = moduleId;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
+
+    public Long getSchoolReportId() {
+        return schoolReportId;
+    }
+
+    public void setSchoolReportId(Long schoolReportId) {
+        this.schoolReportId = schoolReportId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EvaluationDTO evaluationDTO = (EvaluationDTO) o;
+        if(evaluationDTO.getId() == null || getId() == null) {
+            return false;
+        }
+        return Objects.equals(getId(), evaluationDTO.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "EvaluationDTO{" +
+            "id=" + getId() +
+            ", average=" + getAverage() +
+            ", coefficient=" + getCoefficient() +
+            ", evaluationDate='" + getEvaluationDate() + "'" +
+            ", comment='" + getComment() + "'" +
+            "}";
+    }
+}

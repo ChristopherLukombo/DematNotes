@@ -1,0 +1,22 @@
+
+{
+    "dematNotesApp": {
+        "classroom" : {
+            "home": {
+                "title": "Classrooms",
+                "createLabel": "Créer un nouveau Classroom",
+                "createOrEditLabel": "Créer ou éditer un Classroom"
+            },
+            "created": "Un nouveau Classroom a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Classroom avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Classroom avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Classroom {{ id }} ?"
+            },
+            "detail": {
+                "title": "Classroom"
+            },
+            "entitled": "Entitled"
+        }
+    }
+}

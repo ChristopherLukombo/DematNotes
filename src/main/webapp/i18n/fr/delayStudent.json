@@ -1,0 +1,25 @@
+
+{
+    "dematNotesApp": {
+        "delayStudent" : {
+            "home": {
+                "title": "DelayStudents",
+                "createLabel": "Créer un nouveau Delay Student",
+                "createOrEditLabel": "Créer ou éditer un Delay Student"
+            },
+            "created": "Un nouveau Delay Student a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Delay Student avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Delay Student avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Delay Student {{ id }} ?"
+            },
+            "detail": {
+                "title": "Delay Student"
+            },
+            "startDate": "Start Date",
+            "endDate": "End Date",
+            "reason": "Reason",
+            "student": "Student"
+        }
+    }
+}

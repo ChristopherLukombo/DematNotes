@@ -25,6 +25,12 @@ public class Classroom implements Serializable {
     @Column(name = "entitled", nullable = false)
     private String entitled;
 
+    @Column(name = "jhi_option")
+    private String option;
+
+    @Column(name = "division")
+    private String division;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -45,6 +51,32 @@ public class Classroom implements Serializable {
 
     public void setEntitled(String entitled) {
         this.entitled = entitled;
+    }
+
+    public String getOption() {
+        return option;
+    }
+
+    public Classroom option(String option) {
+        this.option = option;
+        return this;
+    }
+
+    public void setOption(String option) {
+        this.option = option;
+    }
+
+    public String getDivision() {
+        return division;
+    }
+
+    public Classroom division(String division) {
+        this.division = division;
+        return this;
+    }
+
+    public void setDivision(String division) {
+        this.division = division;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -73,6 +105,8 @@ public class Classroom implements Serializable {
         return "Classroom{" +
             "id=" + getId() +
             ", entitled='" + getEntitled() + "'" +
+            ", option='" + getOption() + "'" +
+            ", division='" + getDivision() + "'" +
             "}";
     }
 }

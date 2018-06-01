@@ -16,7 +16,9 @@
             "detail": {
                 "title": "Classroom"
             },
-            "entitled": "Entitled"
+            "entitled": "Entitled",
+            "option": "Option",
+            "division": "Division"
         }
     }
 }

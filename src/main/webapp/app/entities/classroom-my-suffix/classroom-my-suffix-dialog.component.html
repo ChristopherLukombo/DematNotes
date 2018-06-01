@@ -23,6 +23,16 @@
                 </small>
             </div>
         </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.classroom.option" for="field_option">Option</label>
+            <input type="text" class="form-control" name="option" id="field_option"
+                [(ngModel)]="classroom.option" />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.classroom.division" for="field_division">Division</label>
+            <input type="text" class="form-control" name="division" id="field_division"
+                [(ngModel)]="classroom.division" />
+        </div>
 
     </div>
     <div class="modal-footer">

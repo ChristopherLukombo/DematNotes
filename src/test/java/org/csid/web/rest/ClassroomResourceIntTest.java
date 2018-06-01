@@ -44,6 +44,12 @@ public class ClassroomResourceIntTest {
     private static final String DEFAULT_ENTITLED = "AAAAAAAAAA";
     private static final String UPDATED_ENTITLED = "BBBBBBBBBB";
 
+    private static final String DEFAULT_OPTION = "AAAAAAAAAA";
+    private static final String UPDATED_OPTION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DIVISION = "AAAAAAAAAA";
+    private static final String UPDATED_DIVISION = "BBBBBBBBBB";
+
     @Autowired
     private ClassroomRepository classroomRepository;
 
@@ -88,7 +94,9 @@ public class ClassroomResourceIntTest {
      */
     public static Classroom createEntity(EntityManager em) {
         Classroom classroom = new Classroom()
-            .entitled(DEFAULT_ENTITLED);
+            .entitled(DEFAULT_ENTITLED)
+            .option(DEFAULT_OPTION)
+            .division(DEFAULT_DIVISION);
         return classroom;
     }
 
@@ -114,6 +122,8 @@ public class ClassroomResourceIntTest {
         assertThat(classroomList).hasSize(databaseSizeBeforeCreate + 1);
         Classroom testClassroom = classroomList.get(classroomList.size() - 1);
         assertThat(testClassroom.getEntitled()).isEqualTo(DEFAULT_ENTITLED);
+        assertThat(testClassroom.getOption()).isEqualTo(DEFAULT_OPTION);
+        assertThat(testClassroom.getDivision()).isEqualTo(DEFAULT_DIVISION);
     }
 
     @Test
@@ -166,7 +176,9 @@ public class ClassroomResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(classroom.getId().intValue())))
-            .andExpect(jsonPath("$.[*].entitled").value(hasItem(DEFAULT_ENTITLED.toString())));
+            .andExpect(jsonPath("$.[*].entitled").value(hasItem(DEFAULT_ENTITLED.toString())))
+            .andExpect(jsonPath("$.[*].option").value(hasItem(DEFAULT_OPTION.toString())))
+            .andExpect(jsonPath("$.[*].division").value(hasItem(DEFAULT_DIVISION.toString())));
     }
 
     @Test
@@ -180,7 +192,9 @@ public class ClassroomResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(classroom.getId().intValue()))
-            .andExpect(jsonPath("$.entitled").value(DEFAULT_ENTITLED.toString()));
+            .andExpect(jsonPath("$.entitled").value(DEFAULT_ENTITLED.toString()))
+            .andExpect(jsonPath("$.option").value(DEFAULT_OPTION.toString()))
+            .andExpect(jsonPath("$.division").value(DEFAULT_DIVISION.toString()));
     }
 
     @Test
@@ -203,7 +217,9 @@ public class ClassroomResourceIntTest {
         // Disconnect from session so that the updates on updatedClassroom are not directly saved in db
         em.detach(updatedClassroom);
         updatedClassroom
-            .entitled(UPDATED_ENTITLED);
+            .entitled(UPDATED_ENTITLED)
+            .option(UPDATED_OPTION)
+            .division(UPDATED_DIVISION);
         ClassroomDTO classroomDTO = classroomMapper.toDto(updatedClassroom);
 
         restClassroomMockMvc.perform(put("/api/classrooms")
@@ -216,6 +232,8 @@ public class ClassroomResourceIntTest {
         assertThat(classroomList).hasSize(databaseSizeBeforeUpdate);
         Classroom testClassroom = classroomList.get(classroomList.size() - 1);
         assertThat(testClassroom.getEntitled()).isEqualTo(UPDATED_ENTITLED);
+        assertThat(testClassroom.getOption()).isEqualTo(UPDATED_OPTION);
+        assertThat(testClassroom.getDivision()).isEqualTo(UPDATED_DIVISION);
     }
 
     @Test

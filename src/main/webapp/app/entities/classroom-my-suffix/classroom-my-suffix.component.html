@@ -18,6 +18,8 @@
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
             <th><span jhiTranslate="dematNotesApp.classroom.entitled">Entitled</span></th>
+            <th><span jhiTranslate="dematNotesApp.classroom.option">Option</span></th>
+            <th><span jhiTranslate="dematNotesApp.classroom.division">Division</span></th>
             <th></th>
             </tr>
             </thead>
@@ -25,6 +27,8 @@
             <tr *ngFor="let classroom of classrooms ;trackBy: trackId">
                 <td><a [routerLink]="['../classroom-my-suffix', classroom.id ]">{{classroom.id}}</a></td>
                 <td>{{classroom.entitled}}</td>
+                <td>{{classroom.option}}</td>
+                <td>{{classroom.division}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

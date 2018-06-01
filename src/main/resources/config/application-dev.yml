@@ -19,6 +19,10 @@ logging:
         org.csid: DEBUG
         io.github.jhipster: DEBUG
 
+    file: /home/christopher/Documents/log4j-application.log
+    pattern:
+        console: "%d %-5level %logger : %msg%n"
+        file: "%d %-5level [%thread] %logger : %msg%n"
 spring:
     profiles:
         active: dev
@@ -32,7 +36,7 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/dematnotes
+        url: jdbc:postgresql://109.12.191.106:5432/dematnotes
         username: postgres
         password: postgres
     jpa:

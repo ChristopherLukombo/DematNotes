@@ -5,7 +5,12 @@
         "menu": {
             "home": "Home",
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
+            "marks": "Marks",
+            "schoolReports": "School Reports",
+            "results": "Results",
+            "schoolLife": "School Life",
             "entities": {
+		  "home": "Home",
                 "main": "Entities",
                 "studentMySuffix": "Student",
                 "inscriptionModuleMySuffix": "Inscription Module",
@@ -144,5 +149,5 @@
         "emailexists": "Email is already in use!",
         "idexists": "A new {{ entityName }} cannot already have an ID"
     },
-    "footer": "This is your footer"
+    "footer": "Copyright 2017-2018 DematNotes"
 }

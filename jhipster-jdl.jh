@@ -91,6 +91,8 @@ entity School {
 
 entity Classroom {
     entitled String required
+    option String
+    division String
 }
 
 entity SchoolYear {

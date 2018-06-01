@@ -8,6 +8,14 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "option",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "division",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180531134437",

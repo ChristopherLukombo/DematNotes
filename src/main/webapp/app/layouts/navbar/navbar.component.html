@@ -5,7 +5,8 @@
         </a>
         <a class="navbar-brand logo float-left" routerLink="/" (click)="collapseNavbar()">
             <span class="logo-img"></span>
-            <span jhiTranslate="global.title" class="navbar-title">DematNotes</span> <span class="navbar-version">{{version}}</span>
+            <span jhiTranslate="global.title" class="navbar-title">DematNotes</span>
+            <!--<span class="navbar-version">{{version}}</span>-->
         </a>
     </div>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
@@ -15,6 +16,38 @@
                     <span>
                         <i class="fa fa-home" aria-hidden="true"></i>
                         <span jhiTranslate="global.menu.home">Home</span>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="marks" (click)="collapseNavbar()">
+                    <span>
+                        <i class="far fa-clipboard" aria-hidden="true"></i>
+                        <span jhiTranslate="global.menu.marks">Marks</span>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="schoolReports" (click)="collapseNavbar()">
+                    <span>
+                        <i class="fa fa-list" aria-hidden="true"></i>
+                        <span jhiTranslate="global.menu.schoolReports">School Reports</span>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="results" (click)="collapseNavbar()">
+                    <span>
+                        <i class="fas fa-copy" aria-hidden="true"></i>
+                        <span jhiTranslate="global.menu.results">Results</span>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="schoolLife" (click)="collapseNavbar()">
+                    <span>
+                        <i class="fas fa-check-circle" aria-hidden="true"></i>
+                        <span jhiTranslate="global.menu.schoolLife">School Life</span>
                     </span>
                 </a>
             </li>
@@ -90,21 +123,9 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="school-report-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.schoolReportMySuffix">School Report My Suffix</span>
-                        </a>
-                    </li>
-                    <li>
                         <a class="dropdown-item" routerLink="school-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span jhiTranslate="global.menu.entities.schoolMySuffix">School My Suffix</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="classroom-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.classroomMySuffix">Classroom My Suffix</span>
                         </a>
                     </li>
                     <li>
@@ -117,6 +138,18 @@
                         <a class="dropdown-item" routerLink="document-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span jhiTranslate="global.menu.entities.documentMySuffix">Document My Suffix</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="school-report-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.schoolReportMySuffix">School Report My Suffix</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="classroom-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.classroomMySuffix">Classroom My Suffix</span>
                         </a>
                     </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->

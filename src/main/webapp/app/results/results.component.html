@@ -1,0 +1,26 @@
+<mat-tab-group>
+    <mat-tab label="Résultats">
+        <span>Résultats</span>
+        <!-- Liste déroulante -->
+        <mat-form-field>
+            <mat-select>
+                <mat-option *ngFor="let food of foods" [value]="food.value">
+                    {{ food.viewValue }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select>
+                <mat-option *ngFor="let food of foods" [value]="food.value">
+                    {{ food.viewValue }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select>
+                <mat-option *ngFor="let food of foods" [value]="food.value">
+                    {{ food.viewValue }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+</mat-tab-group>

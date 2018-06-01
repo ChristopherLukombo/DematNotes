@@ -1,0 +1,12 @@
+<mat-tab-group>
+    <mat-tab label="Feuille d'appel">
+        <span>Appel du : </span>
+        <!-- Liste déroulante -->
+        <mat-form-field>
+            <mat-select>
+                <mat-option *ngFor="let food of foods" [value]="food.value">
+                    {{ food.viewValue }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+</mat-tab-group>

@@ -17,6 +17,18 @@ import { DematNotesAdminModule } from './admin/admin.module';
 import { DematNotesAccountModule } from './account/account.module';
 import { DematNotesEntityModule } from './entities/entity.module';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
+
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CdkTableModule} from '@angular/cdk/table';
+import {MatButtonToggleModule, MatMenuModule, MatSelectModule, MatTableModule, MatTabsModule, MatFormFieldModule} from '@angular/material';
+import {ChartsModule} from 'ng2-charts';
+import {MarksComponent} from './marks/marks.component';
+import {SchoolReportsComponent} from './school-reports/school-reports.component';
+import {ResultsComponent} from './results/results.component';
+import {SchoolLifeComponent} from './school-life/school-life.component';
+import {SchoolReportService} from './school-reports/school-reports.service';
+
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {
     JhiMainComponent,
@@ -29,8 +41,17 @@ import {
 } from './layouts';
 
 @NgModule({
+    exports: [
+        MatMenuModule,
+        MatTabsModule,
+        MatSelectModule,
+        MatTableModule,
+        MatFormFieldModule,
+        CdkTableModule
+    ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         DematNotesAppRoutingModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
         DematNotesSharedModule,
@@ -38,6 +59,15 @@ import {
         DematNotesAdminModule,
         DematNotesAccountModule,
         DematNotesEntityModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatMenuModule,
+        MatTabsModule,
+        MatSelectModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatButtonToggleModule,
+        ChartsModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
@@ -46,7 +76,11 @@ import {
         ErrorComponent,
         PageRibbonComponent,
         ActiveMenuDirective,
-        FooterComponent
+        FooterComponent,
+        MarksComponent,
+        SchoolReportsComponent,
+        ResultsComponent,
+        SchoolLifeComponent,
     ],
     providers: [
         ProfileService,
@@ -83,8 +117,9 @@ import {
             multi: true,
             deps: [
                 Injector
-            ]
-        }
+            ],
+        },
+        SchoolReportService
     ],
     bootstrap: [ JhiMainComponent ]
 })

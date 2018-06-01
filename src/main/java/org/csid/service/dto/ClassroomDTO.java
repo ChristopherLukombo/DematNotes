@@ -15,6 +15,10 @@ public class ClassroomDTO implements Serializable {
     @NotNull
     private String entitled;
 
+    private String option;
+
+    private String division;
+
     public Long getId() {
         return id;
     }
@@ -29,6 +33,22 @@ public class ClassroomDTO implements Serializable {
 
     public void setEntitled(String entitled) {
         this.entitled = entitled;
+    }
+
+    public String getOption() {
+        return option;
+    }
+
+    public void setOption(String option) {
+        this.option = option;
+    }
+
+    public String getDivision() {
+        return division;
+    }
+
+    public void setDivision(String division) {
+        this.division = division;
     }
 
     @Override
@@ -57,6 +77,8 @@ public class ClassroomDTO implements Serializable {
         return "ClassroomDTO{" +
             "id=" + getId() +
             ", entitled='" + getEntitled() + "'" +
+            ", option='" + getOption() + "'" +
+            ", division='" + getDivision() + "'" +
             "}";
     }
 }

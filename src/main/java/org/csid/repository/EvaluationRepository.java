@@ -1,9 +1,11 @@
 package org.csid.repository;
 
-import org.csid.domain.Evaluation;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-import org.springframework.data.jpa.repository.*;
+import org.csid.domain.Evaluation;
+import org.csid.domain.Student;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -13,4 +15,6 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
 
+	public List<Evaluation> findAllByStudent(Student s);
+	
 }

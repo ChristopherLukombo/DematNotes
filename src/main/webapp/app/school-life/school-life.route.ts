@@ -7,8 +7,7 @@ export const schoolLifeRoute: Route = {
     component: SchoolLifeComponent,
     data: {
         authorities: ['ROLE_USER'],
-        // pageTitle: 'dematNotesApp.marks.home.title'
-        pageTitle: 'Vie scolaire'
+        pageTitle: 'global.menu.schoolLife'
     },
     canActivate: [UserRouteAccessService]
 };

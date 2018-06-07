@@ -10,28 +10,20 @@ import org.csid.domain.InscriptionModule;
 import org.csid.domain.Intervention;
 import org.csid.domain.Module;
 import org.csid.domain.School;
-import org.csid.domain.Student;
 import org.csid.domain.Teacher;
-import org.csid.domain.User;
 import org.csid.repository.InscriptionModuleRepository;
 import org.csid.repository.InterventionRepository;
 import org.csid.repository.ModuleRepository;
 import org.csid.repository.SchoolRepository;
-import org.csid.repository.StudentRepository;
 import org.csid.repository.TeacherRepository;
-import org.csid.repository.UserRepository;
 import org.csid.service.IStudentService;
 import org.csid.service.dto.ClassroomDTO;
-import org.csid.service.dto.UserDTO;
 import org.csid.service.mapper.ClassroomMapper;
-import org.csid.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("IStudentService")
 public class StudentServiceImpl_ implements IStudentService {
-	@Autowired
-	private StudentRepository studentRepository;
 
 	@Autowired
 	private InterventionRepository interventionRepository;
@@ -50,30 +42,8 @@ public class StudentServiceImpl_ implements IStudentService {
 
 	@Autowired
 	private ClassroomMapper classroomMapper;
-	
-	@Autowired
-	private UserMapper userMapper;
-	
-	@Autowired
-	private UserRepository userRepository;
 
-	@Override
-	public List<UserDTO> findStudentByClassroom(final Long idSchool, final Long idClassroom, final Long idSchoolYear) {
-		final List<Student> students = studentRepository.findAll();
 
-//		return students
-//				.stream()
-//				.filter(s -> s.getSchool().getWording().trim().equals(school.getWording().trim()) && s.getClassroom().getEntitled().trim().equals(classroom.getEntitled().trim()))
-//				.map(s -> studentMapper.toDto(s)).collect(Collectors.toList());
-		final List<UserDTO> userDTOs = new ArrayList<>(); 
-		for (Student student : students) {
-//			if (student.getSchool().getWording().trim().equals(school.getWording().trim()) && student.getClassroom().getEntitled().trim().equals(classroom.getEntitled().trim()) && student.getSchoolYear().equals(schoolYear)) {
-				User u = userRepository.findOne(student.getUser().getId());
-				userDTOs.add(userMapper.userToUserDTO(u));
-//			}
-		}
-		return userDTOs;
-	}
 
 	@Override
 	public List<ClassroomDTO> findClassroomForTeacher(final Long idTeacher, final Long idSchool) {

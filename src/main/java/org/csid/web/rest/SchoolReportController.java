@@ -32,33 +32,31 @@ public class SchoolReportController {
 	private final Logger log = LoggerFactory.getLogger(SchoolReportController.class);
 
 	@RequestMapping(value = "/schoolReport/export", method = RequestMethod.GET)
-	public ResponseEntity<Object> exportSchoolReport(final HttpServletResponse response) throws Exception {
+	public ResponseEntity<HttpStatus> exportSchoolReport(final HttpServletResponse response) throws Exception {
 
 		log.info("[API] Call API Service export");
 
 		File exportSchoolReportPDF;
 
 		try {
-			exportSchoolReportPDF = new File("/home/christopher/Téléchargements/test.txt");
+			exportSchoolReportPDF = new File("/home/christopher/Téléchargements/test.pdf");
 		} catch(final Exception e) {
 			throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during retrieving file : " + e.getMessage());
 		}
-
+		
 		response.setHeader("Content-Disposition", "attachment; filename=" + exportSchoolReportPDF.getName());
 		response.setHeader("Content-Length", String.valueOf(exportSchoolReportPDF.length()));
-		response.setContentType("text/pdf");
+		response.setContentType("application/pdf");
 
 		Document document = new Document();
-		PdfWriter.getInstance(document, new FileOutputStream("/home/christopher/Téléchargements/test.pdf"));
+		PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
 		document.open();
 		document.add(new Paragraph("Hello World!"));
 		document.close();
-
+		
 		try (InputStream inputStream = new BufferedInputStream(new FileInputStream(exportSchoolReportPDF))) {
 			FileCopyUtils.copy(inputStream, response.getOutputStream());
 			response.getOutputStream().flush();
-
-
 		} catch(final FileNotFoundException e) {
 			log.error("File not found", exportSchoolReportPDF.getPath());
 			throw new Exception(HttpStatus.NOT_FOUND.value() + " File not found " + exportSchoolReportPDF.getPath());
@@ -66,7 +64,8 @@ public class SchoolReportController {
 			log.error("Error during file copy", exportSchoolReportPDF.getPath());
 			throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during copy " + exportSchoolReportPDF.getPath());
 		}
-
+		
+        
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

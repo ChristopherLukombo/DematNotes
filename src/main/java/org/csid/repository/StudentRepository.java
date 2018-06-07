@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.csid.domain.SchoolYear;
 import org.csid.domain.Student;
+import org.csid.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,5 +20,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findByUserIsCurrentUser();
     
     List<Student> findAllBySchoolYear(SchoolYear schoolYear);
+    
+    Student findStudentByUser(User user);
 
 }

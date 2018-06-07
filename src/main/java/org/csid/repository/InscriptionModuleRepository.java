@@ -16,4 +16,5 @@ import org.springframework.stereotype.Repository;
 public interface InscriptionModuleRepository extends JpaRepository<InscriptionModule, Long> {
 	
 	public List<InscriptionModule> findAllByModule(Module module);
+	
 }

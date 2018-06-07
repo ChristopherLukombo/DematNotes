@@ -7,8 +7,7 @@ export const schoolReportsRoute: Route = {
     component: SchoolReportsComponent,
     data: {
         authorities: ['ROLE_USER'],
-        // pageTitle: 'dematNotesApp.marks.home.title'
-        pageTitle: 'School Reports'
+        pageTitle: 'global.menu.schoolReports'
     },
     canActivate: [UserRouteAccessService]
 };

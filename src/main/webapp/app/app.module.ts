@@ -21,13 +21,15 @@ import { PaginationConfig } from './blocks/config/uib-pagination.config';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
-import {MatButtonToggleModule, MatMenuModule, MatSelectModule, MatTableModule, MatTabsModule, MatFormFieldModule} from '@angular/material';
+import {MatButtonToggleModule, MatMenuModule, MatSelectModule, MatTableModule, MatTabsModule, MatFormFieldModule, MatIconModule} from '@angular/material';
 import {ChartsModule} from 'ng2-charts';
 import {MarksComponent} from './marks/marks.component';
 import {SchoolReportsComponent} from './school-reports/school-reports.component';
 import {ResultsComponent} from './results/results.component';
 import {SchoolLifeComponent} from './school-life/school-life.component';
 import {SchoolReportService} from './school-reports/school-reports.service';
+
+import {MarksService} from './marks/marks.service';
 
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {
@@ -47,6 +49,7 @@ import {
         MatSelectModule,
         MatTableModule,
         MatFormFieldModule,
+        MatIconModule,
         CdkTableModule
     ],
     imports: [
@@ -67,6 +70,7 @@ import {
         MatTableModule,
         MatFormFieldModule,
         MatButtonToggleModule,
+        MatIconModule,
         ChartsModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
@@ -119,7 +123,8 @@ import {
                 Injector
             ],
         },
-        SchoolReportService
+        SchoolReportService,
+        MarksService
     ],
     bootstrap: [ JhiMainComponent ]
 })

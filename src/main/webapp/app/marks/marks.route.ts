@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 import { UserRouteAccessService } from '../shared';
-
+import {MarksComponent} from './marks.component';
 export const marksRoute: Route = {
     path: 'marks',
     component: MarksComponent,

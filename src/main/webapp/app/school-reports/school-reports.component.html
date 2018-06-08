@@ -1,28 +1,53 @@
 <mat-tab-group>
     <mat-tab label="Bulletin">
         <span>Bulletin</span>
-        <!-- Liste déroulante -->
-        <mat-form-field>
-            <mat-select>
-                <mat-option *ngFor="let food of foods" [value]="food.value">
-                    {{ food.viewValue }}
+          <!-- Listes déroulante -->
+          <mat-form-field>
+            <mat-select name="schoolSelected" [(ngModel)]="schoolSelected" (ngModelChange)="getClassroomsByCurrentUserTeacher()" placeholder="Ecoles">
+                <mat-option *ngFor="let school of schools" [value]="school.id">
+                    {{ school.wording }} - {{school.city}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field>
-            <mat-select>
-                <mat-option *ngFor="let food of foods" [value]="food.value">
-                    {{ food.viewValue }}
+
+        <mat-form-field *ngIf="schoolSelected && this.classrooms.length > 0">   
+            <mat-select name="classroomSelected" [(ngModel)]="classroomSelected" (ngModelChange)="getStudentsUserByCurrentUserTeacher()" placeholder="Classes">
+                <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
+                    {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }} 
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field>
-            <mat-select>
-                <mat-option *ngFor="let food of foods" [value]="food.value">
-                    {{ food.viewValue }}
+
+        <mat-form-field *ngIf="classroomSelected">
+            <mat-select name="userSelected" [(ngModel)]="userSelected" (ngModelChange)="getStudentUserByCurrentUserTeacher()" placeholder="Etudiants">
+                <mat-option *ngFor="let user of users" [value]="user.id">
+                    {{ user.firstName }} -  {{ user.lastName }} 
                 </mat-option>
             </mat-select>
         </mat-form-field>
+    
+        <button type="submit" class="btn btn-primary" name="valid" (click)="saveMark()">Valider</button>
+
+    <div *ngIf="classroomSelected">
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Moyenne</th>
+                <th>Commentaire</th>
+                <th>Coefficient</th>
+            </tr>
+            <tr *ngFor="let user of users">
+                <td>{{user.id}}</td>
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+                <td><input type="text" name="mark" [(ngModel)]="marks[user.id]"></td>
+                <td><input type="text" name="comment" [(ngModel)]="comments[user.id]"></td>
+                <td><input type="text" name="coefficient" [(ngModel)]="coefficients[user.id]"></td>
+            </tr>
+        </table>
+    </div>
 </mat-tab-group>
 
 <button (click)="downloadPDF()">Télécharger PDF</button>

@@ -2,106 +2,106 @@
 
     <!-- Saisie des notes -->
     <mat-tab label="Saisie des notes">
-            <span>Saisie des notes</span>
-            <!-- Listes déroulante -->
-           <mat-form-field>
-                <mat-select name="schoolSelected" [(ngModel)]="schoolSelected" (ngModelChange)="getClassroomsByCurrentUserTeacher()" placeholder="Ecoles">
-                    <mat-option *ngFor="let school of schools" [value]="school.id">
-                        {{ school.wording }} - {{school.city}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+        <span>Saisie des notes</span>
+        <!-- Listes déroulante -->
+        <mat-form-field>
+            <mat-select name="schoolSelected" [(ngModel)]="schoolSelected" (ngModelChange)="getClassroomsByCurrentUserTeacher()" placeholder="Ecoles">
+                <mat-option *ngFor="let school of schools" [value]="school.id">
+                    {{ school.wording }} - {{school.city}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
-            <mat-form-field *ngIf="schoolSelected && this.classrooms.length > 0">   
-                <mat-select name="classroomSelected" [(ngModel)]="classroomSelected" (ngModelChange)="getStudentsUserByCurrentUserTeacher()" placeholder="Classes">
-                    <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
-                        {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }} 
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+        <mat-form-field *ngIf="schoolSelected && this.classrooms.length > 0">
+            <mat-select name="classroomSelected" [(ngModel)]="classroomSelected" (ngModelChange)="getStudentsUserByCurrentUserTeacher()" placeholder="Classes">
+                <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
+                    {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
-            <mat-form-field *ngIf="classroomSelected">
-                <mat-select name="userSelected" [(ngModel)]="userSelected" (ngModelChange)="getStudentUserByCurrentUserTeacher()" placeholder="Etudiants">
-                    <mat-option *ngFor="let user of users" [value]="user.id">
-                        {{ user.firstName }} -  {{ user.lastName }} 
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        
-            <button type="submit" class="btn btn-primary" name="valid" (click)="saveMark()">Valider</button>
+        <mat-form-field *ngIf="classroomSelected">
+            <mat-select name="userSelected" [(ngModel)]="userSelected" (ngModelChange)="getStudentUserByCurrentUserTeacher()" placeholder="Etudiants">
+                <mat-option *ngFor="let user of users" [value]="user.id">
+                    {{ user.firstName }} -  {{ user.lastName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button type="submit" class="btn btn-primary" name="valid" (click)="saveMarks()">Valider</button>
 
         <div *ngIf="classroomSelected">
             <table border="1">
                 <tr>
-                    <th>ID</th>
-                    <th>Prénom</th>
-                    <th>Nom</th>
-                    <th>Moyenne</th>
-                    <th>Commentaire</th>
-                    <th>Coefficient</th>
+                    <th> ID </th>
+                    <th> Prénom </th>
+                    <th> Nom </th>
+                    <th> Moyenne </th>
+                    <th> Commentaire </th>
+                    <th> Coefficient </th>
                 </tr>
                 <tr *ngFor="let user of users">
-                    <td>{{user.id}}</td>
-                    <td>{{user.firstName}}</td>
-                    <td>{{user.lastName}}</td>
-                    <td><input type="text" name="mark" [(ngModel)]="marks[user.id]"></td>
-                    <td><input type="text" name="comment" [(ngModel)]="comments[user.id]"></td>
-                    <td><input type="text" name="coefficient" [(ngModel)]="coefficients[user.id]"></td>
+                    <td> {{user.id}} </td>
+                    <td> {{user.firstName}} </td>
+                    <td> {{user.lastName}} </td>
+                    <td> <input type="text" name="mark" [(ngModel)]="marks[user.id]"> </td>
+                    <td> <input type="text" name="comment" [(ngModel)]="comments[user.id]"> </td>
+                    <td> <input type="text" name="coefficient" [(ngModel)]="coefficients[user.id]"> </td>
                 </tr>
             </table>
         </div>
 
-     </mat-tab>
+    </mat-tab>
 
     <!-- Relevé de notes -->
     <mat-tab label="Relevé de notes">
         <span style="float:right;">
             <mat-icon svgIcon="printer"></mat-icon>
-            <mat-icon svgIcon="upload"></mat-icon>
+            <mat-icon svgIcon="upload" (click)="openDialog()"></mat-icon>
         </span>
         <span>Relevé de notes</span>
         <!-- Liste déroulante -->
-            <mat-form-field>
-                <mat-select name="schoolSelectedReport" [(ngModel)]="schoolSelectedReport" (ngModelChange)="getClassroomsByCurrentUserTeacherReport()" placeholder="Ecoles">
-                    <mat-option *ngFor="let school of schoolsReport" [value]="school.id">
-                            {{ school.wording }} - {{school.city}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+        <mat-form-field>
+            <mat-select name="schoolSelectedReport" [(ngModel)]="schoolSelectedReport" (ngModelChange)="getClassroomsByCurrentUserTeacherReport()" placeholder="Ecoles">
+                <mat-option *ngFor="let school of schoolsReport" [value]="school.id">
+                    {{ school.wording }} - {{school.city}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
-                <mat-form-field *ngIf="schoolSelectedReport && this.classroomsReport.length > 0">   
-                    <mat-select name="classroomSelectedReport" [(ngModel)]="classroomSelectedReport" (ngModelChange)="getStudentsUserByCurrentUserTeacherReport()" placeholder="Classes">
-                        <mat-option *ngFor="let classroom of classroomsReport" [value]="classroom.id">
-                            {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }} 
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+        <mat-form-field *ngIf="schoolSelectedReport && this.classroomsReport.length > 0">
+            <mat-select name="classroomSelectedReport" [(ngModel)]="classroomSelectedReport" (ngModelChange)="getStudentsUserByCurrentUserTeacherReport()" placeholder="Classes">
+                <mat-option *ngFor="let classroom of classroomsReport" [value]="classroom.id">
+                    {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
-                <mat-form-field *ngIf="classroomSelectedReport">
-                    <mat-select name="userSelectedReport" [(ngModel)]="userSelectedReport" (ngModelChange)="getStudentUserByCurrentUserTeacherReport()" placeholder="Etudiants">
-                        <mat-option *ngFor="let user of usersReport" [value]="user.id">
-                            {{ user.firstName }} -  {{ user.lastName }} 
-                        </mat-option>
-                    </mat-select>
-            </mat-form-field>
+        <mat-form-field *ngIf="classroomSelectedReport">
+            <mat-select name="userSelectedReport" [(ngModel)]="userSelectedReport" (ngModelChange)="getStudentUserByCurrentUserTeacherReport()" placeholder="Etudiants">
+                <mat-option *ngFor="let user of usersReport" [value]="user.id">
+                    {{ user.firstName }} -  {{ user.lastName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
 
         <div *ngIf="classroomSelectedReport">
-                <table border="1">
-                    <tr>
-                        <th>ID</th>
-                        <th>Prénom</th>
-                        <th>Nom</th>
-                    </tr>
-                    <tr *ngFor="let user of usersReport">
-                        <td>{{user.id}}</td>
-                        <td>{{user.firstName}}</td>
-                        <td>{{user.lastName}}</td>
-                    </tr>
-                </table>
-            </div>
+            <table border="1">
+                <tr>
+                    <th>ID</th>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                </tr>
+                <tr *ngFor="let user of usersReport">
+                    <td>{{user.id}}</td>
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.lastName}}</td>
+                </tr>
+            </table>
+        </div>
     </mat-tab>
-    
+
     <!-- Graphe -->
     <mat-tab label="Graphe">
         <div style="width: 40%;">

@@ -24,7 +24,6 @@ public class ManagerDTO implements Serializable {
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
     private String mobilePhoneNumber;
 
-    @NotNull
     @Size(min = 10, max = 18)
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
     private String fixePhoneNumber;

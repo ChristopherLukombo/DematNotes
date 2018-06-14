@@ -1,0 +1,64 @@
+
+<div *ngIf="teacher">
+    <h2><span jhiTranslate="dematNotesApp.teacher.detail.title">Teacher</span> {{teacher.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.teacher.email">Email</span></dt>
+        <dd>
+            <span>{{teacher.email}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.teacher.mobilePhoneNumber">Mobile Phone Number</span></dt>
+        <dd>
+            <span>{{teacher.mobilePhoneNumber}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.teacher.fixePhoneNumber">Fixe Phone Number</span></dt>
+        <dd>
+            <span>{{teacher.fixePhoneNumber}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.teacher.address">Address</span></dt>
+        <dd>
+            <span>{{teacher.address}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.teacher.city">City</span></dt>
+        <dd>
+            <span>{{teacher.city}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.teacher.postalCode">Postal Code</span></dt>
+        <dd>
+            <span>{{teacher.postalCode}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.teacher.dateOfBirth">Date Of Birth</span></dt>
+        <dd>
+            <span>{{teacher.dateOfBirth | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.teacher.placeOfBirth">Place Of Birth</span></dt>
+        <dd>
+            <span>{{teacher.placeOfBirth}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.teacher.user">User</span></dt>
+        <dd>
+            {{teacher.userId}}
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.teacher.specialModule">Special Module</span></dt>
+        <dd>
+            <div *ngIf="teacher.specialModuleId">
+                <a [routerLink]="['/module', teacher.specialModuleId]">{{teacher.specialModuleId}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'teacher/'+ teacher.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

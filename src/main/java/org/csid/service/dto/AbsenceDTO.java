@@ -21,9 +21,9 @@ public class AbsenceDTO implements Serializable {
     @NotNull
     private ZonedDateTime endDate;
 
-    private String reason;
+    private Long moduleId;
 
-    private Long studentId;
+    private Set<StudentDTO> students = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -49,20 +49,20 @@ public class AbsenceDTO implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getReason() {
-        return reason;
+    public Long getModuleId() {
+        return moduleId;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setModuleId(Long moduleId) {
+        this.moduleId = moduleId;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public Set<StudentDTO> getStudents() {
+        return students;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setStudents(Set<StudentDTO> students) {
+        this.students = students;
     }
 
     @Override
@@ -92,7 +92,6 @@ public class AbsenceDTO implements Serializable {
             "id=" + getId() +
             ", startDate='" + getStartDate() + "'" +
             ", endDate='" + getEndDate() + "'" +
-            ", reason='" + getReason() + "'" +
             "}";
     }
 }

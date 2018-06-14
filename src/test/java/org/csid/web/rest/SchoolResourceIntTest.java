@@ -44,8 +44,8 @@ public class SchoolResourceIntTest {
     private static final String DEFAULT_WORDING = "AAAAAAAAAA";
     private static final String UPDATED_WORDING = "BBBBBBBBBB";
 
-    private static final String DEFAULT_PHONE_NUMBER = "7924884108";
-    private static final String UPDATED_PHONE_NUMBER = "+896010517816";
+    private static final String DEFAULT_PHONE_NUMBER = "7683700000";
+    private static final String UPDATED_PHONE_NUMBER = "+910792720019";
 
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
@@ -53,8 +53,8 @@ public class SchoolResourceIntTest {
     private static final String DEFAULT_CITY = "AAAAAAAAAA";
     private static final String UPDATED_CITY = "BBBBBBBBBB";
 
-    private static final String DEFAULT_POSTAL_CODE = "91171";
-    private static final String UPDATED_POSTAL_CODE = "90314";
+    private static final String DEFAULT_POSTAL_CODE = "26103";
+    private static final String UPDATED_POSTAL_CODE = "68543";
 
     private static final String DEFAULT_SCHOOL_LEVEL = "AAAAAAAAAA";
     private static final String UPDATED_SCHOOL_LEVEL = "BBBBBBBBBB";

@@ -5,14 +5,14 @@ import java.util.List;
 public class ChartData {
 	private List<Double> data;
 	private String label;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public ChartData() {
 		super();
 	}
-	
+
 	/**
 	 * @param data
 	 * @param label
@@ -22,39 +22,39 @@ public class ChartData {
 		this.data = data;
 		this.label = label;
 	}
-	
+
 	/**
 	 * @return the data
 	 */
 	public List<Double> getData() {
 		return data;
 	}
-	
+
 	/**
 	 * @param data the data to set
 	 */
 	public void setData(final List<Double> data) {
 		this.data = data;
 	}
-	
+
 	/**
 	 * @return the label
 	 */
 	public String getLabel() {
 		return label;
 	}
-	
+
 	/**
 	 * @param label the label to set
 	 */
 	public void setLabel(final String label) {
 		this.label = label;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -63,7 +63,7 @@ public class ChartData {
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
 		return result;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -88,5 +88,5 @@ public class ChartData {
 			return false;
 		return true;
 	}
-	
+
 }

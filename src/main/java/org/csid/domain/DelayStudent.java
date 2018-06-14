@@ -6,6 +6,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -30,11 +32,14 @@ public class DelayStudent implements Serializable {
     @Column(name = "end_date", nullable = false)
     private ZonedDateTime endDate;
 
-    @Column(name = "reason")
-    private String reason;
-
     @ManyToOne
-    private Student student;
+    private Module module;
+
+    @ManyToMany
+    @JoinTable(name = "delay_student_student",
+               joinColumns = @JoinColumn(name="delay_students_id", referencedColumnName="id"),
+               inverseJoinColumns = @JoinColumn(name="students_id", referencedColumnName="id"))
+    private Set<Student> students = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -71,30 +76,40 @@ public class DelayStudent implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getReason() {
-        return reason;
+    public Module getModule() {
+        return module;
     }
 
-    public DelayStudent reason(String reason) {
-        this.reason = reason;
+    public DelayStudent module(Module module) {
+        this.module = module;
         return this;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setModule(Module module) {
+        this.module = module;
     }
 
-    public Student getStudent() {
-        return student;
+    public Set<Student> getStudents() {
+        return students;
     }
 
-    public DelayStudent student(Student student) {
-        this.student = student;
+    public DelayStudent students(Set<Student> students) {
+        this.students = students;
         return this;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public DelayStudent addStudent(Student student) {
+        this.students.add(student);
+        return this;
+    }
+
+    public DelayStudent removeStudent(Student student) {
+        this.students.remove(student);
+        return this;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -124,7 +139,6 @@ public class DelayStudent implements Serializable {
             "id=" + getId() +
             ", startDate='" + getStartDate() + "'" +
             ", endDate='" + getEndDate() + "'" +
-            ", reason='" + getReason() + "'" +
             "}";
     }
 }

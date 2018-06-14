@@ -2,12 +2,14 @@ import {Component, OnInit} from '@angular/core';
 import {Principal} from '../shared';
 import {MarksService} from './marks.service';
 import {User} from '../shared/user/user.model';
-import {SchoolMySuffix} from '../entities/school-my-suffix';
-import {ClassroomMySuffix} from '../entities/classroom-my-suffix';
-import {EvaluationMySuffix, EvaluationMySuffixService} from '../entities/evaluation-my-suffix';
+import {School} from '../entities/school';
+import {Classroom} from '../entities/classroom';
+import {Evaluation, EvaluationService} from '../entities/evaluation';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MatDialog, MatIconRegistry} from '@angular/material';
 import {DialogComponent} from '../dialog/dialog.component';
+import {FormControl} from '@angular/forms';
+import {Module} from '../entities/module';
 
 @Component({
     selector: 'jhi-marks',
@@ -16,14 +18,19 @@ import {DialogComponent} from '../dialog/dialog.component';
 export class MarksComponent implements OnInit {
     currentUser: any;
     currentUserReport: any;
+    currentUserGraph: any;
 
-    schools: SchoolMySuffix[] = [];
-    classrooms: ClassroomMySuffix[] = [];
+    schools: School[] = [];
+    classrooms: Classroom[] = [];
     users: User[] = [];
 
-    schoolsReport: SchoolMySuffix[] = [];
-    classroomsReport: ClassroomMySuffix[] = [];
+    schoolsReport: School[] = [];
+    classroomsReport: Classroom[] = [];
     usersReport: User[] = [];
+
+    schoolsGraph: School[] = [];
+    classroomsGraph: Classroom[] = [];
+    usersGraph: User[] = [];
 
     schoolSelected;
     classroomSelected;
@@ -33,9 +40,12 @@ export class MarksComponent implements OnInit {
     classroomSelectedReport;
     userSelectedReport;
 
+    schoolSelectedGraph;
+    classroomSelectedGraph;
+    userSelectedGraph;
+
     marks: string[] = Array<string>(this.users.length);
     comments: string[] = Array<string>(this.users.length);
-    coefficients: string[] = Array<string>(this.users.length);
 
     // marksReport: string[] = Array<string>(this.usersReport.length);
     // commentsReport: string[] = Array<string>(this.usersReport.length);
@@ -52,43 +62,29 @@ export class MarksComponent implements OnInit {
         }
     ];
 
+    yearPeriod: string;
+
     // chartLabels = ['January', 'February', 'Mars', 'April'];
 
+    containsData = false;
+
+    myControl: FormControl = new FormControl();
+
+    modules: Module[];
+
+    idModule: number;
 
     constructor(
         private principal: Principal,
         private marksService: MarksService,
-        private evaluationService: EvaluationMySuffixService,
-        private iconRegistry: MatIconRegistry,
-        private sanitizer: DomSanitizer,
+        private evaluationService: EvaluationService,
         public dialog: MatDialog
-    ) {
-        // Loading of encrypted icons
-        this.iconRegistry.addSvgIcon(
-            'printer',
-            this.sanitizer.bypassSecurityTrustResourceUrl('content/c11b97db8f0e59c9940351c914c4bec9.svg'));
-        this.iconRegistry.addSvgIcon(
-            'upload',
-            this.sanitizer.bypassSecurityTrustResourceUrl('content/4d599ba6bf2eb50c397d5aefd3b20e00.svg'));
-    }
+    ) {}
 
     ngOnInit(): void {
         this.loadCurrentUser();
         this.loadCurrentUserReport();
-        this.loadChartData();
-    }
-
-    /**
-     * Open a popUp
-     */
-    openDialog(): void {
-        const dialogRef = this.dialog.open(DialogComponent, {
-            width: '250px',
-        });
-        dialogRef.afterClosed().subscribe((response) => {
-            console.log('The dialog was closed');
-            console.log(response);
-        });
+        this.loadCurrentUserGraph();
     }
 
     onChartClick(event): void {
@@ -98,9 +94,15 @@ export class MarksComponent implements OnInit {
     private loadCurrentUser(): void {
         this.principal.identity().then((account) => {
             this.currentUser = account;
-            this.marksService.getSchoolsByCurrentUserTeacher(account.id).subscribe(schools => {
+            this.marksService.getSchoolsByCurrentUserTeacher(account.id).subscribe((schools) => {
                 this.schools = schools;
-            }, error => {
+            }, (error) => {
+                console.log(JSON.parse(error.body).message);
+            });
+
+            this.marksService.getModules(account.id).subscribe((modules) => {
+                this.modules = modules;
+            }, (error) => {
                 console.log(JSON.parse(error.body).message);
             });
         });
@@ -112,22 +114,38 @@ export class MarksComponent implements OnInit {
             this.marksService.getSchoolsByCurrentUserTeacher(
                 account.id
             ).subscribe(
-                schools => {
+                (schools) => {
                     this.schoolsReport = schools;
-                }, error => {
+                }, (error) => {
                     console.log(JSON.parse(error.body).message);
                 });
         });
     }
 
-    private loadChartData(): void {
+    private loadCurrentUserGraph(): void {
+        this.principal.identity().then((account) => {
+            this.currentUserGraph = account;
+            this.marksService.getSchoolsByCurrentUserTeacher(
+                account.id
+            ).subscribe(
+                (schools) => {
+                    this.schoolsGraph = schools;
+                }, (error) => {
+                    console.log(JSON.parse(error.body).message);
+                });
+        });
+    }
+
+    public loadChartData(): void {
         this.marksService.getData(
-            1101,
-            1301
-        ).subscribe(chartData => {
-                // this.chartData = response;
+            this.schoolSelectedGraph,
+            this.classroomSelectedGraph
+        ).subscribe(
+            (chartData) => {
+                this.containsData = true;
                 this.chartData = chartData as any [];
-            }, error => {
+                console.log(this.chartData);
+            }, (error) => {
                 console.log(JSON.parse(error.body).message);
             }
         );
@@ -137,11 +155,11 @@ export class MarksComponent implements OnInit {
         this.marksService.getClassroomsByCurrentUserTeacher(
             this.currentUser.id,
             this.schoolSelected
-        ).subscribe(classrooms => {
+        ).subscribe((classrooms) => {
             this.userSelected = undefined;
             this.classroomSelected = undefined;
             this.classrooms = classrooms;
-        }, error => {
+        }, (error) => {
             console.log(JSON.parse(error.body).message);
         });
     }
@@ -150,10 +168,23 @@ export class MarksComponent implements OnInit {
         this.marksService.getClassroomsByCurrentUserTeacher(
             this.currentUserReport.id,
             this.schoolSelectedReport
-        ).subscribe(classrooms => {
+        ).subscribe((classrooms) => {
             this.userSelectedReport = undefined;
             this.classroomSelectedReport = undefined;
             this.classroomsReport = classrooms;
+        }, (error) => {
+            console.log(JSON.parse(error.body).message);
+        });
+    }
+
+    getClassroomsByCurrentUserTeacherGraph(): void {
+        this.marksService.getClassroomsByCurrentUserTeacher(
+            this.currentUserGraph.id,
+            this.schoolSelectedGraph
+        ).subscribe((classrooms) => {
+            this.userSelectedGraph = undefined;
+            this.classroomSelectedGraph = undefined;
+            this.classroomsGraph = classrooms;
         }, (error) => {
             console.log(JSON.parse(error.body).message);
         });
@@ -164,9 +195,9 @@ export class MarksComponent implements OnInit {
             this.currentUser.id,
             this.schoolSelected,
             this.classroomSelected
-        ).subscribe(users => {
+        ).subscribe((users) => {
             this.users = users;
-        }, error => {
+        }, (error) => {
             console.log(JSON.parse(error.body).message);
         });
     }
@@ -176,9 +207,22 @@ export class MarksComponent implements OnInit {
             this.currentUserReport.id,
             this.schoolSelectedReport,
             this.classroomSelectedReport
-        ).subscribe(user => {
+        ).subscribe((user) => {
             this.usersReport = user;
-        }, error => {
+        }, (error) => {
+            console.log(JSON.parse(error.body).message);
+        });
+    }
+
+    getStudentsUserByCurrentUserTeacherGraph(): void {
+        console.log( this.classroomSelectedGraph);
+        this.marksService.getStudentsUserByCurrentUserTeacher(
+            this.currentUserGraph.id,
+            this.schoolSelectedGraph,
+            this.classroomSelectedGraph
+        ).subscribe((users) => {
+            this.usersGraph = users;
+        }, (error) => {
             console.log(JSON.parse(error.body).message);
         });
     }
@@ -186,7 +230,7 @@ export class MarksComponent implements OnInit {
     getStudentUserByCurrentUserTeacher(): void {
         this.marksService.getStudentUserByIdUser(
             this.userSelected
-        ).subscribe(users => {
+        ).subscribe((users) => {
             this.users = new Array<User>();
             this.users.push(users);
         }, (error) => {
@@ -197,10 +241,22 @@ export class MarksComponent implements OnInit {
     getStudentUserByCurrentUserTeacherReport(): void {
         this.marksService.getStudentUserByIdUser(
             this.userSelected
-        ).subscribe(user => {
+        ).subscribe((user) => {
             this.usersReport = new Array<User>();
             this.usersReport.push(user);
-        }, error => {
+        }, (error) => {
+            console.log(JSON.parse(error.body).message);
+        });
+    }
+
+    getStudentUserByCurrentUserTeacherGraph(): void {
+        this.marksService.getStudentUserByIdUser(
+            this.userSelectedGraph
+        ).subscribe((user) => {
+            this.usersGraph = new Array<User>();
+            this.usersGraph.push(user);
+            this.loadChartData();
+        }, (error) => {
             console.log(JSON.parse(error.body).message);
         });
     }
@@ -210,43 +266,38 @@ export class MarksComponent implements OnInit {
      */
     saveMarks(): void {
         for (let i = 0; i < this.marks.length; i++) {
-            if (undefined !== this.marks[i]  && undefined !== this.coefficients[i]) {
+            if (undefined !== this.marks[i]) {
                 if (!this.isNumber(this.marks[i].trim())) {
                     alert('Saisir une moyenne valide');
                     return;
                 } else if (parseFloat(this.marks[i].trim()) < 0 || parseFloat(this.marks[i].trim()) > 20) {
                     alert('Saisir une moyenne entre 0 et 20');
                     return;
-                } else if (!this.isNumber(this.coefficients[i].trim())) {
-                    alert('Saisir un coefficient valide');
-                    return;
-                } else if (parseFloat(this.coefficients[i].trim()) < 0 || parseFloat(this.coefficients[i].trim()) > 15) {
-                    alert('Saisir un coefficient entre 0 et 15');
-                    return;
-                } else {
+                }  else {
                     this.marksService.getStudentByIdUser(i).subscribe(
-                        student => {
-                            const evaluation = new EvaluationMySuffix(
+                        (student) => {
+                            const e = new Evaluation(
                                 null,
                                 parseFloat(this.marks[i].trim()),
-                                parseFloat(this.coefficients[i].trim()),
                                 new Date().toISOString().slice(0, 16),
-                                this.comments[i].trim(),
-                                null,
+                                (this.comments[i] != null && this.comments[i].trim().length > 0) ? this.comments[i].trim() : '',
+                                this.yearPeriod,
+                               null,
                                 student.id,
+                                this.idModule,
                                 null
                             );
 
-                            this.evaluationService.create(evaluation).subscribe(
-                                evaluation => {
-                                    if (i === this.marks.length - 1) {
+                            this.evaluationService.create(e).subscribe(
+                                (evaluation) => {
+                                    if (i === this.marks.length - 1 && evaluation) {
                                         alert('Moyenne enregistrée');
                                     }
-                                }, firstError => {
+                                }, (firstError) => {
                                     console.log(JSON.parse(firstError.body).message);
                                 });
 
-                        }, secondError => {
+                        }, (secondError) => {
                             console.log(JSON.parse(secondError.body).message);
                         });
 

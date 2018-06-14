@@ -1,12 +1,13 @@
 package org.csid.repository;
 
-import java.util.List;
-
 import org.csid.domain.Absence;
-import org.csid.domain.Student;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * Spring Data JPA repository for the Absence entity.
@@ -14,7 +15,13 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface AbsenceRepository extends JpaRepository<Absence, Long> {
-	
-	public List<Absence> findAllByStudent(Student student);
-	
+    @Query("select distinct absence from Absence absence left join fetch absence.students")
+    List<Absence> findAllWithEagerRelationships();
+
+    @Query("select absence from Absence absence left join fetch absence.students where absence.id =:id")
+    Absence findOneWithEagerRelationships(@Param("id") Long id);
+
+    @Query("select absence from Absence absence left join fetch absence.students where absence.startDate<=:dateTime and absence.endDate<=:dateTime")
+    List<Absence> findAllAbsencesByPeriod(@Param("dateTime") ZonedDateTime dateTime);
+
 }

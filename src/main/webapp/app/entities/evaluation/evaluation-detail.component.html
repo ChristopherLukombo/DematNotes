@@ -1,0 +1,60 @@
+
+<div *ngIf="evaluation">
+    <h2><span jhiTranslate="dematNotesApp.evaluation.detail.title">Evaluation</span> {{evaluation.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.evaluation.average">Average</span></dt>
+        <dd>
+            <span>{{evaluation.average}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.evaluation.evaluationDate">Evaluation Date</span></dt>
+        <dd>
+            <span>{{evaluation.evaluationDate | date:'medium'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.evaluation.comment">Comment</span></dt>
+        <dd>
+            <span>{{evaluation.comment}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.evaluation.yearPeriod">Year Period</span></dt>
+        <dd>
+            <span>{{evaluation.yearPeriod}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.evaluation.validation">Validation</span></dt>
+        <dd>
+            <span>{{evaluation.validation}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.evaluation.student">Student</span></dt>
+        <dd>
+            <div *ngIf="evaluation.studentId">
+                <a [routerLink]="['/student', evaluation.studentId]">{{evaluation.studentId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.evaluation.module">Module</span></dt>
+        <dd>
+            <div *ngIf="evaluation.moduleId">
+                <a [routerLink]="['/module', evaluation.moduleId]">{{evaluation.moduleId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.evaluation.schoolReport">School Report</span></dt>
+        <dd>
+            <div *ngIf="evaluation.schoolReportId">
+                <a [routerLink]="['/school-report', evaluation.schoolReportId]">{{evaluation.schoolReportId}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'evaluation/'+ evaluation.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

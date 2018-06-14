@@ -1,0 +1,72 @@
+<div>
+    <h2>
+        <span jhiTranslate="dematNotesApp.absence.home.title">Absences</span>
+        <button class="btn btn-primary float-right jh-create-entity create-absence" [routerLink]="['/', { outlets: { popup: ['absence-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span  jhiTranslate="dematNotesApp.absence.home.createLabel">
+            Create new Absence
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="absences">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="dematNotesApp.absence.startDate">Start Date</span></th>
+            <th><span jhiTranslate="dematNotesApp.absence.endDate">End Date</span></th>
+            <th><span jhiTranslate="dematNotesApp.absence.module">Module</span></th>
+            <th><span jhiTranslate="dematNotesApp.absence.student">Student</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let absence of absences ;trackBy: trackId">
+                <td><a [routerLink]="['../absence', absence.id ]">{{absence.id}}</a></td>
+                <td>{{absence.startDate | date:'medium'}}</td>
+                <td>{{absence.endDate | date:'medium'}}</td>
+                <td>
+                    <div *ngIf="absence.moduleId">
+                        <a [routerLink]="['../module', absence.moduleId  ]" >{{absence.moduleId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <span *ngFor="let student of absence.students; let last = last">
+                            <a class="form-control-static" [routerLink]="['../student', student?.id ]">{{student.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../absence', absence.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'absence/'+ absence.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'absence/'+ absence.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

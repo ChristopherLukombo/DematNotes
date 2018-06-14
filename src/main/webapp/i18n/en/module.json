@@ -16,10 +16,9 @@
             "detail": {
                 "title": "Module"
             },
-            "yearPeriod": "Year Period",
-            "optionModule": "Option Module",
-            "course": "Course",
-            "school": "School"
+            "entitled": "Entitled",
+            "description": "Description",
+            "optionModule": "Option Module"
         }
     }
 }

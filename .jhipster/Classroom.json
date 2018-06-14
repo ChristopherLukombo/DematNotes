@@ -18,11 +18,10 @@
             "fieldType": "String"
         }
     ],
-    "changelogDate": "20180531134437",
+    "changelogDate": "20180609180011",
     "entityTableName": "classroom",
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false,
-    "angularJSSuffix": "mySuffix"
+    "jpaMetamodelFiltering": false
 }

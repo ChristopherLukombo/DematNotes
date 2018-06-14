@@ -8,14 +8,12 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Intervention and its DTO InterventionDTO.
  */
-@Mapper(componentModel = "spring", uses = {TeacherMapper.class, ModuleMapper.class})
+@Mapper(componentModel = "spring", uses = {ModuleMapper.class, TeacherMapper.class})
 public interface InterventionMapper extends EntityMapper<InterventionDTO, Intervention> {
 
-    @Mapping(source = "teacher.id", target = "teacherId")
     @Mapping(source = "module.id", target = "moduleId")
     InterventionDTO toDto(Intervention intervention);
 
-    @Mapping(source = "teacherId", target = "teacher")
     @Mapping(source = "moduleId", target = "module")
     Intervention toEntity(InterventionDTO interventionDTO);
 

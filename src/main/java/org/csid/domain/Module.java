@@ -22,18 +22,15 @@ public class Module implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "year_period", nullable = false)
-    private String yearPeriod;
+    @Column(name = "entitled", nullable = false)
+    private String entitled;
+
+    @Column(name = "description")
+    private String description;
 
     @NotNull
     @Column(name = "option_module", nullable = false)
     private Boolean optionModule;
-
-    @ManyToOne
-    private Course course;
-
-    @ManyToOne
-    private School school;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -44,17 +41,30 @@ public class Module implements Serializable {
         this.id = id;
     }
 
-    public String getYearPeriod() {
-        return yearPeriod;
+    public String getEntitled() {
+        return entitled;
     }
 
-    public Module yearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
+    public Module entitled(String entitled) {
+        this.entitled = entitled;
         return this;
     }
 
-    public void setYearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
+    public void setEntitled(String entitled) {
+        this.entitled = entitled;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Module description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean isOptionModule() {
@@ -68,32 +78,6 @@ public class Module implements Serializable {
 
     public void setOptionModule(Boolean optionModule) {
         this.optionModule = optionModule;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public Module course(Course course) {
-        this.course = course;
-        return this;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public School getSchool() {
-        return school;
-    }
-
-    public Module school(School school) {
-        this.school = school;
-        return this;
-    }
-
-    public void setSchool(School school) {
-        this.school = school;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -121,7 +105,8 @@ public class Module implements Serializable {
     public String toString() {
         return "Module{" +
             "id=" + getId() +
-            ", yearPeriod='" + getYearPeriod() + "'" +
+            ", entitled='" + getEntitled() + "'" +
+            ", description='" + getDescription() + "'" +
             ", optionModule='" + isOptionModule() + "'" +
             "}";
     }

@@ -1,23 +1,23 @@
 import './vendor.ts';
 
-import {Injector, NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {LocalStorageService, Ng2Webstorage, SessionStorageService} from 'ngx-webstorage';
-import {JhiEventManager} from 'ng-jhipster';
+import { NgModule, Injector } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Ng2Webstorage, LocalStorageService, SessionStorageService  } from 'ngx-webstorage';
+import { JhiEventManager } from 'ng-jhipster';
 
-import {AuthInterceptor} from './blocks/interceptor/auth.interceptor';
-import {AuthExpiredInterceptor} from './blocks/interceptor/auth-expired.interceptor';
-import {ErrorHandlerInterceptor} from './blocks/interceptor/errorhandler.interceptor';
-import {NotificationInterceptor} from './blocks/interceptor/notification.interceptor';
-import {DematNotesSharedModule, UserRouteAccessService} from './shared';
-import {DematNotesAppRoutingModule} from './app-routing.module';
-import {DematNotesHomeModule} from './home/home.module';
-import {DematNotesAdminModule} from './admin/admin.module';
-import {DematNotesAccountModule} from './account/account.module';
-import {DematNotesEntityModule} from './entities/entity.module';
-import {PaginationConfig} from './blocks/config/uib-pagination.config';
-
+import { AuthInterceptor } from './blocks/interceptor/auth.interceptor';
+import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
+import { ErrorHandlerInterceptor } from './blocks/interceptor/errorhandler.interceptor';
+import { NotificationInterceptor } from './blocks/interceptor/notification.interceptor';
+import { DematNotesSharedModule, UserRouteAccessService } from './shared';
+import { DematNotesAppRoutingModule} from './app-routing.module';
+import { DematNotesHomeModule } from './home/home.module';
+import { DematNotesAdminModule } from './admin/admin.module';
+import { DematNotesAccountModule } from './account/account.module';
+import { DematNotesEntityModule } from './entities/entity.module';
+import { PaginationConfig } from './blocks/config/uib-pagination.config';
+// jhipster-needle-angular-add-module-import JHipster will add new module here
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ChartsModule} from 'ng2-charts';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -30,7 +30,8 @@ import {
     MatMenuModule,
     MatSelectModule,
     MatTableModule,
-    MatTabsModule
+    MatTabsModule,
+    MatAutocompleteModule
 } from '@angular/material';
 
 import {MarksComponent} from './marks/marks.component';
@@ -40,17 +41,18 @@ import {SchoolLifeComponent} from './school-life/school-life.component';
 import {SchoolReportService} from './school-reports/school-reports.service';
 
 import {MarksService} from './marks/marks.service';
-// jhipster-needle-angular-add-module-import JHipster will add new module here
+import {DialogComponent} from './dialog/dialog.component';
 import {
-    ActiveMenuDirective,
-    ErrorComponent,
-    FooterComponent,
     JhiMainComponent,
     NavbarComponent,
+    FooterComponent,
+    ProfileService,
     PageRibbonComponent,
-    ProfileService
+    ActiveMenuDirective,
+    ErrorComponent
 } from './layouts';
-import {DialogComponent} from './dialog/dialog.component';
+import {FileUploaderService} from './dialog/FileUploaderService';
+import {SchoolLifeService} from './school-life/school-life.service';
 
 @NgModule({
     exports: [
@@ -62,6 +64,7 @@ import {DialogComponent} from './dialog/dialog.component';
         MatIconModule,
         CdkTableModule,
         MatDialogModule,
+        MatAutocompleteModule
     ],
     imports: [
         BrowserModule,
@@ -73,6 +76,7 @@ import {DialogComponent} from './dialog/dialog.component';
         DematNotesAdminModule,
         DematNotesAccountModule,
         DematNotesEntityModule,
+        // jhipster-needle-angular-add-module JHipster will add new module here
         ReactiveFormsModule,
         FormsModule,
         MatMenuModule,
@@ -83,8 +87,8 @@ import {DialogComponent} from './dialog/dialog.component';
         MatButtonToggleModule,
         MatIconModule,
         ChartsModule,
-        MatDialogModule
-        // jhipster-needle-angular-add-module JHipster will add new module here
+        MatDialogModule,
+        MatAutocompleteModule
     ],
     declarations: [
         JhiMainComponent,
@@ -137,10 +141,12 @@ import {DialogComponent} from './dialog/dialog.component';
             multi: true,
             deps: [
                 Injector
-            ],
+            ]
         },
         SchoolReportService,
         MarksService,
+        SchoolLifeService,
+        FileUploaderService
     ],
     bootstrap: [ JhiMainComponent ]
 })

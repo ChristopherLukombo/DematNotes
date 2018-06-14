@@ -55,7 +55,7 @@ public class InterventionServiceImpl implements InterventionService {
     @Transactional(readOnly = true)
     public List<InterventionDTO> findAll() {
         log.debug("Request to get all Interventions");
-        return interventionRepository.findAll().stream()
+        return interventionRepository.findAllWithEagerRelationships().stream()
             .map(interventionMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }
@@ -70,7 +70,7 @@ public class InterventionServiceImpl implements InterventionService {
     @Transactional(readOnly = true)
     public InterventionDTO findOne(Long id) {
         log.debug("Request to get Intervention : {}", id);
-        Intervention intervention = interventionRepository.findOne(id);
+        Intervention intervention = interventionRepository.findOneWithEagerRelationships(id);
         return interventionMapper.toDto(intervention);
     }
 

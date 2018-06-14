@@ -46,14 +46,14 @@ public class StudentResourceIntTest {
     private static final String DEFAULT_INE = "AAAAAAAAAA";
     private static final String UPDATED_INE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_EMAIL = "+@jz.eji";
-    private static final String UPDATED_EMAIL = "6+@7.rx";
+    private static final String DEFAULT_EMAIL = "o@q.vs";
+    private static final String UPDATED_EMAIL = "_@i0.zy";
 
-    private static final String DEFAULT_MOBILE_PHONE_NUMBER = "6653968756";
-    private static final String UPDATED_MOBILE_PHONE_NUMBER = "+728)80228017";
+    private static final String DEFAULT_MOBILE_PHONE_NUMBER = "8821514359";
+    private static final String UPDATED_MOBILE_PHONE_NUMBER = "+515591313343";
 
-    private static final String DEFAULT_FIXE_PHONE_NUMBER = "1624042637";
-    private static final String UPDATED_FIXE_PHONE_NUMBER = "+390)52996911";
+    private static final String DEFAULT_FIXE_PHONE_NUMBER = "0958304257";
+    private static final String UPDATED_FIXE_PHONE_NUMBER = "+65842547165";
 
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
@@ -61,8 +61,8 @@ public class StudentResourceIntTest {
     private static final String DEFAULT_CITY = "AAAAAAAAAA";
     private static final String UPDATED_CITY = "BBBBBBBBBB";
 
-    private static final String DEFAULT_POSTAL_CODE = "21154";
-    private static final String UPDATED_POSTAL_CODE = "92699";
+    private static final String DEFAULT_POSTAL_CODE = "13641";
+    private static final String UPDATED_POSTAL_CODE = "95294";
 
     private static final LocalDate DEFAULT_DATE_OF_BIRTH = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATE_OF_BIRTH = LocalDate.now(ZoneId.systemDefault());
@@ -222,25 +222,6 @@ public class StudentResourceIntTest {
         int databaseSizeBeforeTest = studentRepository.findAll().size();
         // set the field null
         student.setMobilePhoneNumber(null);
-
-        // Create the Student, which fails.
-        StudentDTO studentDTO = studentMapper.toDto(student);
-
-        restStudentMockMvc.perform(post("/api/students")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(studentDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkFixePhoneNumberIsRequired() throws Exception {
-        int databaseSizeBeforeTest = studentRepository.findAll().size();
-        // set the field null
-        student.setFixePhoneNumber(null);
 
         // Create the Student, which fails.
         StudentDTO studentDTO = studentMapper.toDto(student);

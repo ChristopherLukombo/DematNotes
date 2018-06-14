@@ -40,10 +40,9 @@ public class Student implements Serializable {
     @Column(name = "mobile_phone_number", length = 18, nullable = false)
     private String mobilePhoneNumber;
 
-    @NotNull
     @Size(min = 10, max = 18)
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
-    @Column(name = "fixe_phone_number", length = 18, nullable = false)
+    @Column(name = "fixe_phone_number", length = 18)
     private String fixePhoneNumber;
 
     @NotNull
@@ -69,27 +68,10 @@ public class Student implements Serializable {
 
     @OneToMany(mappedBy = "student")
     @JsonIgnore
-    private Set<Absence> absences = new HashSet<>();
-
-    @OneToMany(mappedBy = "student")
-    @JsonIgnore
-    private Set<DelayStudent> delaystudents = new HashSet<>();
-
-    @OneToMany(mappedBy = "student")
-    @JsonIgnore
     private Set<Document> documents = new HashSet<>();
 
     @ManyToOne
     private User user;
-
-    @ManyToOne
-    private SchoolYear schoolYear;
-
-    @ManyToOne
-    private Classroom classroom;
-
-    @ManyToOne
-    private School school;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -217,56 +199,6 @@ public class Student implements Serializable {
         this.placeOfBirth = placeOfBirth;
     }
 
-    public Set<Absence> getAbsences() {
-        return absences;
-    }
-
-    public Student absences(Set<Absence> absences) {
-        this.absences = absences;
-        return this;
-    }
-
-    public Student addAbsences(Absence absence) {
-        this.absences.add(absence);
-        absence.setStudent(this);
-        return this;
-    }
-
-    public Student removeAbsences(Absence absence) {
-        this.absences.remove(absence);
-        absence.setStudent(null);
-        return this;
-    }
-
-    public void setAbsences(Set<Absence> absences) {
-        this.absences = absences;
-    }
-
-    public Set<DelayStudent> getDelaystudents() {
-        return delaystudents;
-    }
-
-    public Student delaystudents(Set<DelayStudent> delayStudents) {
-        this.delaystudents = delayStudents;
-        return this;
-    }
-
-    public Student addDelaystudents(DelayStudent delayStudent) {
-        this.delaystudents.add(delayStudent);
-        delayStudent.setStudent(this);
-        return this;
-    }
-
-    public Student removeDelaystudents(DelayStudent delayStudent) {
-        this.delaystudents.remove(delayStudent);
-        delayStudent.setStudent(null);
-        return this;
-    }
-
-    public void setDelaystudents(Set<DelayStudent> delayStudents) {
-        this.delaystudents = delayStudents;
-    }
-
     public Set<Document> getDocuments() {
         return documents;
     }
@@ -303,45 +235,6 @@ public class Student implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public SchoolYear getSchoolYear() {
-        return schoolYear;
-    }
-
-    public Student schoolYear(SchoolYear schoolYear) {
-        this.schoolYear = schoolYear;
-        return this;
-    }
-
-    public void setSchoolYear(SchoolYear schoolYear) {
-        this.schoolYear = schoolYear;
-    }
-
-    public Classroom getClassroom() {
-        return classroom;
-    }
-
-    public Student classroom(Classroom classroom) {
-        this.classroom = classroom;
-        return this;
-    }
-
-    public void setClassroom(Classroom classroom) {
-        this.classroom = classroom;
-    }
-
-    public School getSchool() {
-        return school;
-    }
-
-    public Student school(School school) {
-        this.school = school;
-        return this;
-    }
-
-    public void setSchool(School school) {
-        this.school = school;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

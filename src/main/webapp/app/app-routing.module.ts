@@ -10,6 +10,7 @@ import {schoolLifeRoute} from './school-life/school-life.route';
 
 const LAYOUT_ROUTES = [
     navbarRoute,
+    navbarRoute,
     marksRoute,
     schoolReportsRoute,
     resultsRoute,

@@ -52,9 +52,6 @@ public class DelayStudentResourceIntTest {
     private static final ZonedDateTime DEFAULT_END_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_END_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final String DEFAULT_REASON = "AAAAAAAAAA";
-    private static final String UPDATED_REASON = "BBBBBBBBBB";
-
     @Autowired
     private DelayStudentRepository delayStudentRepository;
 
@@ -100,8 +97,7 @@ public class DelayStudentResourceIntTest {
     public static DelayStudent createEntity(EntityManager em) {
         DelayStudent delayStudent = new DelayStudent()
             .startDate(DEFAULT_START_DATE)
-            .endDate(DEFAULT_END_DATE)
-            .reason(DEFAULT_REASON);
+            .endDate(DEFAULT_END_DATE);
         return delayStudent;
     }
 
@@ -128,7 +124,6 @@ public class DelayStudentResourceIntTest {
         DelayStudent testDelayStudent = delayStudentList.get(delayStudentList.size() - 1);
         assertThat(testDelayStudent.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testDelayStudent.getEndDate()).isEqualTo(DEFAULT_END_DATE);
-        assertThat(testDelayStudent.getReason()).isEqualTo(DEFAULT_REASON);
     }
 
     @Test
@@ -201,8 +196,7 @@ public class DelayStudentResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(delayStudent.getId().intValue())))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(sameInstant(DEFAULT_START_DATE))))
-            .andExpect(jsonPath("$.[*].endDate").value(hasItem(sameInstant(DEFAULT_END_DATE))))
-            .andExpect(jsonPath("$.[*].reason").value(hasItem(DEFAULT_REASON.toString())));
+            .andExpect(jsonPath("$.[*].endDate").value(hasItem(sameInstant(DEFAULT_END_DATE))));
     }
 
     @Test
@@ -217,8 +211,7 @@ public class DelayStudentResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(delayStudent.getId().intValue()))
             .andExpect(jsonPath("$.startDate").value(sameInstant(DEFAULT_START_DATE)))
-            .andExpect(jsonPath("$.endDate").value(sameInstant(DEFAULT_END_DATE)))
-            .andExpect(jsonPath("$.reason").value(DEFAULT_REASON.toString()));
+            .andExpect(jsonPath("$.endDate").value(sameInstant(DEFAULT_END_DATE)));
     }
 
     @Test
@@ -242,8 +235,7 @@ public class DelayStudentResourceIntTest {
         em.detach(updatedDelayStudent);
         updatedDelayStudent
             .startDate(UPDATED_START_DATE)
-            .endDate(UPDATED_END_DATE)
-            .reason(UPDATED_REASON);
+            .endDate(UPDATED_END_DATE);
         DelayStudentDTO delayStudentDTO = delayStudentMapper.toDto(updatedDelayStudent);
 
         restDelayStudentMockMvc.perform(put("/api/delay-students")
@@ -257,7 +249,6 @@ public class DelayStudentResourceIntTest {
         DelayStudent testDelayStudent = delayStudentList.get(delayStudentList.size() - 1);
         assertThat(testDelayStudent.getStartDate()).isEqualTo(UPDATED_START_DATE);
         assertThat(testDelayStudent.getEndDate()).isEqualTo(UPDATED_END_DATE);
-        assertThat(testDelayStudent.getReason()).isEqualTo(UPDATED_REASON);
     }
 
     @Test

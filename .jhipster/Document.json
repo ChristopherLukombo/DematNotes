@@ -35,11 +35,10 @@
             "fieldType": "String"
         }
     ],
-    "changelogDate": "20180531134439",
+    "changelogDate": "20180609180013",
     "entityTableName": "document",
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false,
-    "angularJSSuffix": "mySuffix"
+    "jpaMetamodelFiltering": false
 }

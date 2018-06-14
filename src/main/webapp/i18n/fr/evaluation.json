@@ -17,11 +17,12 @@
                 "title": "Evaluation"
             },
             "average": "Average",
-            "coefficient": "Coefficient",
             "evaluationDate": "Evaluation Date",
             "comment": "Comment",
-            "module": "Module",
+            "yearPeriod": "Year Period",
+            "validation": "Validation",
             "student": "Student",
+            "module": "Module",
             "schoolReport": "School Report"
         }
     }

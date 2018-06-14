@@ -52,9 +52,6 @@ public class AbsenceResourceIntTest {
     private static final ZonedDateTime DEFAULT_END_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_END_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final String DEFAULT_REASON = "AAAAAAAAAA";
-    private static final String UPDATED_REASON = "BBBBBBBBBB";
-
     @Autowired
     private AbsenceRepository absenceRepository;
 
@@ -100,8 +97,7 @@ public class AbsenceResourceIntTest {
     public static Absence createEntity(EntityManager em) {
         Absence absence = new Absence()
             .startDate(DEFAULT_START_DATE)
-            .endDate(DEFAULT_END_DATE)
-            .reason(DEFAULT_REASON);
+            .endDate(DEFAULT_END_DATE);
         return absence;
     }
 
@@ -128,7 +124,6 @@ public class AbsenceResourceIntTest {
         Absence testAbsence = absenceList.get(absenceList.size() - 1);
         assertThat(testAbsence.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testAbsence.getEndDate()).isEqualTo(DEFAULT_END_DATE);
-        assertThat(testAbsence.getReason()).isEqualTo(DEFAULT_REASON);
     }
 
     @Test
@@ -201,8 +196,7 @@ public class AbsenceResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(absence.getId().intValue())))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(sameInstant(DEFAULT_START_DATE))))
-            .andExpect(jsonPath("$.[*].endDate").value(hasItem(sameInstant(DEFAULT_END_DATE))))
-            .andExpect(jsonPath("$.[*].reason").value(hasItem(DEFAULT_REASON.toString())));
+            .andExpect(jsonPath("$.[*].endDate").value(hasItem(sameInstant(DEFAULT_END_DATE))));
     }
 
     @Test
@@ -217,8 +211,7 @@ public class AbsenceResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(absence.getId().intValue()))
             .andExpect(jsonPath("$.startDate").value(sameInstant(DEFAULT_START_DATE)))
-            .andExpect(jsonPath("$.endDate").value(sameInstant(DEFAULT_END_DATE)))
-            .andExpect(jsonPath("$.reason").value(DEFAULT_REASON.toString()));
+            .andExpect(jsonPath("$.endDate").value(sameInstant(DEFAULT_END_DATE)));
     }
 
     @Test
@@ -242,8 +235,7 @@ public class AbsenceResourceIntTest {
         em.detach(updatedAbsence);
         updatedAbsence
             .startDate(UPDATED_START_DATE)
-            .endDate(UPDATED_END_DATE)
-            .reason(UPDATED_REASON);
+            .endDate(UPDATED_END_DATE);
         AbsenceDTO absenceDTO = absenceMapper.toDto(updatedAbsence);
 
         restAbsenceMockMvc.perform(put("/api/absences")
@@ -257,7 +249,6 @@ public class AbsenceResourceIntTest {
         Absence testAbsence = absenceList.get(absenceList.size() - 1);
         assertThat(testAbsence.getStartDate()).isEqualTo(UPDATED_START_DATE);
         assertThat(testAbsence.getEndDate()).isEqualTo(UPDATED_END_DATE);
-        assertThat(testAbsence.getReason()).isEqualTo(UPDATED_REASON);
     }
 
     @Test

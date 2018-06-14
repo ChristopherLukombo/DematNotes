@@ -1,3 +1,4 @@
+<!-- Feuille d'appel pour le professeur -->
 <mat-tab-group>
     <mat-tab label="Feuille d'appel">
         <span>Appel du : </span>
@@ -26,26 +27,60 @@
             </mat-select>
         </mat-form-field>
 
-        <button type="submit" class="btn btn-primary" name="valid" (click)="saveMark()">Valider</button>
+        <button type="submit" class="btn btn-dark" name="validate" (click)="saveAbsences()">Valider</button>
 
     <div *ngIf="classroomSelected">
-        <table border="1">
+        <table class="table table-striped tab">
+            <thead>
             <tr>
-                <th>ID</th>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Moyenne</th>
-                <th>Commentaire</th>
-                <th>Coefficient</th>
+                <th scope="col"> # </th>
+                <th scope="col"> Prénom </th>
+                <th scope="col"> Nom </th>
             </tr>
+            </thead>
+            <tbody>
             <tr *ngFor="let user of users">
-                <td>{{user.id}}</td>
-                <td>{{user.firstName}}</td>
-                <td>{{user.lastName}}</td>
-                <td>{{}}</td><!-- Afficher le nombre d'absences -->
-                <td>{{}}</td><!-- Afficher le nombre de retards -->
+                <td scope="row"></td>
+                <td> {{user.firstName}} </td>
+                <td> {{user.lastName}}</td>
             </tr>
+            </tbody>
         </table>
     </div>
+    </mat-tab>
+
+    <!-- Mon espace pour l'étudiant -->
+    <mat-tab label="Mon espace" *ngIf="this.absences">
+        <span style="float:right;">
+            <!--<mat-icon svgIcon="printer"></mat-icon>-->
+            <mat-icon svgIcon="upload" (click)="openDialog()" id="icon"></mat-icon>
+        </span>
+        <span>Mon parcours : </span>
+
+        <table class="table table-striped tab">
+            <thead>
+            <tr>
+                <th scope="col"> # </th>
+                <th scope="col"> Prénom </th>
+                <th scope="col"> Nom </th>
+                <th scope="col"> Nombre d'absences </th>
+                <th scope="col"> Nombre de retards  </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td scope="row"></td>
+                <td> {{currentUser.firstName}} </td>
+                <td> {{currentUser.lastName}} </td>
+                <td> {{this.absences.length}} </td>
+                <td> {{this.delayStudents.length}} </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </mat-tab>
 </mat-tab-group>
+
+<!--<img src="../../content/images/printer.svg" style="display:none;">-->
+<img src="../../content/images/upload.svg" style="display:none;">
 

@@ -29,11 +29,10 @@
             "fieldType": "LocalDate"
         }
     ],
-    "changelogDate": "20180531134435",
+    "changelogDate": "20180609180009",
     "entityTableName": "school_report",
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false,
-    "angularJSSuffix": "mySuffix"
+    "jpaMetamodelFiltering": false
 }

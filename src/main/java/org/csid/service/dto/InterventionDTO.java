@@ -19,14 +19,17 @@ public class InterventionDTO implements Serializable {
     private String type;
 
     @NotNull
+    private String yearPeriod;
+
+    @NotNull
     private ZonedDateTime startDate;
 
     @NotNull
     private ZonedDateTime endDate;
 
-    private Long teacherId;
-
     private Long moduleId;
+
+    private Set<TeacherDTO> teachers = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -42,6 +45,14 @@ public class InterventionDTO implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getYearPeriod() {
+        return yearPeriod;
+    }
+
+    public void setYearPeriod(String yearPeriod) {
+        this.yearPeriod = yearPeriod;
     }
 
     public ZonedDateTime getStartDate() {
@@ -60,20 +71,20 @@ public class InterventionDTO implements Serializable {
         this.endDate = endDate;
     }
 
-    public Long getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(Long teacherId) {
-        this.teacherId = teacherId;
-    }
-
     public Long getModuleId() {
         return moduleId;
     }
 
     public void setModuleId(Long moduleId) {
         this.moduleId = moduleId;
+    }
+
+    public Set<TeacherDTO> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(Set<TeacherDTO> teachers) {
+        this.teachers = teachers;
     }
 
     @Override
@@ -102,6 +113,7 @@ public class InterventionDTO implements Serializable {
         return "InterventionDTO{" +
             "id=" + getId() +
             ", type='" + getType() + "'" +
+            ", yearPeriod='" + getYearPeriod() + "'" +
             ", startDate='" + getStartDate() + "'" +
             ", endDate='" + getEndDate() + "'" +
             "}";

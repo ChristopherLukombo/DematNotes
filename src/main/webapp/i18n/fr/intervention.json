@@ -17,10 +17,11 @@
                 "title": "Intervention"
             },
             "type": "Type",
+            "yearPeriod": "Year Period",
             "startDate": "Start Date",
             "endDate": "End Date",
-            "teacher": "Teacher",
-            "module": "Module"
+            "module": "Module",
+            "teacher": "Teacher"
         }
     }
 }

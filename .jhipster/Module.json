@@ -1,26 +1,17 @@
 {
     "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipType": "many-to-one",
-            "relationshipName": "course",
-            "otherEntityName": "course",
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipType": "many-to-one",
-            "relationshipName": "school",
-            "otherEntityName": "school",
-            "otherEntityField": "id"
-        }
-    ],
+    "relationships": [],
     "fields": [
         {
-            "fieldName": "yearPeriod",
+            "fieldName": "entitled",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
         },
         {
             "fieldName": "optionModule",
@@ -30,11 +21,10 @@
             ]
         }
     ],
-    "changelogDate": "20180531134433",
+    "changelogDate": "20180609180007",
     "entityTableName": "module",
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false,
-    "angularJSSuffix": "mySuffix"
+    "jpaMetamodelFiltering": false
 }

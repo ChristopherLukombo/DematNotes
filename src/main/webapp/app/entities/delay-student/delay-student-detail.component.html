@@ -1,0 +1,42 @@
+
+<div *ngIf="delayStudent">
+    <h2><span jhiTranslate="dematNotesApp.delayStudent.detail.title">Delay Student</span> {{delayStudent.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.delayStudent.startDate">Start Date</span></dt>
+        <dd>
+            <span>{{delayStudent.startDate | date:'medium'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.delayStudent.endDate">End Date</span></dt>
+        <dd>
+            <span>{{delayStudent.endDate | date:'medium'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.delayStudent.module">Module</span></dt>
+        <dd>
+            <div *ngIf="delayStudent.moduleId">
+                <a [routerLink]="['/module', delayStudent.moduleId]">{{delayStudent.moduleId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.delayStudent.student">Student</span></dt>
+        <dd>
+            <span *ngFor="let student of delayStudent.students; let last = last">
+                <a [routerLink]="['/student', student?.id ]">{{student.id}}</a>{{last ? '' : ', '}}
+            </span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'delay-student/'+ delayStudent.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

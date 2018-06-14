@@ -18,7 +18,6 @@ logging:
         ROOT: DEBUG
         org.csid: DEBUG
         io.github.jhipster: DEBUG
-
     file: /home/christopher/Documents/log4j-application.log
     pattern:
         console: "%d %-5level %logger : %msg%n"

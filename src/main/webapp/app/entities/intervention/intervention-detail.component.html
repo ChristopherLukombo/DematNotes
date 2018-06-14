@@ -1,0 +1,50 @@
+
+<div *ngIf="intervention">
+    <h2><span jhiTranslate="dematNotesApp.intervention.detail.title">Intervention</span> {{intervention.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.intervention.type">Type</span></dt>
+        <dd>
+            <span>{{intervention.type}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.intervention.yearPeriod">Year Period</span></dt>
+        <dd>
+            <span>{{intervention.yearPeriod}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.intervention.startDate">Start Date</span></dt>
+        <dd>
+            <span>{{intervention.startDate | date:'medium'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.intervention.endDate">End Date</span></dt>
+        <dd>
+            <span>{{intervention.endDate | date:'medium'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.intervention.module">Module</span></dt>
+        <dd>
+            <div *ngIf="intervention.moduleId">
+                <a [routerLink]="['/module', intervention.moduleId]">{{intervention.moduleId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.intervention.teacher">Teacher</span></dt>
+        <dd>
+            <span *ngFor="let teacher of intervention.teachers; let last = last">
+                <a [routerLink]="['/teacher', teacher?.id ]">{{teacher.id}}</a>{{last ? '' : ', '}}
+            </span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'intervention/'+ intervention.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

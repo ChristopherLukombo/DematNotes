@@ -6,6 +6,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -27,6 +29,10 @@ public class Intervention implements Serializable {
     private String type;
 
     @NotNull
+    @Column(name = "year_period", nullable = false)
+    private String yearPeriod;
+
+    @NotNull
     @Column(name = "start_date", nullable = false)
     private ZonedDateTime startDate;
 
@@ -35,10 +41,13 @@ public class Intervention implements Serializable {
     private ZonedDateTime endDate;
 
     @ManyToOne
-    private Teacher teacher;
-
-    @ManyToOne
     private Module module;
+
+    @ManyToMany
+    @JoinTable(name = "intervention_teacher",
+               joinColumns = @JoinColumn(name="interventions_id", referencedColumnName="id"),
+               inverseJoinColumns = @JoinColumn(name="teachers_id", referencedColumnName="id"))
+    private Set<Teacher> teachers = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -60,6 +69,19 @@ public class Intervention implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getYearPeriod() {
+        return yearPeriod;
+    }
+
+    public Intervention yearPeriod(String yearPeriod) {
+        this.yearPeriod = yearPeriod;
+        return this;
+    }
+
+    public void setYearPeriod(String yearPeriod) {
+        this.yearPeriod = yearPeriod;
     }
 
     public ZonedDateTime getStartDate() {
@@ -88,19 +110,6 @@ public class Intervention implements Serializable {
         this.endDate = endDate;
     }
 
-    public Teacher getTeacher() {
-        return teacher;
-    }
-
-    public Intervention teacher(Teacher teacher) {
-        this.teacher = teacher;
-        return this;
-    }
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-    }
-
     public Module getModule() {
         return module;
     }
@@ -112,6 +121,29 @@ public class Intervention implements Serializable {
 
     public void setModule(Module module) {
         this.module = module;
+    }
+
+    public Set<Teacher> getTeachers() {
+        return teachers;
+    }
+
+    public Intervention teachers(Set<Teacher> teachers) {
+        this.teachers = teachers;
+        return this;
+    }
+
+    public Intervention addTeacher(Teacher teacher) {
+        this.teachers.add(teacher);
+        return this;
+    }
+
+    public Intervention removeTeacher(Teacher teacher) {
+        this.teachers.remove(teacher);
+        return this;
+    }
+
+    public void setTeachers(Set<Teacher> teachers) {
+        this.teachers = teachers;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -140,6 +172,7 @@ public class Intervention implements Serializable {
         return "Intervention{" +
             "id=" + getId() +
             ", type='" + getType() + "'" +
+            ", yearPeriod='" + getYearPeriod() + "'" +
             ", startDate='" + getStartDate() + "'" +
             ", endDate='" + getEndDate() + "'" +
             "}";

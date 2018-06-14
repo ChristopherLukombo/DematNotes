@@ -1,0 +1,27 @@
+
+{
+    "dematNotesApp": {
+        "assignmentModule" : {
+            "home": {
+                "title": "AssignmentModules",
+                "createLabel": "Créer un nouveau Assignment Module",
+                "createOrEditLabel": "Créer ou éditer un Assignment Module"
+            },
+            "created": "Un nouveau Assignment Module a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Assignment Module avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Assignment Module avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Assignment Module {{ id }} ?"
+            },
+            "detail": {
+                "title": "Assignment Module"
+            },
+            "coefficient": "Coefficient",
+            "classroom": "Classroom",
+            "school": "School",
+            "schoolYear": "School Year",
+            "teacher": "Teacher",
+            "module": "Module"
+        }
+    }
+}

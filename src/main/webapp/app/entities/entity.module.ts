@@ -1,39 +1,39 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-import { DematNotesStudentMySuffixModule } from './student-my-suffix/student-my-suffix.module';
-import { DematNotesInscriptionModuleMySuffixModule } from './inscription-module-my-suffix/inscription-module-my-suffix.module';
-import { DematNotesManagerMySuffixModule } from './manager-my-suffix/manager-my-suffix.module';
-import { DematNotesTeacherMySuffixModule } from './teacher-my-suffix/teacher-my-suffix.module';
-import { DematNotesAbsenceMySuffixModule } from './absence-my-suffix/absence-my-suffix.module';
-import { DematNotesDelayStudentMySuffixModule } from './delay-student-my-suffix/delay-student-my-suffix.module';
-import { DematNotesInterventionMySuffixModule } from './intervention-my-suffix/intervention-my-suffix.module';
-import { DematNotesCourseMySuffixModule } from './course-my-suffix/course-my-suffix.module';
-import { DematNotesModuleMySuffixModule } from './module-my-suffix/module-my-suffix.module';
-import { DematNotesEvaluationMySuffixModule } from './evaluation-my-suffix/evaluation-my-suffix.module';
-import { DematNotesSchoolReportMySuffixModule } from './school-report-my-suffix/school-report-my-suffix.module';
-import { DematNotesSchoolMySuffixModule } from './school-my-suffix/school-my-suffix.module';
-import { DematNotesClassroomMySuffixModule } from './classroom-my-suffix/classroom-my-suffix.module';
-import { DematNotesSchoolYearMySuffixModule } from './school-year-my-suffix/school-year-my-suffix.module';
-import { DematNotesDocumentMySuffixModule } from './document-my-suffix/document-my-suffix.module';
+import { DematNotesStudentModule } from './student/student.module';
+import { DematNotesManagerModule } from './manager/manager.module';
+import { DematNotesTeacherModule } from './teacher/teacher.module';
+import { DematNotesAbsenceModule } from './absence/absence.module';
+import { DematNotesDelayStudentModule } from './delay-student/delay-student.module';
+import { DematNotesInterventionModule } from './intervention/intervention.module';
+import { DematNotesModuleModule } from './module/module.module';
+import { DematNotesEvaluationModule } from './evaluation/evaluation.module';
+import { DematNotesSchoolReportModule } from './school-report/school-report.module';
+import { DematNotesSchoolModule } from './school/school.module';
+import { DematNotesClassroomModule } from './classroom/classroom.module';
+import { DematNotesSchoolYearModule } from './school-year/school-year.module';
+import { DematNotesDocumentModule } from './document/document.module';
+import { DematNotesAssignmentModuleModule } from './assignment-module/assignment-module.module';
+import { DematNotesInscriptionModule } from './inscription/inscription.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
     imports: [
-        DematNotesStudentMySuffixModule,
-        DematNotesInscriptionModuleMySuffixModule,
-        DematNotesManagerMySuffixModule,
-        DematNotesTeacherMySuffixModule,
-        DematNotesAbsenceMySuffixModule,
-        DematNotesDelayStudentMySuffixModule,
-        DematNotesInterventionMySuffixModule,
-        DematNotesCourseMySuffixModule,
-        DematNotesModuleMySuffixModule,
-        DematNotesEvaluationMySuffixModule,
-        DematNotesSchoolReportMySuffixModule,
-        DematNotesSchoolMySuffixModule,
-        DematNotesClassroomMySuffixModule,
-        DematNotesSchoolYearMySuffixModule,
-        DematNotesDocumentMySuffixModule,
+        DematNotesStudentModule,
+        DematNotesManagerModule,
+        DematNotesTeacherModule,
+        DematNotesAbsenceModule,
+        DematNotesDelayStudentModule,
+        DematNotesInterventionModule,
+        DematNotesModuleModule,
+        DematNotesEvaluationModule,
+        DematNotesSchoolReportModule,
+        DematNotesSchoolModule,
+        DematNotesClassroomModule,
+        DematNotesSchoolYearModule,
+        DematNotesDocumentModule,
+        DematNotesAssignmentModuleModule,
+        DematNotesInscriptionModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

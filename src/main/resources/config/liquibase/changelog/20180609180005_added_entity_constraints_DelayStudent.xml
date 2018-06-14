@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity DelayStudent.
+    -->
+    <changeSet id="20180609180005-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="module_id"
+                                 baseTableName="delay_student"
+                                 constraintName="fk_delay_student_module_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="module"/>
+
+        <addForeignKeyConstraint baseColumnNames="delay_students_id"
+                                 baseTableName="delay_student_student"
+                                 constraintName="fk_delay_student_student_delay_students_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="delay_student"/>
+        <addForeignKeyConstraint baseColumnNames="students_id"
+                                 baseTableName="delay_student_student"
+                                 constraintName="fk_delay_student_student_students_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="student"/>
+        
+    </changeSet>
+</databaseChangeLog>

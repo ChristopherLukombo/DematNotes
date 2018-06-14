@@ -25,13 +25,8 @@
             "postalCode": "Postal Code",
             "dateOfBirth": "Date Of Birth",
             "placeOfBirth": "Place Of Birth",
-            "absences": "Absences",
-            "delaystudents": "Delaystudents",
             "documents": "Documents",
-            "user": "User",
-            "schoolYear": "School Year",
-            "classroom": "Classroom",
-            "school": "School"
+            "user": "User"
         }
     }
 }

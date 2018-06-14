@@ -43,14 +43,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = DematNotesApp.class)
 public class ManagerResourceIntTest {
 
-    private static final String DEFAULT_EMAIL = "kj@8.zb";
-    private static final String UPDATED_EMAIL = "m@y.sphp";
+    private static final String DEFAULT_EMAIL = "9@by.dwe";
+    private static final String UPDATED_EMAIL = "zq@3d.zbfy";
 
-    private static final String DEFAULT_MOBILE_PHONE_NUMBER = "0720741892";
-    private static final String UPDATED_MOBILE_PHONE_NUMBER = "2319092509";
+    private static final String DEFAULT_MOBILE_PHONE_NUMBER = "+276001821579";
+    private static final String UPDATED_MOBILE_PHONE_NUMBER = "6013269933";
 
-    private static final String DEFAULT_FIXE_PHONE_NUMBER = "+475489594477";
-    private static final String UPDATED_FIXE_PHONE_NUMBER = "9370325023";
+    private static final String DEFAULT_FIXE_PHONE_NUMBER = "7671544907";
+    private static final String UPDATED_FIXE_PHONE_NUMBER = "+700)11756283";
 
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
@@ -58,8 +58,8 @@ public class ManagerResourceIntTest {
     private static final String DEFAULT_CITY = "AAAAAAAAAA";
     private static final String UPDATED_CITY = "BBBBBBBBBB";
 
-    private static final String DEFAULT_POSTAL_CODE = "95487";
-    private static final String UPDATED_POSTAL_CODE = "89331";
+    private static final String DEFAULT_POSTAL_CODE = "94965";
+    private static final String UPDATED_POSTAL_CODE = "40534";
 
     private static final LocalDate DEFAULT_DATE_OF_BIRTH = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATE_OF_BIRTH = LocalDate.now(ZoneId.systemDefault());
@@ -198,25 +198,6 @@ public class ManagerResourceIntTest {
         int databaseSizeBeforeTest = managerRepository.findAll().size();
         // set the field null
         manager.setMobilePhoneNumber(null);
-
-        // Create the Manager, which fails.
-        ManagerDTO managerDTO = managerMapper.toDto(manager);
-
-        restManagerMockMvc.perform(post("/api/managers")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managerDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Manager> managerList = managerRepository.findAll();
-        assertThat(managerList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkFixePhoneNumberIsRequired() throws Exception {
-        int databaseSizeBeforeTest = managerRepository.findAll().size();
-        // set the field null
-        manager.setFixePhoneNumber(null);
 
         // Create the Manager, which fails.
         ManagerDTO managerDTO = managerMapper.toDto(manager);

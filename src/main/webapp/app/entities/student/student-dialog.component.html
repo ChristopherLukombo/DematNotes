@@ -1,0 +1,164 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myStudentLabel" jhiTranslate="dematNotesApp.student.home.createOrEditLabel">Create or edit a Student</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!student.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="student.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.ine" for="field_ine">Ine</label>
+            <input type="text" class="form-control" name="ine" id="field_ine"
+                [(ngModel)]="student.ine" required/>
+            <div [hidden]="!(editForm.controls.ine?.dirty && editForm.controls.ine?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.ine?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.email" for="field_email">Email</label>
+            <input type="text" class="form-control" name="email" id="field_email"
+                [(ngModel)]="student.email" required pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/>
+            <div [hidden]="!(editForm.controls.email?.dirty && editForm.controls.email?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.email?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.email?.errors?.pattern" jhiTranslate="entity.validation.pattern" translateValues="{ pattern: 'Email' }">
+                    This field should follow pattern for "Email".
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.mobilePhoneNumber" for="field_mobilePhoneNumber">Mobile Phone Number</label>
+            <input type="text" class="form-control" name="mobilePhoneNumber" id="field_mobilePhoneNumber"
+                [(ngModel)]="student.mobilePhoneNumber" required minlength="10" maxlength="18" pattern="^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$"/>
+            <div [hidden]="!(editForm.controls.mobilePhoneNumber?.dirty && editForm.controls.mobilePhoneNumber?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.mobilePhoneNumber?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.mobilePhoneNumber?.errors?.minlength" jhiTranslate="entity.validation.minlength" translateValues="{ min: 10 }">
+                   This field is required to be at least 10 characters.
+                </small>
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.mobilePhoneNumber?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 18 }">
+                   This field cannot be longer than 18 characters.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.mobilePhoneNumber?.errors?.pattern" jhiTranslate="entity.validation.pattern" translateValues="{ pattern: 'Mobile Phone Number' }">
+                    This field should follow pattern for "Mobile Phone Number".
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.fixePhoneNumber" for="field_fixePhoneNumber">Fixe Phone Number</label>
+            <input type="text" class="form-control" name="fixePhoneNumber" id="field_fixePhoneNumber"
+                [(ngModel)]="student.fixePhoneNumber" minlength="10" maxlength="18" pattern="^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$"/>
+            <div [hidden]="!(editForm.controls.fixePhoneNumber?.dirty && editForm.controls.fixePhoneNumber?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.fixePhoneNumber?.errors?.minlength" jhiTranslate="entity.validation.minlength" translateValues="{ min: 10 }">
+                   This field is required to be at least 10 characters.
+                </small>
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.fixePhoneNumber?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 18 }">
+                   This field cannot be longer than 18 characters.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.fixePhoneNumber?.errors?.pattern" jhiTranslate="entity.validation.pattern" translateValues="{ pattern: 'Fixe Phone Number' }">
+                    This field should follow pattern for "Fixe Phone Number".
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.address" for="field_address">Address</label>
+            <input type="text" class="form-control" name="address" id="field_address"
+                [(ngModel)]="student.address" required/>
+            <div [hidden]="!(editForm.controls.address?.dirty && editForm.controls.address?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.address?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.city" for="field_city">City</label>
+            <input type="text" class="form-control" name="city" id="field_city"
+                [(ngModel)]="student.city" required/>
+            <div [hidden]="!(editForm.controls.city?.dirty && editForm.controls.city?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.city?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.postalCode" for="field_postalCode">Postal Code</label>
+            <input type="text" class="form-control" name="postalCode" id="field_postalCode"
+                [(ngModel)]="student.postalCode" required pattern="^(([0-8][0-9])|(9[0-5]))[0-9]{3}$"/>
+            <div [hidden]="!(editForm.controls.postalCode?.dirty && editForm.controls.postalCode?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.postalCode?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.postalCode?.errors?.pattern" jhiTranslate="entity.validation.pattern" translateValues="{ pattern: 'Postal Code' }">
+                    This field should follow pattern for "Postal Code".
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.dateOfBirth" for="field_dateOfBirth">Date Of Birth</label>
+            <div class="input-group">
+                <input id="field_dateOfBirth" type="text" class="form-control" name="dateOfBirth" ngbDatepicker  #dateOfBirthDp="ngbDatepicker" [(ngModel)]="student.dateOfBirth"
+                required/>
+                <span class="input-group-append">
+                    <button type="button" class="btn btn-secondary" (click)="dateOfBirthDp.toggle()"><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+            <div [hidden]="!(editForm.controls.dateOfBirth?.dirty && editForm.controls.dateOfBirth?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.dateOfBirth?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.placeOfBirth" for="field_placeOfBirth">Place Of Birth</label>
+            <input type="text" class="form-control" name="placeOfBirth" id="field_placeOfBirth"
+                [(ngModel)]="student.placeOfBirth" required/>
+            <div [hidden]="!(editForm.controls.placeOfBirth?.dirty && editForm.controls.placeOfBirth?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.placeOfBirth?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.student.user" for="field_user">User</label>
+            <select class="form-control" id="field_user" name="user" [(ngModel)]="student.userId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="userOption.id" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

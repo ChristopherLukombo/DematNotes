@@ -41,8 +41,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = DematNotesApp.class)
 public class ModuleResourceIntTest {
 
-    private static final String DEFAULT_YEAR_PERIOD = "AAAAAAAAAA";
-    private static final String UPDATED_YEAR_PERIOD = "BBBBBBBBBB";
+    private static final String DEFAULT_ENTITLED = "AAAAAAAAAA";
+    private static final String UPDATED_ENTITLED = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     private static final Boolean DEFAULT_OPTION_MODULE = false;
     private static final Boolean UPDATED_OPTION_MODULE = true;
@@ -91,7 +94,8 @@ public class ModuleResourceIntTest {
      */
     public static Module createEntity(EntityManager em) {
         Module module = new Module()
-            .yearPeriod(DEFAULT_YEAR_PERIOD)
+            .entitled(DEFAULT_ENTITLED)
+            .description(DEFAULT_DESCRIPTION)
             .optionModule(DEFAULT_OPTION_MODULE);
         return module;
     }
@@ -117,7 +121,8 @@ public class ModuleResourceIntTest {
         List<Module> moduleList = moduleRepository.findAll();
         assertThat(moduleList).hasSize(databaseSizeBeforeCreate + 1);
         Module testModule = moduleList.get(moduleList.size() - 1);
-        assertThat(testModule.getYearPeriod()).isEqualTo(DEFAULT_YEAR_PERIOD);
+        assertThat(testModule.getEntitled()).isEqualTo(DEFAULT_ENTITLED);
+        assertThat(testModule.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testModule.isOptionModule()).isEqualTo(DEFAULT_OPTION_MODULE);
     }
 
@@ -143,10 +148,10 @@ public class ModuleResourceIntTest {
 
     @Test
     @Transactional
-    public void checkYearPeriodIsRequired() throws Exception {
+    public void checkEntitledIsRequired() throws Exception {
         int databaseSizeBeforeTest = moduleRepository.findAll().size();
         // set the field null
-        module.setYearPeriod(null);
+        module.setEntitled(null);
 
         // Create the Module, which fails.
         ModuleDTO moduleDTO = moduleMapper.toDto(module);
@@ -190,7 +195,8 @@ public class ModuleResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(module.getId().intValue())))
-            .andExpect(jsonPath("$.[*].yearPeriod").value(hasItem(DEFAULT_YEAR_PERIOD.toString())))
+            .andExpect(jsonPath("$.[*].entitled").value(hasItem(DEFAULT_ENTITLED.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].optionModule").value(hasItem(DEFAULT_OPTION_MODULE.booleanValue())));
     }
 
@@ -205,7 +211,8 @@ public class ModuleResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(module.getId().intValue()))
-            .andExpect(jsonPath("$.yearPeriod").value(DEFAULT_YEAR_PERIOD.toString()))
+            .andExpect(jsonPath("$.entitled").value(DEFAULT_ENTITLED.toString()))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.optionModule").value(DEFAULT_OPTION_MODULE.booleanValue()));
     }
 
@@ -229,7 +236,8 @@ public class ModuleResourceIntTest {
         // Disconnect from session so that the updates on updatedModule are not directly saved in db
         em.detach(updatedModule);
         updatedModule
-            .yearPeriod(UPDATED_YEAR_PERIOD)
+            .entitled(UPDATED_ENTITLED)
+            .description(UPDATED_DESCRIPTION)
             .optionModule(UPDATED_OPTION_MODULE);
         ModuleDTO moduleDTO = moduleMapper.toDto(updatedModule);
 
@@ -242,7 +250,8 @@ public class ModuleResourceIntTest {
         List<Module> moduleList = moduleRepository.findAll();
         assertThat(moduleList).hasSize(databaseSizeBeforeUpdate);
         Module testModule = moduleList.get(moduleList.size() - 1);
-        assertThat(testModule.getYearPeriod()).isEqualTo(UPDATED_YEAR_PERIOD);
+        assertThat(testModule.getEntitled()).isEqualTo(UPDATED_ENTITLED);
+        assertThat(testModule.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testModule.isOptionModule()).isEqualTo(UPDATED_OPTION_MODULE);
     }
 

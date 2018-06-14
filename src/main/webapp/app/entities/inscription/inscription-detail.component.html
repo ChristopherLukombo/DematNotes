@@ -1,0 +1,46 @@
+
+<div *ngIf="inscription">
+    <h2><span jhiTranslate="dematNotesApp.inscription.detail.title">Inscription</span> {{inscription.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.inscription.school">School</span></dt>
+        <dd>
+            <div *ngIf="inscription.schoolId">
+                <a [routerLink]="['/school', inscription.schoolId]">{{inscription.schoolId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.inscription.classroom">Classroom</span></dt>
+        <dd>
+            <div *ngIf="inscription.classroomId">
+                <a [routerLink]="['/classroom', inscription.classroomId]">{{inscription.classroomId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.inscription.schoolYear">School Year</span></dt>
+        <dd>
+            <div *ngIf="inscription.schoolYearId">
+                <a [routerLink]="['/school-year', inscription.schoolYearId]">{{inscription.schoolYearId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.inscription.student">Student</span></dt>
+        <dd>
+            <span *ngFor="let student of inscription.students; let last = last">
+                <a [routerLink]="['/student', student?.id ]">{{student.id}}</a>{{last ? '' : ', '}}
+            </span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'inscription/'+ inscription.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

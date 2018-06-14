@@ -2,10 +2,18 @@
     "fluentMethods": true,
     "relationships": [
         {
+            "relationshipType": "many-to-one",
+            "relationshipName": "module",
+            "otherEntityName": "module",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "",
             "relationshipName": "student",
             "otherEntityName": "student",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
+            "otherEntityField": "id",
+            "ownerSide": true
         }
     ],
     "fields": [
@@ -22,17 +30,12 @@
             "fieldValidateRules": [
                 "required"
             ]
-        },
-        {
-            "fieldName": "reason",
-            "fieldType": "String"
         }
     ],
-    "changelogDate": "20180531134429",
+    "changelogDate": "20180609180004",
     "entityTableName": "absence",
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false,
-    "angularJSSuffix": "mySuffix"
+    "jpaMetamodelFiltering": false
 }

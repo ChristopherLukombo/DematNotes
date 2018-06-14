@@ -24,9 +24,8 @@
             "postalCode": "Postal Code",
             "dateOfBirth": "Date Of Birth",
             "placeOfBirth": "Place Of Birth",
-            "interventions": "Interventions",
             "user": "User",
-            "specialCourse": "Special Course"
+            "specialModule": "Special Module"
         }
     }
 }

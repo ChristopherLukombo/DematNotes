@@ -19,16 +19,19 @@ public class EvaluationDTO implements Serializable {
     private Double average;
 
     @NotNull
-    private Float coefficient;
-
-    @NotNull
     private ZonedDateTime evaluationDate;
 
     private String comment;
 
-    private Long moduleId;
+    @NotNull
+    private String yearPeriod;
+
+    @Size(max = 10)
+    private String validation;
 
     private Long studentId;
+
+    private Long moduleId;
 
     private Long schoolReportId;
 
@@ -48,14 +51,6 @@ public class EvaluationDTO implements Serializable {
         this.average = average;
     }
 
-    public Float getCoefficient() {
-        return coefficient;
-    }
-
-    public void setCoefficient(Float coefficient) {
-        this.coefficient = coefficient;
-    }
-
     public ZonedDateTime getEvaluationDate() {
         return evaluationDate;
     }
@@ -72,12 +67,20 @@ public class EvaluationDTO implements Serializable {
         this.comment = comment;
     }
 
-    public Long getModuleId() {
-        return moduleId;
+    public String getYearPeriod() {
+        return yearPeriod;
     }
 
-    public void setModuleId(Long moduleId) {
-        this.moduleId = moduleId;
+    public void setYearPeriod(String yearPeriod) {
+        this.yearPeriod = yearPeriod;
+    }
+
+    public String getValidation() {
+        return validation;
+    }
+
+    public void setValidation(String validation) {
+        this.validation = validation;
     }
 
     public Long getStudentId() {
@@ -86,6 +89,14 @@ public class EvaluationDTO implements Serializable {
 
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
+    }
+
+    public Long getModuleId() {
+        return moduleId;
+    }
+
+    public void setModuleId(Long moduleId) {
+        this.moduleId = moduleId;
     }
 
     public Long getSchoolReportId() {
@@ -122,9 +133,10 @@ public class EvaluationDTO implements Serializable {
         return "EvaluationDTO{" +
             "id=" + getId() +
             ", average=" + getAverage() +
-            ", coefficient=" + getCoefficient() +
             ", evaluationDate='" + getEvaluationDate() + "'" +
             ", comment='" + getComment() + "'" +
+            ", yearPeriod='" + getYearPeriod() + "'" +
+            ", validation='" + getValidation() + "'" +
             "}";
     }
 }

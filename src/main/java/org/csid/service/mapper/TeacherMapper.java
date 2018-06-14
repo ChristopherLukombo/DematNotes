@@ -8,16 +8,15 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Teacher and its DTO TeacherDTO.
  */
-@Mapper(componentModel = "spring", uses = {UserMapper.class, CourseMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class, ModuleMapper.class})
 public interface TeacherMapper extends EntityMapper<TeacherDTO, Teacher> {
 
     @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "specialCourse.id", target = "specialCourseId")
+    @Mapping(source = "specialModule.id", target = "specialModuleId")
     TeacherDTO toDto(Teacher teacher);
 
-    @Mapping(target = "interventions", ignore = true)
     @Mapping(source = "userId", target = "user")
-    @Mapping(source = "specialCourseId", target = "specialCourse")
+    @Mapping(source = "specialModuleId", target = "specialModule")
     Teacher toEntity(TeacherDTO teacherDTO);
 
     default Teacher fromId(Long id) {

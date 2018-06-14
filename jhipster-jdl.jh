@@ -2,7 +2,7 @@ entity Student {
     ine String required
     email String required pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
     mobilePhoneNumber String required minlength(10) maxlength(18) pattern(/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
-    fixePhoneNumber String required minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
+    fixePhoneNumber String minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
     address String required 
     city String required
     postalCode String required pattern(/^(([0-8][0-9])|(9[0-5]))[0-9]{3}$/)
@@ -10,16 +10,10 @@ entity Student {
     placeOfBirth String required
 }
 
-entity InscriptionModule {
-    inscriptionDate LocalDate required
-    validation String maxlength(10)
-    yearPeriod String required // Semestre 1 ou 2
-}
-
 entity Manager {
     email String required pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
     mobilePhoneNumber String required minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
-    fixePhoneNumber String required minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
+    fixePhoneNumber String minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
     address String required
     city String required
     postalCode String required pattern(/^(([0-8][0-9])|(9[0-5]))[0-9]{3}$/)
@@ -30,47 +24,44 @@ entity Manager {
 entity Teacher {
     email String required pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
     mobilePhoneNumber String required minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
-    fixePhoneNumber String required minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
+    fixePhoneNumber String minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
     address String required
     city String required
     postalCode String required pattern(/^(([0-8][0-9])|(9[0-5]))[0-9]{3}$/)
     dateOfBirth LocalDate required
     placeOfBirth String required
+
 } 
 
 entity Absence {
     startDate ZonedDateTime required
     endDate ZonedDateTime required
-    reason String
 }
 
 entity DelayStudent {
     startDate ZonedDateTime required
     endDate ZonedDateTime required
-    reason String
 }
 
 entity Intervention {
     type String required
+    yearPeriod String required // Semestre 1 ou 2
     startDate ZonedDateTime required
     endDate ZonedDateTime required
 }
 
-entity Course {
+entity Module {
     entitled String required
     description String
-}
-
-entity Module {
-    yearPeriod String required // Semestre 1 ou 2
     optionModule Boolean required
 }
 
 entity Evaluation {
     average Double required
-    coefficient Float required
     evaluationDate ZonedDateTime required
     comment String
+    yearPeriod String required // Semestre 1 ou 2
+    validation String maxlength(10)
 }
 
 entity SchoolReport {
@@ -107,6 +98,14 @@ entity Document {
     url String
 }
 
+entity AssignmentModule {
+	coefficient Float
+}
+
+entity Inscription {
+
+}
+
 relationship ManyToOne {
     Student{user} to User
     Teacher{user} to User
@@ -114,48 +113,61 @@ relationship ManyToOne {
 }
 
 relationship OneToMany  {
-    Student{absences} to Absence
-    Student{delaystudents} to DelayStudent
     Student{documents} to Document
 }
 
-relationship ManyToOne {
-    Student{schoolYear} to SchoolYear
-    Student{classroom} to Classroom
-    Student{school} to School
+relationship ManyToMany {
+    Absence{student} to Student
+    DelayStudent{student} to Student
 }
 
 relationship ManyToOne {
-    Evaluation{module} to Module
+    Absence{module} to Module
+    DelayStudent{module} to Module
+}
+
+relationship ManyToOne {
     Evaluation{student} to Student
+    Evaluation{module} to Module
+}
+
+relationship ManyToMany {
+    Intervention{teacher} to Teacher 
 }
 
 relationship ManyToOne {
-    InscriptionModule{module} to Module
-    InscriptionModule{student} to Student
-}
-
-relationship OneToMany {
-    Teacher{interventions} to Intervention
-}
-
-relationship ManyToOne {
-    Intervention{module} to Module
-}
-
-relationship ManyToOne {
-    Teacher{specialCourse} to Course
-    Module{course} to Course
-    Module{school} to School
+   Intervention{module} to Module
 }
 
 relationship OneToMany {
     SchoolReport{evaluations} to Evaluation
 }
 
+relationship ManyToOne {
+    Inscription{school} to School
+    Inscription{classroom} to Classroom
+    Inscription{schoolYear} to SchoolYear
+}
+relationship ManyToMany {
+    Inscription{student} to Student
+}
+
+relationship ManyToMany {
+    AssignmentModule{teacher} to Teacher
+    AssignmentModule{module} to Module
+}
+
+relationship ManyToOne {
+    AssignmentModule{classroom} to Classroom
+    AssignmentModule{school} to School
+    AssignmentModule{schoolYear} to SchoolYear
+}
+
+relationship ManyToOne {
+    Teacher{specialModule} to Module
+}
+
 dto * with mapstruct
 
 // Set service options to all except few
 service all with serviceImpl
-// Set an angular suffix
-angularSuffix * with mySuffix

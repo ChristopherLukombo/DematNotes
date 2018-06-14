@@ -5,6 +5,7 @@ import org.csid.config.DefaultProfileUtil;
 
 import io.github.jhipster.config.JHipsterConstants;
 
+import org.csid.config.PropertiesConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -23,7 +24,7 @@ import java.util.Collection;
 
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
-@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
+@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class, PropertiesConfig.class})
 public class DematNotesApp {
 
     private static final Logger log = LoggerFactory.getLogger(DematNotesApp.class);

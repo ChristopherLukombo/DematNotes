@@ -3,10 +3,12 @@ import {SchoolReportService} from './school-reports.service';
 import {Principal} from '../shared';
 import {MarksService} from '../marks/marks.service';
 import {User} from '../shared/user/user.model';
-import {SchoolMySuffix} from '../entities/school-my-suffix';
-import {ClassroomMySuffix} from '../entities/classroom-my-suffix';
-import {EvaluationMySuffix, EvaluationMySuffixService} from '../entities/evaluation-my-suffix';
-import {MatDialog} from '@angular/material';
+import {School} from '../entities/school';
+import {Classroom} from '../entities/classroom';
+import {Evaluation, EvaluationService} from '../entities/evaluation';
+import {MatIconRegistry} from '@angular/material';
+import { saveAs } from 'file-saver';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
     selector: 'jhi-school-reports',
@@ -15,8 +17,8 @@ import {MatDialog} from '@angular/material';
 export class SchoolReportsComponent implements OnInit {
     currentUser: any;
 
-    schools: SchoolMySuffix[] = Array<SchoolMySuffix>();
-    classrooms: ClassroomMySuffix[] = Array<ClassroomMySuffix>();
+    schools: School[] = Array<School>();
+    classrooms: Classroom[] = Array<Classroom>();
     users: User[] = Array<User>();
 
     schoolSelected;
@@ -30,10 +32,17 @@ export class SchoolReportsComponent implements OnInit {
     constructor(
         private principal: Principal,
         private marksService: MarksService,
-        private evaluationService: EvaluationMySuffixService,
-        public dialog: MatDialog,
-        private schoolReportService: SchoolReportService
-    ) {}
+        private evaluationService: EvaluationService,
+        private schoolReportService: SchoolReportService,
+        private iconRegistry: MatIconRegistry,
+        private sanitizer: DomSanitizer,
+    ) {
+
+        // Loading of encrypted icon
+        this.iconRegistry.addSvgIcon(
+            'download',
+            this.sanitizer.bypassSecurityTrustResourceUrl('content/2a7860b62b7f5e43cbf9a4a7d56ed91c.svg'));
+    }
 
     ngOnInit(): void {
         this.loadCurrentUser();
@@ -102,22 +111,23 @@ export class SchoolReportsComponent implements OnInit {
                     return;
                 } else  {
                     this.marksService.getStudentByIdUser(i).subscribe(
-                        student => {
-                            const evaluation = new EvaluationMySuffix(
+                        (student) => {
+                            const e = new Evaluation(
                                 null,
                                 parseFloat(this.marks[i].trim()),
-                                parseFloat(this.coefficients[i].trim()),
                                 new Date().toISOString().slice(0, 16),
                                 this.comments[i].trim(),
                                 null,
+                                null,
                                 student.id,
+                                null,
                                 null
                             );
 
-                            this.evaluationService.create(evaluation)
+                            this.evaluationService.create(e)
                                 .subscribe(
-                                    evaluation => {
-                                        if (i === this.marks.length - 1) {
+                                    (evaluation) => {
+                                        if (i === this.marks.length - 1 && evaluation) {
                                             alert('Moyenne enregistré');
                                         }
                                     }, (firstError) => {
@@ -141,9 +151,11 @@ export class SchoolReportsComponent implements OnInit {
         return valid;
     }
 
-    downloadPDF() {
-        // this.schoolReportService.query().subscribe((response) => {
-        //     console.log(response.body);
-        // });
+    downloadSchoolReport() {
+        this.schoolReportService.downloadSchoolReport().subscribe((response) => {
+            saveAs(response, 'bulletin');
+        }, (error) =>  {
+            console.log(error);
+        });
     }
 }

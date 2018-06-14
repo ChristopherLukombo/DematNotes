@@ -6,7 +6,6 @@
         <a class="navbar-brand logo float-left" routerLink="/" (click)="collapseNavbar()">
             <span class="logo-img"></span>
             <span jhiTranslate="global.title" class="navbar-title">DematNotes</span>
-            <!--<span class="navbar-version">{{version}}</span>-->
         </a>
     </div>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
@@ -63,93 +62,93 @@
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu>
                     <li>
-                        <a class="dropdown-item" routerLink="student-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.studentMySuffix">Student My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.student">Student</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="inscription-module-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="manager" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.inscriptionModuleMySuffix">Inscription Module My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.manager">Manager</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="manager-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="teacher" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.managerMySuffix">Manager My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.teacher">Teacher</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="teacher-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="absence" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.teacherMySuffix">Teacher My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.absence">Absence</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="absence-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="delay-student" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.absenceMySuffix">Absence My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.delayStudent">Delay Student</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="delay-student-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="intervention" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.delayStudentMySuffix">Delay Student My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.intervention">Intervention</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="intervention-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="module" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.interventionMySuffix">Intervention My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.module">Module</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="course-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="evaluation" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.courseMySuffix">Course My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.evaluation">Evaluation</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="module-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="school-report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.moduleMySuffix">Module My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.schoolReport">School Report</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="evaluation-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="school" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.evaluationMySuffix">Evaluation My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.school">School</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="school-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="classroom" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.schoolMySuffix">School My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.classroom">Classroom</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="school-year-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="school-year" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.schoolYearMySuffix">School Year My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.schoolYear">School Year</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="document-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="document" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.documentMySuffix">Document My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.document">Document</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="school-report-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="assignment-module" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.schoolReportMySuffix">School Report My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.assignmentModule">Assignment Module</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="classroom-my-suffix" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="inscription" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.classroomMySuffix">Classroom My Suffix</span>
+                            <span jhiTranslate="global.menu.entities.inscription">Inscription</span>
                         </a>
                     </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->

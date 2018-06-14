@@ -55,7 +55,7 @@ public class AbsenceServiceImpl implements AbsenceService {
     @Transactional(readOnly = true)
     public List<AbsenceDTO> findAll() {
         log.debug("Request to get all Absences");
-        return absenceRepository.findAll().stream()
+        return absenceRepository.findAllWithEagerRelationships().stream()
             .map(absenceMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }
@@ -70,7 +70,7 @@ public class AbsenceServiceImpl implements AbsenceService {
     @Transactional(readOnly = true)
     public AbsenceDTO findOne(Long id) {
         log.debug("Request to get Absence : {}", id);
-        Absence absence = absenceRepository.findOne(id);
+        Absence absence = absenceRepository.findOneWithEagerRelationships(id);
         return absenceMapper.toDto(absence);
     }
 

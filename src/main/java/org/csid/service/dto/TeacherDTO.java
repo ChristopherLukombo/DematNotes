@@ -24,7 +24,6 @@ public class TeacherDTO implements Serializable {
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
     private String mobilePhoneNumber;
 
-    @NotNull
     @Size(min = 10, max = 18)
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
     private String fixePhoneNumber;
@@ -47,7 +46,7 @@ public class TeacherDTO implements Serializable {
 
     private Long userId;
 
-    private Long specialCourseId;
+    private Long specialModuleId;
 
     public Long getId() {
         return id;
@@ -129,12 +128,12 @@ public class TeacherDTO implements Serializable {
         this.userId = userId;
     }
 
-    public Long getSpecialCourseId() {
-        return specialCourseId;
+    public Long getSpecialModuleId() {
+        return specialModuleId;
     }
 
-    public void setSpecialCourseId(Long courseId) {
-        this.specialCourseId = courseId;
+    public void setSpecialModuleId(Long moduleId) {
+        this.specialModuleId = moduleId;
     }
 
     @Override

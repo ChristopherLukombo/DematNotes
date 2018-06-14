@@ -43,14 +43,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = DematNotesApp.class)
 public class TeacherResourceIntTest {
 
-    private static final String DEFAULT_EMAIL = "_@3.ccja";
-    private static final String UPDATED_EMAIL = "+4@0.qnz";
+    private static final String DEFAULT_EMAIL = "l@t.ujig";
+    private static final String UPDATED_EMAIL = "o@d.wlzp";
 
-    private static final String DEFAULT_MOBILE_PHONE_NUMBER = "1004026235";
-    private static final String UPDATED_MOBILE_PHONE_NUMBER = "9443687708";
+    private static final String DEFAULT_MOBILE_PHONE_NUMBER = "+657)712452087";
+    private static final String UPDATED_MOBILE_PHONE_NUMBER = "+552)73915886";
 
-    private static final String DEFAULT_FIXE_PHONE_NUMBER = "3462653223";
-    private static final String UPDATED_FIXE_PHONE_NUMBER = "0346379898";
+    private static final String DEFAULT_FIXE_PHONE_NUMBER = "+201)21837482";
+    private static final String UPDATED_FIXE_PHONE_NUMBER = "+405015834590";
 
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
@@ -58,8 +58,8 @@ public class TeacherResourceIntTest {
     private static final String DEFAULT_CITY = "AAAAAAAAAA";
     private static final String UPDATED_CITY = "BBBBBBBBBB";
 
-    private static final String DEFAULT_POSTAL_CODE = "95860";
-    private static final String UPDATED_POSTAL_CODE = "93443";
+    private static final String DEFAULT_POSTAL_CODE = "95284";
+    private static final String UPDATED_POSTAL_CODE = "23578";
 
     private static final LocalDate DEFAULT_DATE_OF_BIRTH = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATE_OF_BIRTH = LocalDate.now(ZoneId.systemDefault());
@@ -198,25 +198,6 @@ public class TeacherResourceIntTest {
         int databaseSizeBeforeTest = teacherRepository.findAll().size();
         // set the field null
         teacher.setMobilePhoneNumber(null);
-
-        // Create the Teacher, which fails.
-        TeacherDTO teacherDTO = teacherMapper.toDto(teacher);
-
-        restTeacherMockMvc.perform(post("/api/teachers")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(teacherDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Teacher> teacherList = teacherRepository.findAll();
-        assertThat(teacherList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkFixePhoneNumberIsRequired() throws Exception {
-        int databaseSizeBeforeTest = teacherRepository.findAll().size();
-        // set the field null
-        teacher.setFixePhoneNumber(null);
 
         // Create the Teacher, which fails.
         TeacherDTO teacherDTO = teacherMapper.toDto(teacher);

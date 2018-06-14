@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity Intervention.
+    -->
+    <changeSet id="20180609180006-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="module_id"
+                                 baseTableName="intervention"
+                                 constraintName="fk_intervention_module_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="module"/>
+
+        <addForeignKeyConstraint baseColumnNames="interventions_id"
+                                 baseTableName="intervention_teacher"
+                                 constraintName="fk_intervention_teacher_interventions_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="intervention"/>
+        <addForeignKeyConstraint baseColumnNames="teachers_id"
+                                 baseTableName="intervention_teacher"
+                                 constraintName="fk_intervention_teacher_teachers_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="teacher"/>
+        
+    </changeSet>
+</databaseChangeLog>

@@ -53,11 +53,10 @@
             ]
         }
     ],
-    "changelogDate": "20180531134436",
+    "changelogDate": "20180609180010",
     "entityTableName": "school",
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false,
-    "angularJSSuffix": "mySuffix"
+    "jpaMetamodelFiltering": false
 }

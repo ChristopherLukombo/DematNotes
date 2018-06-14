@@ -36,11 +36,11 @@ Generic styles
 
 /* Error highlight on input fields */
 .ng-valid[required], .ng-valid.required  {
-  border-left: 5px solid green;
+    border-left: 5px solid green;
 }
 
 .ng-invalid:not(form)  {
-  border-left: 5px solid red;
+    border-left: 5px solid red;
 }
 
 /* other generic styles */
@@ -91,7 +91,7 @@ Generic styles
 make sure browsers use the pointer cursor for anchors, even with no href
 ========================================================================== */
 a:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .hand, [jhisortby] {
@@ -162,12 +162,12 @@ entity tables helpers
 /* Makes toolbar not wrap on smaller screens
  http://www.sketchingwithcss.com/samplechapter/cheatsheet.html#right */
 .flex-btn-group-container {
-   display: -webkit-flex;
-   display: flex;
-   -webkit-flex-direction: row;
-   flex-direction: row;
-   -webkit-justify-content: flex-end;
-   justify-content: flex-end;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
 }
 
 /* ==========================================================================
@@ -211,7 +211,7 @@ ui bootstrap tweaks
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
- }
+}
 
 .buttonlog {
     /*background-color: #DCDCDC; !* couleur de fond du bouton connexion *!*/
@@ -283,3 +283,29 @@ ui bootstrap tweaks
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 /* jhipster-needle-css-add-main JHipster will add new css style */
+
+#icon:hover {
+    cursor:pointer;
+}
+
+.tab {
+    border: 1px solid white;
+}
+
+.tab th {
+    background-color: black;
+    color: white;
+}
+
+#fieldAverage {
+    border: none;
+    border-radius: 5px;
+    width: 36px;
+    text-align: center;
+}
+
+#fieldComment {
+    border: none;
+    border-radius: 5px;
+    resize: none;
+}

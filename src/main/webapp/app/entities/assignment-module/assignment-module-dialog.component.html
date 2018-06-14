@@ -1,0 +1,63 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myAssignmentModuleLabel" jhiTranslate="dematNotesApp.assignmentModule.home.createOrEditLabel">Create or edit a Assignment Module</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!assignmentModule.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="assignmentModule.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.assignmentModule.coefficient" for="field_coefficient">Coefficient</label>
+            <input type="number" class="form-control" name="coefficient" id="field_coefficient"
+                [(ngModel)]="assignmentModule.coefficient" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.assignmentModule.classroom" for="field_classroom">Classroom</label>
+            <select class="form-control" id="field_classroom" name="classroom" [(ngModel)]="assignmentModule.classroomId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="classroomOption.id" *ngFor="let classroomOption of classrooms; trackBy: trackClassroomById">{{classroomOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.assignmentModule.school" for="field_school">School</label>
+            <select class="form-control" id="field_school" name="school" [(ngModel)]="assignmentModule.schoolId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="schoolOption.id" *ngFor="let schoolOption of schools; trackBy: trackSchoolById">{{schoolOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.assignmentModule.schoolYear" for="field_schoolYear">School Year</label>
+            <select class="form-control" id="field_schoolYear" name="schoolYear" [(ngModel)]="assignmentModule.schoolYearId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="schoolYearOption.id" *ngFor="let schoolYearOption of schoolyears; trackBy: trackSchoolYearById">{{schoolYearOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label jhiTranslate="dematNotesApp.assignmentModule.teacher" for="field_teacher">Teacher</label>
+            <select class="form-control" id="field_teacher" multiple name="teacher" [(ngModel)]="assignmentModule.teachers">
+                <option [ngValue]="getSelected(assignmentModule.teachers, teacherOption)" *ngFor="let teacherOption of teachers; trackBy: trackTeacherById">{{teacherOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label jhiTranslate="dematNotesApp.assignmentModule.module" for="field_module">Module</label>
+            <select class="form-control" id="field_module" multiple name="module" [(ngModel)]="assignmentModule.modules">
+                <option [ngValue]="getSelected(assignmentModule.modules, moduleOption)" *ngFor="let moduleOption of modules; trackBy: trackModuleById">{{moduleOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

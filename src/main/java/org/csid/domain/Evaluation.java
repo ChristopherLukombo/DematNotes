@@ -27,21 +27,25 @@ public class Evaluation implements Serializable {
     private Double average;
 
     @NotNull
-    @Column(name = "coefficient", nullable = false)
-    private Float coefficient;
-
-    @NotNull
     @Column(name = "evaluation_date", nullable = false)
     private ZonedDateTime evaluationDate;
 
     @Column(name = "jhi_comment")
     private String comment;
 
-    @ManyToOne
-    private Module module;
+    @NotNull
+    @Column(name = "year_period", nullable = false)
+    private String yearPeriod;
+
+    @Size(max = 10)
+    @Column(name = "jhi_validation", length = 10)
+    private String validation;
 
     @ManyToOne
     private Student student;
+
+    @ManyToOne
+    private Module module;
 
     @ManyToOne
     private SchoolReport schoolReport;
@@ -66,19 +70,6 @@ public class Evaluation implements Serializable {
 
     public void setAverage(Double average) {
         this.average = average;
-    }
-
-    public Float getCoefficient() {
-        return coefficient;
-    }
-
-    public Evaluation coefficient(Float coefficient) {
-        this.coefficient = coefficient;
-        return this;
-    }
-
-    public void setCoefficient(Float coefficient) {
-        this.coefficient = coefficient;
     }
 
     public ZonedDateTime getEvaluationDate() {
@@ -107,17 +98,30 @@ public class Evaluation implements Serializable {
         this.comment = comment;
     }
 
-    public Module getModule() {
-        return module;
+    public String getYearPeriod() {
+        return yearPeriod;
     }
 
-    public Evaluation module(Module module) {
-        this.module = module;
+    public Evaluation yearPeriod(String yearPeriod) {
+        this.yearPeriod = yearPeriod;
         return this;
     }
 
-    public void setModule(Module module) {
-        this.module = module;
+    public void setYearPeriod(String yearPeriod) {
+        this.yearPeriod = yearPeriod;
+    }
+
+    public String getValidation() {
+        return validation;
+    }
+
+    public Evaluation validation(String validation) {
+        this.validation = validation;
+        return this;
+    }
+
+    public void setValidation(String validation) {
+        this.validation = validation;
     }
 
     public Student getStudent() {
@@ -131,6 +135,19 @@ public class Evaluation implements Serializable {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public Module getModule() {
+        return module;
+    }
+
+    public Evaluation module(Module module) {
+        this.module = module;
+        return this;
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
     }
 
     public SchoolReport getSchoolReport() {
@@ -172,9 +189,10 @@ public class Evaluation implements Serializable {
         return "Evaluation{" +
             "id=" + getId() +
             ", average=" + getAverage() +
-            ", coefficient=" + getCoefficient() +
             ", evaluationDate='" + getEvaluationDate() + "'" +
             ", comment='" + getComment() + "'" +
+            ", yearPeriod='" + getYearPeriod() + "'" +
+            ", validation='" + getValidation() + "'" +
             "}";
     }
 }

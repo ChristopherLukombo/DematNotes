@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity Absence.
+    -->
+    <changeSet id="20180609180004-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="module_id"
+                                 baseTableName="absence"
+                                 constraintName="fk_absence_module_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="module"/>
+
+        <addForeignKeyConstraint baseColumnNames="absences_id"
+                                 baseTableName="absence_student"
+                                 constraintName="fk_absence_student_absences_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="absence"/>
+        <addForeignKeyConstraint baseColumnNames="students_id"
+                                 baseTableName="absence_student"
+                                 constraintName="fk_absence_student_students_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="student"/>
+        
+    </changeSet>
+</databaseChangeLog>

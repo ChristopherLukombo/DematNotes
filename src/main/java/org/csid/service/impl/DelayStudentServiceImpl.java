@@ -55,7 +55,7 @@ public class DelayStudentServiceImpl implements DelayStudentService {
     @Transactional(readOnly = true)
     public List<DelayStudentDTO> findAll() {
         log.debug("Request to get all DelayStudents");
-        return delayStudentRepository.findAll().stream()
+        return delayStudentRepository.findAllWithEagerRelationships().stream()
             .map(delayStudentMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }
@@ -70,7 +70,7 @@ public class DelayStudentServiceImpl implements DelayStudentService {
     @Transactional(readOnly = true)
     public DelayStudentDTO findOne(Long id) {
         log.debug("Request to get DelayStudent : {}", id);
-        DelayStudent delayStudent = delayStudentRepository.findOne(id);
+        DelayStudent delayStudent = delayStudentRepository.findOneWithEagerRelationships(id);
         return delayStudentMapper.toDto(delayStudent);
     }
 

@@ -1,44 +1,34 @@
 package org.csid.service.impl;
 
+import org.csid.domain.*;
+import org.csid.repository.*;
+import org.csid.service.IMarkService;
+import org.csid.service.dto.*;
+import org.csid.service.mapper.*;
+import org.csid.service.persistent.ChartData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.transaction.Transactional;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.transaction.Transactional;
-
-import org.csid.domain.Evaluation;
-import org.csid.domain.InscriptionModule;
-import org.csid.domain.Intervention;
-import org.csid.domain.Student;
-import org.csid.domain.Teacher;
-import org.csid.domain.User;
-import org.csid.repository.EvaluationRepository;
-import org.csid.repository.InscriptionModuleRepository;
-import org.csid.repository.InterventionRepository;
-import org.csid.repository.StudentRepository;
-import org.csid.repository.TeacherRepository;
-import org.csid.repository.UserRepository;
-import org.csid.service.MarkService;
-import org.csid.service.dto.ClassroomDTO;
-import org.csid.service.dto.SchoolDTO;
-import org.csid.service.dto.StudentDTO;
-import org.csid.service.dto.UserDTO;
-import org.csid.service.mapper.ClassroomMapper;
-import org.csid.service.mapper.EvaluationMapper;
-import org.csid.service.mapper.SchoolMapper;
-import org.csid.service.mapper.StudentMapper;
-import org.csid.service.mapper.UserMapper;
-import org.csid.service.persistent.ChartData;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 
 
 @Service("MarkService")
 @Transactional
-public class MarkServiceImpl implements MarkService {
+public class MarkServiceImpl implements IMarkService {
 
 	@Autowired
 	private UserMapper userMapper;
@@ -53,16 +43,13 @@ public class MarkServiceImpl implements MarkService {
 	private StudentMapper studentMapper;
 
 	@Autowired
-	private InterventionRepository interventionRepository;
-
-	@Autowired
 	private TeacherRepository teacherRepository;
 
 	@Autowired
 	private SchoolMapper schoolMapper;
 
 	@Autowired
-	private InscriptionModuleRepository inscriptionModuleRepository;
+	private InscriptionRepository inscriptionRepository;
 
 	@Autowired
 	private ClassroomMapper classroomMapper;
@@ -70,147 +57,102 @@ public class MarkServiceImpl implements MarkService {
 	@Autowired
 	private EvaluationRepository evaluationRepository;
 
-	@Autowired
-	private EvaluationMapper evaluationMapper;
+    @Autowired
+    private AssignmentModuleRepository assignmentModuleRepository;
 
+    @Autowired
+    private ModuleMapper moduleMapper;
 
 	/**
 	 * Return schools by idUser
-	 * @param idUser 
+	 * @param idUser
 	 * @return list of schools
 	 */
 	@Override
-	public List<SchoolDTO> getSchoolsByCurrentUserTeacher(final Long idUser) {
-		final List<Teacher> teachers = teacherRepository.findByUserIsCurrentUser();
+	public List<SchoolDTO> getSchoolsByCurrentTeacher(final Long idUser) {
+        final LocalDate currentDate = LocalDate.now();
 
-		final List<SchoolDTO> schoolDTOs = new ArrayList<>();
+		final List<AssignmentModule> assignmentModules = assignmentModuleRepository.findAllByCurrentSchoolYear(currentDate);
 
-		final User user = userRepository.findOne(idUser);
+        final List<SchoolDTO> schoolDTOs = new ArrayList<>();
 
-		int i = 0;
+        final User user = userRepository.findOne(idUser);
 
-		boolean found = false;
+        final Teacher teacher = teacherRepository.findByUser(user);
 
-		if (user != null) {
-			while (i < teachers.size() && !found) {
-				if (teachers.get(i).getUser().equals(user)) {
-					schoolDTOs.addAll(this.getSchoolsByUserTeacher(idUser));
-					found = true;
-				}
-			}
-
-		}
-
-		return schoolDTOs;
-	}
-
-	private List<SchoolDTO> getSchoolsByUserTeacher(final Long idUser) {
-		final ZonedDateTime pastDate = ZonedDateTime.now(ZoneId.of("Europe/Paris")).minusYears(1);
-
-		final List<Intervention> interventions = interventionRepository.findInterventionByPeriod(pastDate);
-
-		final List<SchoolDTO> schoolDTOs = new ArrayList<>();
-
-		final User user = userRepository.findOne(idUser);
-
-		for (final Intervention intervention : interventions) {
-			if (intervention.getModule() != null && intervention.getTeacher().getUser().equals(user) && !schoolDTOs.contains(this.schoolMapper.toDto(intervention.getModule().getSchool()))) {
-				schoolDTOs.add(this.schoolMapper.toDto(intervention.getModule().getSchool()));
-			}
-		}
+		for(final AssignmentModule assignmentModule : assignmentModules) {
+		   if (assignmentModule.getTeachers().contains(teacher)) {
+		       schoolDTOs.add(schoolMapper.toDto(assignmentModule.getSchool()));
+           }
+        }
 
 		return schoolDTOs;
 	}
 
 	@Override
-	public List<ClassroomDTO> getClassroomsByCurrentUserTeacher(final Long idUser, final Long idSchool) {
-		final List<Teacher> teachers = teacherRepository.findByUserIsCurrentUser();
+	public List<ClassroomDTO> getClassroomsByCurrentTeacher(final Long idUser, final Long idSchool) {
+        final LocalDate currentDate = LocalDate.now();
 
-		final List<ClassroomDTO> classroomDTOs = new ArrayList<>();
+        final List<AssignmentModule> assignmentModules = assignmentModuleRepository.findAllByCurrentSchoolYear(currentDate);
 
-		final User user = userRepository.findOne(idUser);
+        final List<ClassroomDTO> classroomDTOs = new ArrayList<>();
 
-		int i = 0;
+        final User user = userRepository.findOne(idUser);
 
-		if (user != null) {
-			while (i < teachers.size()) {
-				if (teachers.get(i).getUser().equals(user)) {
-					for (Intervention in : teachers.get(i).getInterventions()) {
-						if (idUser.equals(in.getTeacher().getUser().getId()) && idSchool.equals(in.getModule().getSchool().getId())) {
-							classroomDTOs.addAll(getClassroomsByModule(in.getModule().getSchool().getId(), in.getModule().getId()));
-						}
+        final Teacher teacher = teacherRepository.findByUser(user);
 
-					}
-				}
-				i++;
-			}
-		}
+        for(final AssignmentModule assignmentModule : assignmentModules) {
+            if (assignmentModule.getTeachers().contains(teacher) && assignmentModule.getSchool().getId().equals(idSchool)) {
+                classroomDTOs.add(classroomMapper.toDto(assignmentModule.getClassroom()));
+            }
+        }
 
 		return classroomDTOs;
 	}
 
-	private List<ClassroomDTO> getClassroomsByModule(final Long idSchool, final Long idModule) {
-		final List<ClassroomDTO> classroomsDTOs = new ArrayList<>();
-
-		final LocalDate pastDate = LocalDate.now().minusYears(1);
-
-		final List<InscriptionModule> inscriptionModules = inscriptionModuleRepository.findAll();
-		// Vérifier si le teacher est dans le module
-		for (InscriptionModule inscriptionModule : inscriptionModules) { 
-			if (inscriptionModule.getStudent().getSchool().getId().equals(idSchool) && inscriptionModule.getModule().getId().equals(idModule) &&
-					!classroomsDTOs.contains(classroomMapper.toDto(inscriptionModule.getStudent().getClassroom())) && inscriptionModule.getInscriptionDate().isAfter(pastDate)) {
-				classroomsDTOs.add(classroomMapper.toDto(inscriptionModule.getStudent().getClassroom()));
-			}
-		}
-
-		return classroomsDTOs;
-	}
-
-
 	@Override
-	public List<UserDTO> getStudentsUserByCurrentUserTeacher(final Long idUser, final Long idSchool, final Long idClassroom) {
-		final List<Teacher> teachers = teacherRepository.findByUserIsCurrentUser();
+	public List<UserDTO> getStudentsByCurrentTeacher(final Long idUser, final Long idSchool, final Long idClassroom) {
+        final LocalDate currentDate = LocalDate.now();
 
-		final List<UserDTO> userDTOs = new ArrayList<>();
+        final List<AssignmentModule> assignmentModules = assignmentModuleRepository.findAllByCurrentSchoolYear(currentDate);
 
-		final User user = userRepository.findOne(idUser);
+        final List<UserDTO> userDTOs = new ArrayList<>();
 
-		int i = 0;
+        final User user = userRepository.findOne(idUser);
 
-		if (user != null) {
-			while (i < teachers.size()) {
-				if (teachers.get(i).getUser().equals(user)) {
-					for (Intervention in : teachers.get(i).getInterventions()) {
-						if (idUser.equals(in.getTeacher().getUser().getId()) && idSchool.equals(in.getModule().getSchool().getId())) {
-							userDTOs.addAll(getStudentsUserByModule(in.getModule().getSchool().getId(), in.getModule().getId(), idClassroom));
-						}
+        final Teacher teacher = teacherRepository.findByUser(user);
 
-					}
-				}
-				i++;
-			}
-		}
+        for(final AssignmentModule assignmentModule : assignmentModules) {
+            if (assignmentModule.getTeachers().contains(teacher) &&
+                assignmentModule.getSchool().getId().equals(idSchool) &&
+                assignmentModule.getClassroom().getId().equals(idClassroom)) {
+                userDTOs.addAll(getUsersByTeacher(idSchool, idClassroom));
+                break;
+            }
+        }
 
 		return userDTOs;
 	}
 
-	private List<UserDTO> getStudentsUserByModule(final Long idSchool, final Long idModule, final Long idClassroom) {
-		final List<UserDTO> usersDTOs = new ArrayList<>();
+	private List<UserDTO> getUsersByTeacher(final Long idSchool, final Long idClassroom) {
+        final LocalDate currentDate = LocalDate.now();
 
-		final LocalDate pastDate = LocalDate.now().minusYears(1);
+        final List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(currentDate);
 
-		final List<InscriptionModule> inscriptionModules = inscriptionModuleRepository.findAll();
-		// Vérifier si le teacher est dans le module
-		for (InscriptionModule inscriptionModule : inscriptionModules) { 
-			if (inscriptionModule.getStudent().getSchool().getId().equals(idSchool) && inscriptionModule.getModule().getId().equals(idModule) &&
-					!usersDTOs.contains(userMapper.userToUserDTO(inscriptionModule.getStudent().getUser())) &&
-					idClassroom.equals(inscriptionModule.getStudent().getClassroom().getId()) && inscriptionModule.getInscriptionDate().isAfter(pastDate)) {
-				usersDTOs.add(userMapper.userToUserDTO(inscriptionModule.getStudent().getUser()));
-			}
-		}
+        final List<UserDTO> userDTOs = new ArrayList<>();
 
-		return usersDTOs;
-	}
+        for (final Inscription inscription : inscriptions) {
+            if (inscription.getSchool().getId().equals(idSchool) &&
+                inscription.getClassroom().getId().equals(idClassroom)) {
+                userDTOs.addAll(inscription.getStudents().stream().
+                    map(u -> userMapper.userToUserDTO(u.getUser())).
+                    collect(Collectors.toList()));
+            }
+        }
+
+        return userDTOs;
+    }
+
 
 	@Override
 	public StudentDTO getStudentByIdUser(final Long idUser) {
@@ -226,9 +168,9 @@ public class MarkServiceImpl implements MarkService {
 	@Override
 	public List<ChartData> getData(final Long idSchool, final Long idClassroom) {
 		final List<ChartData> chartDatas = new ArrayList<>();
-		
+
 		final ZonedDateTime pastDate = ZonedDateTime.now(ZoneId.of("Europe/Paris"));
-		
+
 		chartDatas.add(new ChartData(getAllAveragesBySchoolAndClassroom(idSchool, idClassroom), pastDate.getMonth().toString()));
 
 		return chartDatas;
@@ -236,33 +178,55 @@ public class MarkServiceImpl implements MarkService {
 
 	private List<Double> getAllAveragesBySchoolAndClassroom(final Long idSchool, final Long idClassroom) {
 		final List<Double> averages = new ArrayList<>();
-		
-		final List<Student> students = studentRepository.findAll();
-		
-		for (final Student student : students) {
-			if (student.getSchool().getId().equals(idSchool) && student.getClassroom().getId().equals(idClassroom)) {
-				averages.add(this.getAverageForStudent(student));
-			}
-		}
+
+		final List<Evaluation> evaluations = evaluationRepository.findAll();
+
+        final DecimalFormat decimalFormat = new DecimalFormat("#.#");
+
+		for (final Evaluation evaluation : evaluations) {
+		        if (null != getStudentRegistered(idSchool, idClassroom, evaluation.getStudent().getId())) {
+                    averages.add(new Double(Double.parseDouble(decimalFormat.format(evaluation.getAverage()).replaceAll(",", "."))));
+                }
+        }
 
 		return averages;
 	}
 
+	private StudentDTO getStudentRegistered(final Long idSchool, final Long idClassroom, final Long idStudent) {
+        final List<Inscription> inscriptions = inscriptionRepository.findAll();
 
-	private double getAverageForStudent(final Student s) {
-		final List<Evaluation> evaluations = evaluationRepository.findAllByStudent(s);
+        StudentDTO student = null;
 
-		double sumAverages = 0;
-		double sumCoefficients = 0;
+        for (final Inscription inscription : inscriptions) {
+            if (inscription.getSchool().getId().equals(idSchool) &&
+                inscription.getClassroom().getId().equals(idClassroom)) {
+                student = studentMapper.toDto(inscription.getStudents().stream().filter(s -> s.getId().equals(idStudent)).collect(Collectors.toList()).get(0));
+                break;
+            }
+        }
 
-		final DecimalFormat decimalFormat = new DecimalFormat("#.#");
+        return student;
+    }
 
-		for (final Evaluation evaluation : evaluations) {
-				sumAverages += (evaluation.getAverage() * evaluation.getCoefficient());
-				sumCoefficients += evaluation.getCoefficient();
-		}
-		
-		return Double.parseDouble(decimalFormat.format(sumAverages / sumCoefficients).replaceAll(",", "."));
-	}
+    public List<ModuleDTO> getModules(final Long idUser) {
+        final LocalDate currentDate = LocalDate.now();
+
+        final List<AssignmentModule> assignmentModules = assignmentModuleRepository.findAllByCurrentSchoolYear(currentDate);
+
+        final List<ModuleDTO> modulesDTOs = new ArrayList<>();
+
+        final User user = userRepository.findOne(idUser);
+
+        final Teacher teacher = teacherRepository.findByUser(user);
+
+        for(final AssignmentModule assignmentModule : assignmentModules) {
+            if (assignmentModule.getTeachers().contains(teacher)) {
+                modulesDTOs.addAll(assignmentModule.getModules().stream().filter(m -> m.equals(teacher.getSpecialModule())).
+                    distinct().map(m -> moduleMapper.toDto(m)).collect(Collectors.toList()));
+            }
+        }
+
+        return modulesDTOs;
+    }
 
 }

@@ -3,8 +3,6 @@ package org.csid.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -15,14 +13,12 @@ public class ModuleDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private String yearPeriod;
+    private String entitled;
+
+    private String description;
 
     @NotNull
     private Boolean optionModule;
-
-    private Long courseId;
-
-    private Long schoolId;
 
     public Long getId() {
         return id;
@@ -32,12 +28,20 @@ public class ModuleDTO implements Serializable {
         this.id = id;
     }
 
-    public String getYearPeriod() {
-        return yearPeriod;
+    public String getEntitled() {
+        return entitled;
     }
 
-    public void setYearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
+    public void setEntitled(String entitled) {
+        this.entitled = entitled;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean isOptionModule() {
@@ -46,22 +50,6 @@ public class ModuleDTO implements Serializable {
 
     public void setOptionModule(Boolean optionModule) {
         this.optionModule = optionModule;
-    }
-
-    public Long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
-    }
-
-    public Long getSchoolId() {
-        return schoolId;
-    }
-
-    public void setSchoolId(Long schoolId) {
-        this.schoolId = schoolId;
     }
 
     @Override
@@ -89,7 +77,8 @@ public class ModuleDTO implements Serializable {
     public String toString() {
         return "ModuleDTO{" +
             "id=" + getId() +
-            ", yearPeriod='" + getYearPeriod() + "'" +
+            ", entitled='" + getEntitled() + "'" +
+            ", description='" + getDescription() + "'" +
             ", optionModule='" + isOptionModule() + "'" +
             "}";
     }

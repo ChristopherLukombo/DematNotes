@@ -1,0 +1,42 @@
+
+<div *ngIf="absence">
+    <h2><span jhiTranslate="dematNotesApp.absence.detail.title">Absence</span> {{absence.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.absence.startDate">Start Date</span></dt>
+        <dd>
+            <span>{{absence.startDate | date:'medium'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.absence.endDate">End Date</span></dt>
+        <dd>
+            <span>{{absence.endDate | date:'medium'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.absence.module">Module</span></dt>
+        <dd>
+            <div *ngIf="absence.moduleId">
+                <a [routerLink]="['/module', absence.moduleId]">{{absence.moduleId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.absence.student">Student</span></dt>
+        <dd>
+            <span *ngFor="let student of absence.students; let last = last">
+                <a [routerLink]="['/student', student?.id ]">{{student.id}}</a>{{last ? '' : ', '}}
+            </span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'absence/'+ absence.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

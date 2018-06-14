@@ -3,14 +3,14 @@
     "relationships": [
         {
             "relationshipType": "many-to-one",
-            "relationshipName": "module",
-            "otherEntityName": "module",
+            "relationshipName": "student",
+            "otherEntityName": "student",
             "otherEntityField": "id"
         },
         {
             "relationshipType": "many-to-one",
-            "relationshipName": "student",
-            "otherEntityName": "student",
+            "relationshipName": "module",
+            "otherEntityName": "module",
             "otherEntityField": "id"
         },
         {
@@ -29,13 +29,6 @@
             ]
         },
         {
-            "fieldName": "coefficient",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
             "fieldName": "evaluationDate",
             "fieldType": "ZonedDateTime",
             "fieldValidateRules": [
@@ -45,13 +38,27 @@
         {
             "fieldName": "comment",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "yearPeriod",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "validation",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 10
         }
     ],
-    "changelogDate": "20180531134434",
+    "changelogDate": "20180609180008",
     "entityTableName": "evaluation",
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false,
-    "angularJSSuffix": "mySuffix"
+    "jpaMetamodelFiltering": false
 }

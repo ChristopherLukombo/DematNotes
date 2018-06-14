@@ -1,14 +1,11 @@
 package org.csid.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -36,10 +33,9 @@ public class Teacher implements Serializable {
     @Column(name = "mobile_phone_number", length = 18, nullable = false)
     private String mobilePhoneNumber;
 
-    @NotNull
     @Size(min = 10, max = 18)
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
-    @Column(name = "fixe_phone_number", length = 18, nullable = false)
+    @Column(name = "fixe_phone_number", length = 18)
     private String fixePhoneNumber;
 
     @NotNull
@@ -63,15 +59,11 @@ public class Teacher implements Serializable {
     @Column(name = "place_of_birth", nullable = false)
     private String placeOfBirth;
 
-    @OneToMany(mappedBy = "teacher")
-    @JsonIgnore
-    private Set<Intervention> interventions = new HashSet<>();
-
     @ManyToOne
     private User user;
 
     @ManyToOne
-    private Course specialCourse;
+    private Module specialModule;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -186,31 +178,6 @@ public class Teacher implements Serializable {
         this.placeOfBirth = placeOfBirth;
     }
 
-    public Set<Intervention> getInterventions() {
-        return interventions;
-    }
-
-    public Teacher interventions(Set<Intervention> interventions) {
-        this.interventions = interventions;
-        return this;
-    }
-
-    public Teacher addInterventions(Intervention intervention) {
-        this.interventions.add(intervention);
-        intervention.setTeacher(this);
-        return this;
-    }
-
-    public Teacher removeInterventions(Intervention intervention) {
-        this.interventions.remove(intervention);
-        intervention.setTeacher(null);
-        return this;
-    }
-
-    public void setInterventions(Set<Intervention> interventions) {
-        this.interventions = interventions;
-    }
-
     public User getUser() {
         return user;
     }
@@ -224,17 +191,17 @@ public class Teacher implements Serializable {
         this.user = user;
     }
 
-    public Course getSpecialCourse() {
-        return specialCourse;
+    public Module getSpecialModule() {
+        return specialModule;
     }
 
-    public Teacher specialCourse(Course course) {
-        this.specialCourse = course;
+    public Teacher specialModule(Module module) {
+        this.specialModule = module;
         return this;
     }
 
-    public void setSpecialCourse(Course course) {
-        this.specialCourse = course;
+    public void setSpecialModule(Module module) {
+        this.specialModule = module;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

@@ -2,21 +2,30 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "teacher",
-            "otherEntityName": "teacher",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
-        },
-        {
             "relationshipType": "many-to-one",
             "relationshipName": "module",
             "otherEntityName": "module",
             "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "",
+            "relationshipName": "teacher",
+            "otherEntityName": "teacher",
+            "otherEntityField": "id",
+            "ownerSide": true
         }
     ],
     "fields": [
         {
             "fieldName": "type",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "yearPeriod",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
@@ -37,11 +46,10 @@
             ]
         }
     ],
-    "changelogDate": "20180531134431",
+    "changelogDate": "20180609180006",
     "entityTableName": "intervention",
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false,
-    "angularJSSuffix": "mySuffix"
+    "jpaMetamodelFiltering": false
 }

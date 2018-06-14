@@ -2,11 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {Principal} from '../shared';
 import {MarksService} from '../marks/marks.service';
 import {User} from '../shared/user/user.model';
-import {SchoolMySuffix} from '../entities/school-my-suffix';
-import {ClassroomMySuffix} from '../entities/classroom-my-suffix';
-import {EvaluationMySuffix, EvaluationMySuffixService} from '../entities/evaluation-my-suffix';
-import {DomSanitizer} from '@angular/platform-browser';
-import {MatDialog, MatIconRegistry} from '@angular/material';
+import {School} from '../entities/school';
+import {Classroom} from '../entities/classroom';
+import {Evaluation, EvaluationService} from '../entities/evaluation';
+import {MatDialog} from '@angular/material';
 
 @Component({
     selector: 'jhi-results',
@@ -15,8 +14,8 @@ import {MatDialog, MatIconRegistry} from '@angular/material';
 export class ResultsComponent implements OnInit {
     currentUser: any;
 
-    schools: SchoolMySuffix[] = [];
-    classrooms: ClassroomMySuffix[] = [];
+    schools: School[] = [];
+    classrooms: Classroom[] = [];
     users: User[] = [];
 
     schoolSelected;
@@ -30,7 +29,7 @@ export class ResultsComponent implements OnInit {
     constructor(
         private principal: Principal,
         private marksService: MarksService,
-        private evaluationService: EvaluationMySuffixService,
+        private evaluationService: EvaluationService,
         public dialog: MatDialog
     ) {}
 
@@ -47,9 +46,9 @@ export class ResultsComponent implements OnInit {
             this.currentUser = account;
             this.marksService.getSchoolsByCurrentUserTeacher(account.id)
                 .subscribe(
-                    schools => {
+                    (schools) => {
                         this.schools = schools;
-                    }, error => {
+                    }, (error) => {
                         console.log(JSON.parse(error.body).message);
                     });
         });
@@ -58,11 +57,11 @@ export class ResultsComponent implements OnInit {
     getClassroomsByCurrentUserTeacher(): void {
         this.marksService.getClassroomsByCurrentUserTeacher(this.currentUser.id, this.schoolSelected)
             .subscribe(
-                classrooms => {
+                (classrooms) => {
                     this.userSelected = undefined;
                     this.classroomSelected = undefined;
                     this.classrooms = classrooms;
-                }, error => {
+                }, (error) => {
                     console.log(JSON.parse(error.body).message);
                 });
     }
@@ -74,9 +73,9 @@ export class ResultsComponent implements OnInit {
             this.classroomSelected
         )
             .subscribe(
-                users => {
+                (users) => {
                     this.users = users;
-                }, error => {
+                }, (error) => {
                     console.log(JSON.parse(error.body).message);
                 });
     }
@@ -109,29 +108,30 @@ export class ResultsComponent implements OnInit {
                     return;
                 } else  {
                     this.marksService.getStudentByIdUser(i).subscribe(
-                        student => {
-                            const evaluation = new EvaluationMySuffix(
+                        (student) => {
+                            const e = new Evaluation(
                                 null,
                                 parseFloat(this.marks[i].trim()),
-                                parseFloat(this.coefficients[i].trim()),
                                 new Date().toISOString().slice(0, 16),
                                 this.comments[i].trim(),
                                 null,
+                                null,
                                 student.id,
+                                null,
                                 null
                             );
 
                             this.evaluationService.create(
-                                evaluation
+                                e
                             ).subscribe(
-                                evaluation => {
-                                    if (i === this.marks.length - 1) {
-                                        alert('Moyenne enregistré');
+                                (evaluation) => {
+                                    if (i === this.marks.length - 1 && evaluation) {
+                                        alert('Moyenne enregistré' + evaluation);
                                     }
-                                }, secondError => {
+                                }, (secondError) => {
                                     console.log(JSON.parse(secondError.body).message);
                                 });
-                        }, error => {
+                        }, (error) => {
                             console.log(JSON.parse(error.body).message);
                         });
                 }

@@ -33,10 +33,9 @@ public class Manager implements Serializable {
     @Column(name = "mobile_phone_number", length = 18, nullable = false)
     private String mobilePhoneNumber;
 
-    @NotNull
     @Size(min = 10, max = 18)
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
-    @Column(name = "fixe_phone_number", length = 18, nullable = false)
+    @Column(name = "fixe_phone_number", length = 18)
     private String fixePhoneNumber;
 
     @NotNull

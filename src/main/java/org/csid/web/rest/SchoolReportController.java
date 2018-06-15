@@ -55,7 +55,7 @@ public class SchoolReportController {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during copy " + fileSchoolReportPDF.getPath());
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(fileSchoolReportPDF.getName());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

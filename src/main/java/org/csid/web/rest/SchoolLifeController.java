@@ -89,7 +89,7 @@ public class SchoolLifeController {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during copy " + file.getPath());
         }
 
-        return new  ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/schoolLife/delete/{idDocument}", method = RequestMethod.DELETE)

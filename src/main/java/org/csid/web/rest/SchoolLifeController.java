@@ -9,10 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -50,6 +54,49 @@ public class SchoolLifeController {
     @RequestMapping(value = "/schoolLife/getAllFiles/{idStudent}", method = RequestMethod.GET)
     public List<DocumentDTO> getAllFiles(@PathVariable("idStudent") final Long idStudent) {
         return this.schoolLifeService.getAllFiles(idStudent);
+    }
+
+    @RequestMapping(value = "/schoolLife/download/{idDocument}", method = RequestMethod.GET)
+    public ResponseEntity<Object> downloadDocument(final HttpServletResponse response, @PathVariable("idDocument")  final Long idDocument) throws Exception {
+
+        log.info("[API] Call API Service downloadDocument");
+
+        File file;
+        final String contentType;
+
+        try {
+            final Map.Entry<String,File> entry = schoolLifeService.getFile(idDocument).entrySet().iterator().next();
+            contentType = entry.getKey(); // Type of File
+            file =  entry.getValue(); // File
+
+        } catch(final Exception e) {
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during retrieving file : " + e.getMessage());
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=" + file);
+        response.setHeader("Content-Length", String.valueOf(file.length()));
+
+        response.setContentType(contentType);
+
+        try (InputStream inputStream = new BufferedInputStream(new FileInputStream(file))) {
+            FileCopyUtils.copy(inputStream, response.getOutputStream());
+            response.getOutputStream().flush();
+        } catch(final FileNotFoundException e) {
+            log.error("File not found", file.getPath());
+            throw new Exception(HttpStatus.NOT_FOUND.value() + " File not found " + file.getPath());
+        } catch(final IOException e) {
+            log.error("Error during file copy", file.getPath());
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during copy " + file.getPath());
+        }
+
+        return new  ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/schoolLife/delete/{idDocument}", method = RequestMethod.DELETE)
+    public Boolean deleteFile(@PathVariable final Long idDocument) {
+        log.info("[API] Call API Service deleteDocument");
+
+        return schoolLifeService.deleteFile(idDocument);
     }
 
 }

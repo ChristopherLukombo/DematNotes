@@ -5,9 +5,7 @@ import {User} from '../shared/user/user.model';
 import {School} from '../entities/school';
 import {Classroom} from '../entities/classroom';
 import {Evaluation, EvaluationService} from '../entities/evaluation';
-import {DomSanitizer} from '@angular/platform-browser';
-import {MatDialog, MatIconRegistry} from '@angular/material';
-import {DialogComponent} from '../dialog/dialog.component';
+import {MatDialog} from '@angular/material';
 import {FormControl} from '@angular/forms';
 import {Module} from '../entities/module';
 

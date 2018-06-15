@@ -28,8 +28,9 @@ import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service("ISchoolLifeService")
 @Transactional
@@ -101,25 +102,27 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
     }
 
     public void store(MultipartFile file, Long idStudent) {
-        final Path rootLocation = Paths.get(path);
+        final Path rootLocation = Paths.get(path + "/" + idStudent);
+
         if (!new File(rootLocation + "").exists()) {
             new File(rootLocation + "").mkdir();
         }
 
         final File fileTmp = new File(rootLocation + "/" + file.getOriginalFilename());
+
         if(fileTmp.exists()) {
             fileTmp.delete();
         }
 
         try {
-            Files.copy(file.getInputStream(),rootLocation.resolve(file.getOriginalFilename()));
+            Files.copy(file.getInputStream(), rootLocation.resolve(file.getOriginalFilename()));
 
             final Student student = studentRepository.findOne(idStudent);
 
-            Document document = new Document();
+            final Document document = new Document();
             document.setStudent(student);
-            document.setEntitled(file.getName());
-            document.setUrl(rootLocation + "/" + file.getOriginalFilename());
+            document.setEntitled(file.getOriginalFilename());
+            document.setUrl(idStudent + "/" + file.getOriginalFilename());
             document.setVisible(true);
             document.setType(file.getContentType());
 
@@ -132,9 +135,54 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
     public List<DocumentDTO> getAllFiles(final Long idStudent) {
         final Student student = studentRepository.findOne(idStudent);
-        return documentRepository.findAllByStudent(student).
-            stream().
-            map(d -> documentMapper.toDto(d)).collect(Collectors.toList());
+
+        final List<Document> documents = documentRepository.findAllByStudent(student);
+
+        final List<DocumentDTO> documentDTOs = new ArrayList<>();
+
+        for (int i = 0; i < documents.size(); i++) {
+            documentDTOs.add(i, documentMapper.toDto(documents.get(i)));
+            final String urlTemp = path + "/" + documentMapper.toDto(documents.get(i)).getUrl();
+            documentDTOs.get(i).setUrl(urlTemp);
+        }
+
+        return documentDTOs;
+    }
+
+    public Map<String,File> getFile(final Long idDocument) {
+        final Document document = documentRepository.findOne(idDocument);
+
+        final DocumentDTO documentDTO = documentMapper.toDto(document);
+        documentDTO.setUrl(path + "/" + documentDTO.getUrl());
+
+        Map<String,File> content = new HashMap<>();
+        content.put(documentDTO.getType(), new File(documentDTO.getUrl()));
+
+        return content;
+    }
+
+    public Boolean deleteFile(final Long idDocument) {
+        final Document document = documentRepository.findOne(idDocument);
+
+        Boolean isDeleted = false;
+
+        if (document != null) {
+            try {
+                final File file = new File(path + "/" + document.getUrl());
+
+                if (file.exists()) {
+                    file.delete();
+                    isDeleted = true;
+                }
+
+            } catch (final Exception e) {
+                e.printStackTrace();
+            } finally {
+                documentRepository.delete(idDocument);
+            }
+        }
+
+        return isDeleted;
     }
 
 }

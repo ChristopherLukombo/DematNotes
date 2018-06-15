@@ -17,6 +17,7 @@ import { DematNotesAdminModule } from './admin/admin.module';
 import { DematNotesAccountModule } from './account/account.module';
 import { DematNotesEntityModule } from './entities/entity.module';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
+import {MatListModule} from '@angular/material/list';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ChartsModule} from 'ng2-charts';
@@ -64,7 +65,8 @@ import {SchoolLifeService} from './school-life/school-life.service';
         MatIconModule,
         CdkTableModule,
         MatDialogModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatListModule
     ],
     imports: [
         BrowserModule,
@@ -88,7 +90,8 @@ import {SchoolLifeService} from './school-life/school-life.service';
         MatIconModule,
         ChartsModule,
         MatDialogModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatListModule
     ],
     declarations: [
         JhiMainComponent,

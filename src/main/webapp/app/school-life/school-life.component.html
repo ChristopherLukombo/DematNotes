@@ -52,8 +52,7 @@
     <!-- Mon espace pour l'étudiant -->
     <mat-tab label="Mon espace" *ngIf="this.absences">
         <span style="float:right;">
-            <!--<mat-icon svgIcon="printer"></mat-icon>-->
-            <mat-icon svgIcon="upload" (click)="openDialog()" id="icon"></mat-icon>
+            <mat-icon svgIcon="upload" (click)="openDialog()" class="icon"></mat-icon>
         </span>
         <span>Mon parcours : </span>
 
@@ -72,8 +71,8 @@
                 <td scope="row"></td>
                 <td> {{currentUser.firstName}} </td>
                 <td> {{currentUser.lastName}} </td>
-                <td> {{this.absences.length}} </td>
-                <td> {{this.delayStudents.length}} </td>
+                <!--<td> {{this.absences.length}} </td>-->
+                <!--<td> {{this.delayStudents.length}} </td>-->
             </tr>
             </tbody>
         </table>
@@ -81,6 +80,5 @@
     </mat-tab>
 </mat-tab-group>
 
-<!--<img src="../../content/images/printer.svg" style="display:none;">-->
 <img src="../../content/images/upload.svg" style="display:none;">
 

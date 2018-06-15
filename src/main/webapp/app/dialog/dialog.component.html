@@ -1,3 +1,4 @@
+<h2> Documents </h2>
 <div *ngIf="currentFileUpload" class="progress">
     <div class="progress-bar progress-bar-info progress-bar-striped"
          role="progressbar" attr.aria-valuenow="{{progress.percentage}}"
@@ -12,13 +13,22 @@
 
 <button class="btn btn-success" [disabled]="!selectedFiles" (click)="upload()">Upload</button>
 <br/>
-<button (click)="refresh()">Refresh</button>
 <div class="container" style="width:400px">
     <div style="color: blue; margin-bottom: 20px">
-        <ul *ngFor="let document of this.documents">
-            <li><a href="{{document.url}}" download>{{document.entitled}}</a></li>
-            <li><a href="{{document.url}}">{{document.entitled}}</a></li>
-        </ul>
+        <table class="table table-hover" *ngIf="this.documents.length > 0 && this.documents !== null">
+            <thead>
+            <tr>
+                <th scope="col"> Documents </th>
+                <th scope="col"> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let document of this.documents">
+                <td (click)="this.downloadDocument(document.id)" class="icon">{{document.entitled}}</td>
+                <td><span (click)="this.deleteDocument(document.id)" class="icon">X</span></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <br/>
     <br/>

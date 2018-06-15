@@ -3,7 +3,8 @@ import {FileUploaderService} from './FileUploaderService';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
 import {MarksService} from '../marks/marks.service';
 import {Principal} from '../shared';
-import {Document} from '../entities/document';
+import {Document, DocumentService} from '../entities/document';
+import {saveAs} from 'file-saver';
 
 @Component({
     selector: 'jhi-dialog',
@@ -30,6 +31,7 @@ export class DialogComponent implements OnInit {
         private principal: Principal,
         private fileUploader: FileUploaderService,
         private marksService: MarksService,
+        private documentService: DocumentService
     ) { }
 
     ngOnInit() {
@@ -43,31 +45,36 @@ export class DialogComponent implements OnInit {
 
     upload() {
         this.principal.identity().then((account) => {
-            this.progress.percentage = 0;
             this.currentFileUpload = this.selectedFiles.item(0);
-
             this.currentUser = account;
+            console.log(this.currentFileUpload);
+            if (! this.checkExtension(this.currentFileUpload)) {
+                alert('Fichier non valide !');
+            } else {
+                this.progress.percentage = 0;
+                this.marksService.getStudentByIdUser(account.id).subscribe((student) => {
+                    this.fileUploader.uploadImage(this.currentFileUpload, (student != null) ? student.id : 1).
+                    subscribe((event) => {
+                        if (event.type === HttpEventType.UploadProgress) {
+                            this.progress.percentage = Math.round(100 * event.loaded / event.total);
+                        } else if (event instanceof HttpResponse) {
+                            this.getFiles();
+                            console.log('File is completely uploaded!');
+                        }
+                    });
 
-            this.marksService.getStudentByIdUser(account.id).subscribe((student) => {
-
-                this.fileUploader.uploadImage(this.currentFileUpload, (student != null) ? student.id : 1).
-                subscribe((event) => {
-                    if (event.type === HttpEventType.UploadProgress) {
-                        this.progress.percentage = Math.round(100 * event.loaded / event.total);
-                    } else if (event instanceof HttpResponse) {
-                        console.log('File is completely uploaded!');
-                    }
+                    this.selectedFiles = undefined;
+                }, (error) => {
+                    console.log(JSON.parse(error.body).message);
                 });
-
-                this.selectedFiles = undefined;
-            }, (error) => {
-                console.log(JSON.parse(error.body).message);
-            });
+            }
         });
     }
 
-    refresh() {
-        this.getFiles();
+    private checkExtension(file: File): boolean {
+        const extensions = ['image/jpeg', 'image/png', 'application/pdf'];
+        console.log(file.type);
+        return extensions.indexOf(file.type) !== -1;
     }
 
     private getFiles() {
@@ -78,6 +85,32 @@ export class DialogComponent implements OnInit {
                     console.log(documents);
                 });
             });
+        }, (error) => {
+            console.log(JSON.parse(error.body).message);
+        });
+    }
+
+    /**
+     * Download a document based on its id
+     * @param idDocument
+     */
+    public downloadDocument(idDocument) {
+        this.documentService.find(idDocument).subscribe((document) => {
+            this.fileUploader.downloadDocument(idDocument).subscribe((response) => {
+                saveAs(response, document.body.entitled);
+                console.log(response);
+            }, (error) => {
+                console.log(JSON.parse(error.body).message);
+            });
+        }, (firstError) => {
+            console.log(JSON.parse(firstError.body).message);
+        });
+    }
+
+    public deleteDocument(idDocument) {
+        this.fileUploader.deleteFile(idDocument).subscribe((response) => {
+            this.getFiles();
+            console.log(response);
         }, (error) => {
             console.log(JSON.parse(error.body).message);
         });

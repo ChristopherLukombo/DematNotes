@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
 import {HttpClient, HttpRequest} from '@angular/common/http';
 import {SERVER_API_URL} from '../app.constants';
 import {Document} from '../entities/document';
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class FileUploaderService {
@@ -25,6 +25,14 @@ export class FileUploaderService {
 
     getFiles(idUser) {
         return this.http.get<Document[]>(this.resourceUrl + '/schoolLife/getAllFiles/' + `${idUser}`);
+    }
+
+    downloadDocument(idDocument) {
+        return this.http.get(this.resourceUrl + '/schoolLife/download/' + `${idDocument}`, {responseType: 'blob'});
+    }
+
+    deleteFile(idDocument) {
+        return this.http.delete<Boolean>(this.resourceUrl + '/schoolLife/delete/' + `${idDocument}`);
     }
 
 }

@@ -84,7 +84,7 @@ export class ResultsComponent implements OnInit {
         this.marksService.getStudentUserByIdUser(this.userSelected)
             .subscribe(
                 (user) => {
-                    this.users = new Array<User>();
+                    this.users = [];
                     this.users.push(user);
                 }, (error) => {
                     console.log(JSON.parse(error.body).message);

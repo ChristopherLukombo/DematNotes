@@ -229,7 +229,7 @@ export class MarksComponent implements OnInit {
         this.marksService.getStudentUserByIdUser(
             this.userSelected
         ).subscribe((users) => {
-            this.users = new Array<User>();
+            this.users = [];
             this.users.push(users);
         }, (error) => {
             console.log(JSON.parse(error.body).message);
@@ -238,9 +238,9 @@ export class MarksComponent implements OnInit {
 
     getStudentUserByCurrentUserTeacherReport(): void {
         this.marksService.getStudentUserByIdUser(
-            this.userSelected
+            this.userSelectedReport
         ).subscribe((user) => {
-            this.usersReport = new Array<User>();
+            this.usersReport = [];
             this.usersReport.push(user);
         }, (error) => {
             console.log(JSON.parse(error.body).message);
@@ -251,7 +251,7 @@ export class MarksComponent implements OnInit {
         this.marksService.getStudentUserByIdUser(
             this.userSelectedGraph
         ).subscribe((user) => {
-            this.usersGraph = new Array<User>();
+            this.usersGraph = [];
             this.usersGraph.push(user);
             this.loadChartData();
         }, (error) => {

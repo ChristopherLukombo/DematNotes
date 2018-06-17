@@ -183,9 +183,9 @@ public class SchoolReportResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(schoolReport.getId().intValue())))
-            .andExpect(jsonPath("$.[*].yearPeriod").value(hasItem(DEFAULT_YEAR_PERIOD.toString())))
-            .andExpect(jsonPath("$.[*].gradeAword").value(hasItem(DEFAULT_GRADE_AWORD.toString())))
-            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT.toString())))
+            .andExpect(jsonPath("$.[*].yearPeriod").value(hasItem(DEFAULT_YEAR_PERIOD)))
+            .andExpect(jsonPath("$.[*].gradeAword").value(hasItem(DEFAULT_GRADE_AWORD)))
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)))
             .andExpect(jsonPath("$.[*].creationDate").value(hasItem(DEFAULT_CREATION_DATE.toString())));
     }
 
@@ -200,9 +200,9 @@ public class SchoolReportResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(schoolReport.getId().intValue()))
-            .andExpect(jsonPath("$.yearPeriod").value(DEFAULT_YEAR_PERIOD.toString()))
-            .andExpect(jsonPath("$.gradeAword").value(DEFAULT_GRADE_AWORD.toString()))
-            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT.toString()))
+            .andExpect(jsonPath("$.yearPeriod").value(DEFAULT_YEAR_PERIOD))
+            .andExpect(jsonPath("$.gradeAword").value(DEFAULT_GRADE_AWORD))
+            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT))
             .andExpect(jsonPath("$.creationDate").value(DEFAULT_CREATION_DATE.toString()));
     }
 

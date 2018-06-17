@@ -87,7 +87,7 @@ export class SchoolReportsComponent implements OnInit {
         this.marksService.getStudentUserByIdUser(this.userSelected)
             .subscribe(
                 (users) => {
-                    this.users = new Array<User>();
+                    this.users = [];
                     this.users.push(users);
                 }, (error) => {
                     console.log(JSON.parse(error.body).message);

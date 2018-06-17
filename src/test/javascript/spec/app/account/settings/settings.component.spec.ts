@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { DematNotesTestModule } from '../../../test.module';
 import { Principal, AccountService } from '../../../../../../main/webapp/app/shared';
 import { SettingsComponent } from '../../../../../../main/webapp/app/account/settings/settings.component';
-
+import { SettingsService } from '../../../../../../main/webapp/app/account/settings/settings.service';
 describe('Component Tests', () => {
 
     describe('SettingsComponent', () => {
@@ -19,6 +19,7 @@ describe('Component Tests', () => {
                 imports: [DematNotesTestModule],
                 declarations: [SettingsComponent],
                 providers: [
+                    SettingsService
                 ]
             })
             .overrideTemplate(SettingsComponent, '')

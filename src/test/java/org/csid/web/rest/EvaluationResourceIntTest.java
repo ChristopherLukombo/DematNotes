@@ -231,9 +231,9 @@ public class EvaluationResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(evaluation.getId().intValue())))
             .andExpect(jsonPath("$.[*].average").value(hasItem(DEFAULT_AVERAGE.doubleValue())))
             .andExpect(jsonPath("$.[*].evaluationDate").value(hasItem(sameInstant(DEFAULT_EVALUATION_DATE))))
-            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT.toString())))
-            .andExpect(jsonPath("$.[*].yearPeriod").value(hasItem(DEFAULT_YEAR_PERIOD.toString())))
-            .andExpect(jsonPath("$.[*].validation").value(hasItem(DEFAULT_VALIDATION.toString())));
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)))
+            .andExpect(jsonPath("$.[*].yearPeriod").value(hasItem(DEFAULT_YEAR_PERIOD)))
+            .andExpect(jsonPath("$.[*].validation").value(hasItem(DEFAULT_VALIDATION)));
     }
 
     @Test
@@ -249,9 +249,9 @@ public class EvaluationResourceIntTest {
             .andExpect(jsonPath("$.id").value(evaluation.getId().intValue()))
             .andExpect(jsonPath("$.average").value(DEFAULT_AVERAGE.doubleValue()))
             .andExpect(jsonPath("$.evaluationDate").value(sameInstant(DEFAULT_EVALUATION_DATE)))
-            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT.toString()))
-            .andExpect(jsonPath("$.yearPeriod").value(DEFAULT_YEAR_PERIOD.toString()))
-            .andExpect(jsonPath("$.validation").value(DEFAULT_VALIDATION.toString()));
+            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT))
+            .andExpect(jsonPath("$.yearPeriod").value(DEFAULT_YEAR_PERIOD))
+            .andExpect(jsonPath("$.validation").value(DEFAULT_VALIDATION));
     }
 
     @Test

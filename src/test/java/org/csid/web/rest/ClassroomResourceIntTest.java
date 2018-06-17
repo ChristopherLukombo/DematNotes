@@ -176,9 +176,9 @@ public class ClassroomResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(classroom.getId().intValue())))
-            .andExpect(jsonPath("$.[*].entitled").value(hasItem(DEFAULT_ENTITLED.toString())))
-            .andExpect(jsonPath("$.[*].option").value(hasItem(DEFAULT_OPTION.toString())))
-            .andExpect(jsonPath("$.[*].division").value(hasItem(DEFAULT_DIVISION.toString())));
+            .andExpect(jsonPath("$.[*].entitled").value(hasItem(DEFAULT_ENTITLED)))
+            .andExpect(jsonPath("$.[*].option").value(hasItem(DEFAULT_OPTION)))
+            .andExpect(jsonPath("$.[*].division").value(hasItem(DEFAULT_DIVISION)));
     }
 
     @Test
@@ -192,9 +192,9 @@ public class ClassroomResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(classroom.getId().intValue()))
-            .andExpect(jsonPath("$.entitled").value(DEFAULT_ENTITLED.toString()))
-            .andExpect(jsonPath("$.option").value(DEFAULT_OPTION.toString()))
-            .andExpect(jsonPath("$.division").value(DEFAULT_DIVISION.toString()));
+            .andExpect(jsonPath("$.entitled").value(DEFAULT_ENTITLED))
+            .andExpect(jsonPath("$.option").value(DEFAULT_OPTION))
+            .andExpect(jsonPath("$.division").value(DEFAULT_DIVISION));
     }
 
     @Test

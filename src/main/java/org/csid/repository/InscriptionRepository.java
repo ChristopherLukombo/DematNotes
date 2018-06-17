@@ -21,8 +21,7 @@ public interface InscriptionRepository extends JpaRepository<Inscription, Long> 
     @Query("select inscription from Inscription inscription left join fetch inscription.students where inscription.id =:id")
     Inscription findOneWithEagerRelationships(@Param("id") Long id);
 
-    // TODO  and assignment_module.schoolYear.endDate<=:date
-    @Query("select inscription from Inscription inscription left join fetch inscription.students where inscription.schoolYear.startDate<=:date and inscription.schoolYear.endDate<=:date")
+    @Query("select inscription from Inscription inscription left join fetch inscription.students where inscription.schoolYear.startDate<=:date and inscription.schoolYear.endDate>=:date")
     List<Inscription> findAllByCurrentSchoolYear(@Param("date") LocalDate date);
 
 }

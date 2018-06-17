@@ -22,7 +22,7 @@ public interface AssignmentModuleRepository extends JpaRepository<AssignmentModu
     @Query("select assignment_module from AssignmentModule assignment_module left join fetch assignment_module.teachers left join fetch assignment_module.modules where assignment_module.id =:id")
     AssignmentModule findOneWithEagerRelationships(@Param("id") Long id);
 
-    @Query("select assignment_module from AssignmentModule assignment_module left join fetch assignment_module.teachers left join fetch assignment_module.modules where assignment_module.schoolYear.startDate<=:date")
+    @Query("select assignment_module from AssignmentModule assignment_module left join fetch assignment_module.teachers left join fetch assignment_module.modules where assignment_module.schoolYear.startDate<=:date and assignment_module.schoolYear.endDate>=:date")
     List<AssignmentModule> findAllByCurrentSchoolYear(@Param("date") LocalDate date);
 
 }

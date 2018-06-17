@@ -42,7 +42,7 @@ export class SchoolLifeComponent implements OnInit {
     ) {
         this.iconRegistry.addSvgIcon(
             'upload',
-            this.sanitizer.bypassSecurityTrustResourceUrl('content/4d599ba6bf2eb50c397d5aefd3b20e00.svg'));
+            this.sanitizer.bypassSecurityTrustResourceUrl('../../content/4d599ba6bf2eb50c397d5aefd3b20e00.svg'));
     }
 
     ngOnInit(): void {
@@ -109,7 +109,7 @@ export class SchoolLifeComponent implements OnInit {
             this.userSelected
         ).subscribe(
             (users) => {
-                this.users = new Array<User>();
+                this.users = [];
                 this.users.push(users);
             }, (error) => {
                 console.log(JSON.parse(error.body).message);
@@ -130,15 +130,4 @@ export class SchoolLifeComponent implements OnInit {
         });
     }
 
-    saveAbsences() {}
-
-    isNumber(value: string) {
-        let valid = true;
-        try {
-            parseFloat(value);
-        } catch (error) {
-            valid = false;
-        }
-        return valid;
-    }
 }

@@ -22,7 +22,7 @@ import java.util.Map;
 @RequestMapping("/api")
 public class SchoolLifeController {
 
-    private final Logger log = LoggerFactory.getLogger(SchoolReportController.class);
+    private final Logger log = LoggerFactory.getLogger(SchoolLifeController.class);
 
     @Autowired
     private ISchoolLifeService schoolLifeService;

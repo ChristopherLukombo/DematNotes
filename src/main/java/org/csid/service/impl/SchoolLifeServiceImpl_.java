@@ -66,8 +66,9 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
      */
     public List<AbsenceDTO> getAbsencesByStudent(final Long idStudent) {
         final ZonedDateTime currentDate = ZonedDateTime.now(ZoneId.systemDefault());
+        final ZonedDateTime pastDate = ZonedDateTime.now(ZoneId.systemDefault()).minusYears(1);
 
-        final List<Absence> absences = absenceRepository.findAllWithEagerRelationships();
+        final List<Absence> absences = absenceRepository.findAllAbsencesByPeriod(currentDate, pastDate);
 
         final List<AbsenceDTO> absenceDTOs = new ArrayList<>();
 
@@ -85,8 +86,9 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
     @Override
     public List<DelayStudentDTO> getDelayStudentsByStudent(final Long idStudent) {
         final ZonedDateTime currentDate = ZonedDateTime.now(ZoneId.systemDefault());
+        final ZonedDateTime pastDate = ZonedDateTime.now(ZoneId.systemDefault()).minusYears(1);
 
-        final List<DelayStudent> delayStudents = delayStudentRepository.findAllWithEagerRelationships();
+        final List<DelayStudent> delayStudents = delayStudentRepository.findAllAbsencesByPeriod(currentDate, pastDate);
 
         final List<DelayStudentDTO> delayStudentDTOs = new ArrayList<>();
 
@@ -102,10 +104,10 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
     }
 
     public void store(MultipartFile file, Long idStudent) {
-        final Path rootLocation = Paths.get(path + "/" + idStudent);
+        final Path rootLocation = Paths.get(path + "/schoolLife/" + idStudent);
 
         if (!new File(rootLocation + "").exists()) {
-            new File(rootLocation + "").mkdir();
+            new File(rootLocation + "").mkdirs();
         }
 
         final File fileTmp = new File(rootLocation + "/" + file.getOriginalFilename());
@@ -142,7 +144,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
         for (int i = 0; i < documents.size(); i++) {
             documentDTOs.add(i, documentMapper.toDto(documents.get(i)));
-            final String urlTemp = path + "/" + documentMapper.toDto(documents.get(i)).getUrl();
+            final String urlTemp = path + "/schoolLife/" + documentMapper.toDto(documents.get(i)).getUrl();
             documentDTOs.get(i).setUrl(urlTemp);
         }
 
@@ -153,7 +155,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
         final Document document = documentRepository.findOne(idDocument);
 
         final DocumentDTO documentDTO = documentMapper.toDto(document);
-        documentDTO.setUrl(path + "/" + documentDTO.getUrl());
+        documentDTO.setUrl(path + "/schoolLife/" + documentDTO.getUrl());
 
         Map<String,File> content = new HashMap<>();
         content.put(documentDTO.getType(), new File(documentDTO.getUrl()));
@@ -168,7 +170,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
         if (document != null) {
             try {
-                final File file = new File(path + "/" + document.getUrl());
+                final File file = new File(path + "/schoolLife/" + document.getUrl());
 
                 if (file.exists()) {
                     file.delete();

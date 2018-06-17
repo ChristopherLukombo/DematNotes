@@ -21,7 +21,7 @@ public interface AbsenceRepository extends JpaRepository<Absence, Long> {
     @Query("select absence from Absence absence left join fetch absence.students where absence.id =:id")
     Absence findOneWithEagerRelationships(@Param("id") Long id);
 
-    @Query("select absence from Absence absence left join fetch absence.students where absence.startDate<=:dateTime and absence.endDate<=:dateTime")
-    List<Absence> findAllAbsencesByPeriod(@Param("dateTime") ZonedDateTime dateTime);
+    @Query("select absence from Absence absence left join fetch absence.students where absence.startDate>=:startZoneDateTime and absence.startDate<=:endZoneDateTime")
+    List<Absence> findAllAbsencesByPeriod(@Param("startZoneDateTime") ZonedDateTime startZoneDateTime, @Param("endZoneDateTime") ZonedDateTime endZoneDateTime);
 
 }

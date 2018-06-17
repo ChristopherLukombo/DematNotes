@@ -78,4 +78,4 @@ module.exports = (config) => {
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: !WATCH
     });
-};
+}

@@ -106,4 +106,4 @@ module.exports = (options) => ({
             inject: 'body'
         })
     ]
-});
+})

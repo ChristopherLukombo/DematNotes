@@ -7,9 +7,20 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
 import org.csid.service.ISchoolReportService;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +34,174 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         FileOutputStream fos = null;
 
         try {
-            Document document = new Document();
+            Document document = new Document(PageSize.A4, 20, 20, 20, 20);
 
             // create the file in memory
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PdfWriter.getInstance(document, baos);
-
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            Paragraph paragraph = new Paragraph();
+            Font fontTitle = new Font(FontFamily.HELVETICA, 16, Font.BOLD);
+            Font fontWord = new Font(FontFamily.HELVETICA, 12, Font.BOLD);
+            Font fontContent = new Font(FontFamily.HELVETICA, 10);
+            Font fontComment = new Font(FontFamily.HELVETICA, 6);
+            
             document.open();
-
-            document.add(new Paragraph("Hello World!"));
-
+            
+            //Bloc 1 : School & Student
+            PdfPTable table = new PdfPTable(9);
+            PdfPCell cell = new PdfPCell();
+            table.setWidthPercentage(100);
+            table.getDefaultCell().setUseAscender(true);
+            table.getDefaultCell().setUseDescender(true);
+            
+            table.addCell(getPdfPCellCustomized("Lycee Jules Verne\n70 avenue Jean Jaurès\n93 000 Bobigny\n01 48 10 22 15 - 15 08 09 14 94", null, 4, 10.0f, "left", true));
+            
+            table.addCell(getPdfPCellCustomized("Nom - Prénom : KOK Junior\nNé(e) le : 19/08/1993\nClasse : 2BTS SIO\nAnnée scolaire : 2016 - 2017", null, 4, 10.0f, "left", true));
+            
             Image img = Image.getInstance(this.generateQrCode());
-            document.add(img);
-
+            cell.setColspan(1);
+            cell.setPadding(5.0f);
+            table.addCell(img);
+            document.add(table);
+ 
+            //Entitled period
+            paragraph = new Paragraph("Bulletin du 1er Semestre\n\n", fontTitle);
+            paragraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(paragraph);
+            
+            //Bloc 2 Moyennes
+//            table = new PdfPTable(9);
+//            table.setWidthPercentage(100);
+//            table.getDefaultCell().setUseAscender(true);
+//            table.getDefaultCell().setUseDescender(true);
+            
+            table = initPdfPTable(9, 100);
+            
+            //Entilted Moyennes
+            cell = new PdfPCell(new Phrase("Matière\nNom du professeur"));
+        	cell.setColspan(3);
+        	cell.setPadding(10.0f);
+            table.addCell(cell);
+            
+            paragraph = new Paragraph("\nMoyennes\n");
+            cell = new PdfPCell(paragraph);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	cell.setColspan(1);
+            table.addCell(cell);
+            
+            cell = new PdfPCell(new Paragraph("Apréciations générales"));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	cell.setColspan(5);
+        	cell.setPadding(10.0f);
+            table.addCell(cell);
+            
+            //table moyennes
+            for (int i = 0; i < 9; i++) {
+            	cell = new PdfPCell(new Phrase("MATHÉMATIQUES\nM. Louis"));
+            	cell.setColspan(3);
+            	cell.setPadding(10.0f);
+                table.addCell(cell);
+                
+                paragraph = new Paragraph("10.25");
+                cell = new PdfPCell(paragraph);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            	cell.setColspan(1);
+            	cell.setPadding(5.0f);
+                table.addCell(cell);
+                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                
+                cell = new PdfPCell(new Paragraph("\nAllons les enfants de la patriiiie. Le jour de gloireeee est arivéeeeee!!!\n\n", fontContent));
+            	cell.setColspan(7);
+            	cell.setPadding(5.0f);
+                table.addCell(cell);
+            }
+            cell = new PdfPCell(new Phrase("\nMoyenne générale\n"));
+        	cell.setColspan(3);
+        	cell.setPadding(10.0f);
+            table.addCell(cell);
+            
+            paragraph = new Paragraph("12.65");
+            cell = new PdfPCell(paragraph);
+        	cell.setColspan(1);
+        	cell.setPadding(5.0f);
+        	cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            
+            cell = new PdfPCell();
+        	cell.setColspan(7);
+            table.addCell(cell);
+            
+            document.add(table);
+            
+            //Bloc 3 : Vie scolaire
+            table = new PdfPTable(9);
+            table.setWidthPercentage(100);
+            table.getDefaultCell().setUseAscender(true);
+            table.getDefaultCell().setUseDescender(true);
+            
+            cell = new PdfPCell(new Paragraph("Vie scolaire\n\nMme Christine LUKOMBO"));
+        	cell.setColspan(3);
+        	cell.setPadding(5.0f);
+            table.addCell(cell);
+            
+        	cell = new PdfPCell(new PdfPCell(new Paragraph("Abscence(s) :     15 Excusée(s).\n                             2 Non excusée(s).\n\nRetard(s) :            1")));
+            cell.setColspan(6);
+        	table.addCell(cell);
+            
+            document.add(table);
+            
+            //Bloc 4 : Result
+            table = new PdfPTable(4);
+            table.setWidthPercentage(100);
+            table.getDefaultCell().setUseAscender(true);
+            table.getDefaultCell().setUseDescender(true);
+            
+            //Entitled
+            cell = new PdfPCell(new Paragraph("Observation du conseil de classe"));
+            cell.setPadding(5.0f);
+        	cell.setColspan(2);
+            table.addCell(cell);
+            
+            cell = new PdfPCell(new Paragraph("Avis"));
+            cell.setPadding(5.0f);
+        	cell.setColspan(1);
+            table.addCell(cell);
+            
+            cell = new PdfPCell(new Paragraph("Visa du chef d'Établissement"));
+            cell.setPadding(5.0f);
+        	cell.setColspan(1);
+            table.addCell(cell);
+            
+            //Content
+            cell = new PdfPCell(new Paragraph("C'est bien, continuez ainsi.", fontContent));
+            cell.setPadding(5.0f);
+        	cell.setColspan(2);
+            table.addCell(cell);
+            
+            cell = new PdfPCell(new Paragraph("\nEncouragements.\n\n"));
+            cell.setPadding(5.0f);
+        	cell.setColspan(1);
+            table.addCell(cell);
+            
+            cell = new PdfPCell(new Paragraph("\nM. KOK Junior\n\n"));
+            cell.setPadding(5.0f);
+        	cell.setColspan(1);
+            table.addCell(cell);
+            
+            document.add(table);
+            
+            //Comment
+            table = new PdfPTable(2);
+            table.setWidthPercentage(100);
+            table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
+            
+            table.addCell(new Phrase("Bulletin à conserver précieusement.", fontComment));
+            cell = new PdfPCell(new Phrase("15/05/2018", fontComment));
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell);
+            document.add(table);
+            
             document.close();
 
             pdfFile = File.createTempFile("bulletin", ".pdf");
@@ -59,6 +225,55 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         }
 
         return pdfFile;
+    }
+    
+    /**
+     * Create a PdfPCell object
+     * @param chain String Data.
+     * @param colspan int cell to merge.
+     * @param padding float content.
+     * @param align String content.
+     * @param border Boolean cell. FALSE for no border.
+     * @return PdfPCell
+     */
+    public static PdfPCell getPdfPCellCustomized(String chain, Font font, int colspan, float padding, String align, boolean border) {
+    	PdfPCell cell= new PdfPCell();
+    	
+    	if(font == null)
+    		cell = new PdfPCell(new Paragraph(chain));
+    	else
+    		cell = new PdfPCell(new Paragraph(chain, font));
+    	
+        cell.setColspan(colspan);
+        cell.setPadding(padding);
+        
+        switch(align) {
+	        case "left":cell.setHorizontalAlignment(Element.ALIGN_LEFT);break;
+	        case "right":cell.setHorizontalAlignment(Element.ALIGN_RIGHT);break;
+	        case "center":cell.setHorizontalAlignment(Element.ALIGN_CENTER);break;
+	        default:break;
+        }
+        
+        if(!border) {
+        	cell.setBorder(PdfPCell.NO_BORDER);
+        }
+        
+        return cell;
+    }
+    
+    /**
+     * Initialize a PdfPTable object
+     * @param colums int The number of colums of the table
+     * @param widthPercentage int The width of the table in percentage
+     * @return PdfPTable
+     */
+    public PdfPTable initPdfPTable(int colums, int widthPercentage) {
+    	PdfPTable table = new PdfPTable(colums);
+    	table.setWidthPercentage(widthPercentage);
+    	table.getDefaultCell().setUseAscender(true);
+    	table.getDefaultCell().setUseDescender(true);
+    	
+    	return table;
     }
 
     private String generateQrCode() {

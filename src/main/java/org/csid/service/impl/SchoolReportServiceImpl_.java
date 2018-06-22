@@ -60,14 +60,14 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         FileOutputStream fos = null;
 
         try {
-            Document document = new Document(PageSize.A4, 20, 20, 20, 20);
+            Document document = new Document(PageSize.A4, 20, 20, 20, 0);
 
             // create the file in memory
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            PdfWriter.getInstance(document, baos);
             Paragraph paragraph = new Paragraph();
-            Font fontTitle = new Font(FontFamily.HELVETICA, 16, Font.BOLD);
-            //Font fontWord = new Font(FontFamily.HELVETICA, 12, Font.BOLD);
+            PdfPCell cell = new PdfPCell();
+            Font fontTitle = new Font(FontFamily.HELVETICA, 14, Font.BOLD);
             Font fontContent = new Font(FontFamily.HELVETICA, 10);
             Font fontComment = new Font(FontFamily.HELVETICA, 6);
             
@@ -77,17 +77,13 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             
             document.open();
             
-            //Bloc 1 : School & Student
-            PdfPTable table = new PdfPTable(9);
-            PdfPCell cell = new PdfPCell();
-            table.setWidthPercentage(100);
-            table.getDefaultCell().setUseAscender(true);
-            table.getDefaultCell().setUseDescender(true);
+            //Bloc 1 : School & Student --------------------------------------------------------
+            PdfPTable table = initPdfPTable(9, 100);
             
-            table.addCell(getPdfPCellCustomized("\n70 avenue Jean Jaurès\n93 000 Bobigny\n01 48 10 22 15 - 15 08 09 14 94", null, 4, 10.0f, "left", true));
+            table.addCell(getPdfPCellCustomized("Lycée Jules Verne\n70 avenue Jean Jaurès\n93 000 Bobigny\n01 48 10 22 15 - 15 08 09 14 94", null, 4, 5.0f, "left", true));
+            table.addCell(getPdfPCellCustomized("Nom - Prénom : "+user.getLastName()+" "+user.getFirstName()+"\nNé(e) le : "+student.getDateOfBirth()+"\nClasse : SIO 2\nAnnée scolaire : 2016 - 2017", null, 4, 5.0f, "left", true));
             
-            table.addCell(getPdfPCellCustomized("Nom - Prénom : "+user.getLastName()+" "+user.getFirstName()+"\nNé(e) le : "+student.getDateOfBirth()+"\nClasse : TODO\nAnnée scolaire : TODO", null, 4, 10.0f, "left", true));
-            
+            //QR code
             Image img = Image.getInstance(this.generateQrCode());
             cell.setColspan(1);
             cell.setPadding(5.0f);
@@ -99,131 +95,57 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             paragraph.setAlignment(Element.ALIGN_CENTER);
             document.add(paragraph);
             
-            //Bloc 2 Moyennes
+            //Bloc 2 Moyennes ------------------------------------------------------------------
             table = initPdfPTable(9, 100);
             
             //Entilted Moyennes
-            cell = new PdfPCell(new Phrase("Matière\nNom du professeur"));
-        	cell.setColspan(3);
-        	cell.setPadding(10.0f);
-            table.addCell(cell);
-            
-            paragraph = new Paragraph("\nMoyennes\n");
-            cell = new PdfPCell(paragraph);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        	cell.setColspan(1);
-            table.addCell(cell);
-            
-            cell = new PdfPCell(new Paragraph("Apréciations générales"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        	cell.setColspan(5);
-        	cell.setPadding(10.0f);
-            table.addCell(cell);
+            table.addCell(getPdfPCellCustomized("Matière\n\nNom du professeur", fontContent, 3, 5.0f, "left", true));
+            table.addCell(getPdfPCellCustomized("\nMoyennes\n", fontContent, 1, 1.0f, "center", true));
+            table.addCell(getPdfPCellCustomized("Apréciations générales", fontContent, 5, 10.0f, "center", true));
             
             //table moyennes
             for (int i = 0; i < 9; i++) {
-            	cell = new PdfPCell(new Phrase("MATHÉMATIQUES\nM. Louis"));
-            	cell.setColspan(3);
-            	cell.setPadding(10.0f);
-                table.addCell(cell);
-                
-                paragraph = new Paragraph("10.25");
-                cell = new PdfPCell(paragraph);
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            	cell.setColspan(1);
-            	cell.setPadding(5.0f);
-                table.addCell(cell);
-                
-                cell = new PdfPCell(new Paragraph("\nAllons les enfants de la patriiiie. Le jour de gloireeee est arivéeeeee!!!\n\n", fontContent));
-            	cell.setColspan(7);
-            	cell.setPadding(5.0f);
-                table.addCell(cell);
+            	table.addCell(getPdfPCellCustomized("MATHÉMATIQUES\n\nM. Louis", fontContent, 3, 5.0f, "left", true));
+            	table.addCell(getPdfPCellCustomized("10.25", null, 1, 15.0f, "center", true));
+            	table.addCell(getPdfPCellCustomized("\nAllons les enfants de la patriiiie. Le jour de gloireeee est arivéeeeee!!!\n\n", fontContent, 7, 5.0f, "left", true));
             }
-            cell = new PdfPCell(new Phrase("\nMoyenne générale\n"));
-        	cell.setColspan(3);
-        	cell.setPadding(5.0f);
-            table.addCell(cell);
             
-            paragraph = new Paragraph("12.65");
-            cell = new PdfPCell(paragraph);
-        	cell.setColspan(1);
-        	cell.setPadding(5.0f);
-        	cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-            
-            cell = new PdfPCell();
-        	cell.setColspan(7);
-            table.addCell(cell);
+            table.addCell(getPdfPCellCustomized("\nMoyenne générale\n\n\n", fontContent, 3, 5.0f, "", true));
+            table.addCell(getPdfPCellCustomized("\n12.23\n", null, 1, 5.0f, "center", true));
+            table.addCell(getPdfPCellCustomized(null, null, 7, 0, "", true));
             
             document.add(table);
             
-            //Bloc 3 : Vie scolaire
-            table = new PdfPTable(9);
-            table.setWidthPercentage(100);
-            table.getDefaultCell().setUseAscender(true);
-            table.getDefaultCell().setUseDescender(true);
+            //Bloc 3 : Vie scolaire ------------------------------------------------------------
+            table = initPdfPTable(9, 100);
             
-            cell = new PdfPCell(new Paragraph("Vie scolaire\n\nMme Christine LUKOMBO"));
-        	cell.setColspan(3);
-        	cell.setPadding(5.0f);
-            table.addCell(cell);
-            
-        	cell = new PdfPCell(new PdfPCell(new Paragraph("Abscence(s) :     15 Excusée(s).\n                             2 Non excusée(s).\n\nRetard(s) :            1")));
-            cell.setColspan(6);
-        	table.addCell(cell);
+            table.addCell(getPdfPCellCustomized("Vie scolaire\n\nMme Christine LUKOMBO", fontContent, 3, 5.0f, "left", true));
+            table.addCell(getPdfPCellCustomized("Abscence(s) :     15 Excusée(s).\n                             2 Non excusée(s).\n\nRetard(s) :            1", fontContent, 6, 3.0f, "left", true));
             
             document.add(table);
             
-            //Bloc 4 : Result
-            table = new PdfPTable(4);
-            table.setWidthPercentage(100);
-            table.getDefaultCell().setUseAscender(true);
-            table.getDefaultCell().setUseDescender(true);
+            //Bloc 4 : Result ------------------------------------------------------------------
+            table = initPdfPTable(4, 100);
             
             //Entitled
-            cell = new PdfPCell(new Paragraph("Observation du conseil de classe"));
-            cell.setPadding(5.0f);
-        	cell.setColspan(2);
-            table.addCell(cell);
-            
-            cell = new PdfPCell(new Paragraph("Avis"));
-            cell.setPadding(5.0f);
-        	cell.setColspan(1);
-            table.addCell(cell);
-            
-            cell = new PdfPCell(new Paragraph("Visa du chef d'Établissement"));
-            cell.setPadding(5.0f);
-        	cell.setColspan(1);
-            table.addCell(cell);
+            table.addCell(getPdfPCellCustomized("Observation du conseil de classe", fontContent, 2, 5.0f, "left", true));
+            table.addCell(getPdfPCellCustomized("Avis", fontContent, 1, 5.0f, "left", true));
+            table.addCell(getPdfPCellCustomized("Visa du chef d'Établissement", fontContent, 1, 5.0f, "left", true));
             
             //Content
-            cell = new PdfPCell(new Paragraph("C'est bien, continuez ainsi.", fontContent));
-            cell.setPadding(5.0f);
-        	cell.setColspan(2);
-            table.addCell(cell);
+            table.addCell(getPdfPCellCustomized("C'est bien, continuez ainsi.", fontContent, 2, 5.0f, "left", true));
             
-            cell = new PdfPCell(new Paragraph("\nEncouragements.\n\n"));
-            cell.setPadding(5.0f);
-        	cell.setColspan(1);
-            table.addCell(cell);
+            //NOTE : Félicitation / Encouragements/ Avertissement de travail
+            table.addCell(getPdfPCellCustomized("\nEncouragements.\n\n", fontContent, 1, 5.0f, "left", true));
             
-            cell = new PdfPCell(new Paragraph("\nM. KOK Junior\n\n"));
-            cell.setPadding(5.0f);
-        	cell.setColspan(1);
-            table.addCell(cell);
-            
+            table.addCell(getPdfPCellCustomized("\nM. KOK Junior\n\n", fontContent, 1 , 5.0f, "left,", true));
             document.add(table);
             
-            //Comment
-            table = new PdfPTable(2);
-            table.setWidthPercentage(100);
-            table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
+            //Bloc 5 : Comment --------------------------------------------------------------
+            table = initPdfPTable(2, 100);
             
-            table.addCell(new Phrase("Bulletin à conserver précieusement.", fontComment));
-            cell = new PdfPCell(new Phrase("15/05/2018", fontComment));
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setBorder(PdfPCell.NO_BORDER);
-            table.addCell(cell);
+            table.addCell(getPdfPCellCustomized("Bulletin à conserver précieusement.", fontComment, 1, 5.0f, "left", false));
+            table.addCell(getPdfPCellCustomized("15/05/2017", fontComment, 1, 5.0f, "right", false));
             document.add(table);
             
             document.close();
@@ -253,23 +175,26 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
     
     /**
      * Create a PdfPCell object
-     * @param chain String Data.
-     * @param colspan int cell to merge.
-     * @param padding float content.
-     * @param align String content.
-     * @param border Boolean cell. FALSE for no border.
+     * @param chain String   Content to show.
+     * @param colspan int    Number of cells to merge.
+     * @param padding float  Padding element content.
+     * @param align String   Align element content.
+     * @param border Boolean To show border cell
      * @return PdfPCell
      */
     public static PdfPCell getPdfPCellCustomized(String chain, Font font, int colspan, float padding, String align, boolean border) {
-    	PdfPCell cell= new PdfPCell();
+    	PdfPCell cell = new PdfPCell();
     	
     	if(font == null)
     		cell = new PdfPCell(new Paragraph(chain));
     	else
     		cell = new PdfPCell(new Paragraph(chain, font));
     	
-        cell.setColspan(colspan);
-        cell.setPadding(padding);
+    	if(colspan >= 0)
+    		cell.setColspan(colspan);
+    	
+    	if(padding >= 0)
+    		cell.setPadding(padding);
         
         switch(align) {
 	        case "left":cell.setHorizontalAlignment(Element.ALIGN_LEFT);break;

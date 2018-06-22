@@ -38,7 +38,7 @@ public class SchoolReportController {
         try {
         	Long idUser = (long) 4;
         	LocalDate dateInscription = null;
-        	dateInscription.parse("2017-10-15");
+        	//dateInscription.parse("2017-10-15");
         	
             fileSchoolReportPDF = schoolReportService.generateSchoolReport(idUser, dateInscription);
         } catch(final Exception e) {

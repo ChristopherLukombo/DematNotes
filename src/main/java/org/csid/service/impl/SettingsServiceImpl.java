@@ -4,7 +4,7 @@ import com.jcraft.jsch.*;
 import org.csid.domain.User;
 import org.csid.repository.UserRepository;
 import org.csid.service.ISettingsService;
-import org.csid.service.persistent.UserSFTP;
+import org.csid.service.non.persistent.UserSFTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

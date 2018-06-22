@@ -70,7 +70,7 @@ export class SchoolLifeComponent implements OnInit {
                 console.log(JSON.parse(firstError.body).message);
             });
 
-            this.marksService.getSchoolsByCurrentUserTeacher(
+            this.marksService.getSchoolsByTeacher(
                 account.id
             ).subscribe((schools) => {
                 this.schools = schools;
@@ -81,7 +81,7 @@ export class SchoolLifeComponent implements OnInit {
     }
 
     getClassroomsByCurrentUserTeacher(): void {
-        this.marksService.getClassroomsByCurrentUserTeacher(
+        this.marksService.getClassroomsByTeacher(
             this.currentUser.id,
             this.schoolSelected
         ).subscribe((classrooms) => {
@@ -94,7 +94,7 @@ export class SchoolLifeComponent implements OnInit {
     }
 
     getStudentsUserByCurrentUserTeacher(): void {
-        this.marksService.getStudentsUserByCurrentUserTeacher(
+        this.marksService.getStudentsByTeacher(
             this.currentUser.id,
             this.schoolSelected,
             this.classroomSelected).subscribe((users) => {

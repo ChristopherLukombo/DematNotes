@@ -56,6 +56,7 @@ import {
 import {FileUploaderService} from './dialog/FileUploaderService';
 import {SchoolLifeService} from './school-life/school-life.service';
 import {SettingsService} from './account/settings/settings.service';
+import {Services} from './services';
 
 @NgModule({
     exports: [
@@ -69,7 +70,7 @@ import {SettingsService} from './account/settings/settings.service';
         MatDialogModule,
         MatAutocompleteModule,
         MatListModule,
-        MatGridListModule
+        MatGridListModule,
     ],
     imports: [
         BrowserModule,
@@ -154,7 +155,8 @@ import {SettingsService} from './account/settings/settings.service';
         MarksService,
         SchoolLifeService,
         FileUploaderService,
-        SettingsService
+        SettingsService,
+        Services
     ],
     bootstrap: [ JhiMainComponent ]
 })

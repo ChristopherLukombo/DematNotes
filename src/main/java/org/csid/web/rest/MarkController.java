@@ -2,12 +2,9 @@ package org.csid.web.rest;
 
 import org.csid.service.IMarkService;
 import org.csid.service.dto.*;
-import org.csid.service.persistent.ChartData;
+import org.csid.service.non.persistent.ChartData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

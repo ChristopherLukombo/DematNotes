@@ -1,3 +1,7 @@
+/**----- Thème Angular Material -----**/
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
 /* ==============================================================
 Bootstrap tweaks
 ===============================================================*/
@@ -278,10 +282,6 @@ ui bootstrap tweaks
     max-height: 500px;
 }
 
-/**----- Thème Angular Material -----**/
-
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
 /* jhipster-needle-css-add-main JHipster will add new css style */
 
 .icon:hover {
@@ -308,4 +308,12 @@ ui bootstrap tweaks
     border: none;
     border-radius: 5px;
     resize: none;
+}
+
+mat-grid-tile {
+    background: white;
+}
+
+mat-form-field {
+    width: 300px;
 }

@@ -15,15 +15,15 @@ export class MarksService {
 
     constructor(private http: HttpClient) { }
 
-    getSchoolsByCurrentUserTeacher(idUser: number) {
+    getSchoolsByTeacher(idUser: number) {
         return this.http.get<School[]>(this.resourceUrl + '/marks/displaySchools/' + `${idUser}`);
     }
 
-    getClassroomsByCurrentUserTeacher(idUser, idSchool) {
+    getClassroomsByTeacher(idUser, idSchool) {
         return this.http.get<Classroom[]>(this.resourceUrl + '/marks/displayClassrooms/' + `${idUser}/${idSchool}`);
     }
 
-    getStudentsUserByCurrentUserTeacher(idUser, idSchool, idClassroom) {
+    getStudentsByTeacher(idUser, idSchool, idClassroom) {
         return this.http.get<User[]>(this.resourceUrl + '/marks/displayStudents/' + `${idUser}/${idSchool}/${idClassroom}`);
     }
 

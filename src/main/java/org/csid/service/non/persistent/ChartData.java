@@ -1,4 +1,4 @@
-package org.csid.service.persistent;
+package org.csid.service.non.persistent;
 
 import java.util.List;
 

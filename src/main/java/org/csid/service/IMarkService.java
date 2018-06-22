@@ -1,9 +1,8 @@
 package org.csid.service;
 
 import org.csid.service.dto.*;
-import org.csid.service.persistent.ChartData;
+import org.csid.service.non.persistent.ChartData;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

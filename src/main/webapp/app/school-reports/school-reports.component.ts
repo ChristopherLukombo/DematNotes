@@ -1,14 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {SchoolReportService} from './school-reports.service';
 import {Principal} from '../shared';
-import {MarksService} from '../marks/marks.service';
 import {User} from '../shared/user/user.model';
 import {School} from '../entities/school';
 import {Classroom} from '../entities/classroom';
-import {Evaluation, EvaluationService} from '../entities/evaluation';
 import {MatIconRegistry} from '@angular/material';
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
 import {DomSanitizer} from '@angular/platform-browser';
+import {Services} from '../services';
 
 @Component({
     selector: 'jhi-school-reports',
@@ -25,15 +23,9 @@ export class SchoolReportsComponent implements OnInit {
     classroomSelected;
     userSelected;
 
-    marks: string[] = Array<string>(this.users.length);
-    comments: string[] = Array<string>(this.users.length);
-    coefficients: string[] = Array<string>(this.users.length);
-
     constructor(
         private principal: Principal,
-        private marksService: MarksService,
-        private evaluationService: EvaluationService,
-        private schoolReportService: SchoolReportService,
+        private services: Services,
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer,
     ) {
@@ -51,7 +43,7 @@ export class SchoolReportsComponent implements OnInit {
     private loadCurrentUser(): void {
         this.principal.identity().then((account) => {
             this.currentUser = account;
-            this.marksService.getSchoolsByTeacher(account.id)
+            this.services.getSchoolsByTeacher(account.id)
                 .subscribe(
                     (schools) => {
                         this.schools = schools;
@@ -62,7 +54,7 @@ export class SchoolReportsComponent implements OnInit {
     }
 
     getClassroomsByCurrentUserTeacher(): void {
-        this.marksService.getClassroomsByTeacher(this.currentUser.id, this.schoolSelected)
+        this.services.getClassroomsByTeacher(this.currentUser.id, this.schoolSelected)
             .subscribe(
                 (classrooms) => {
                     this.userSelected = undefined;
@@ -74,7 +66,7 @@ export class SchoolReportsComponent implements OnInit {
     }
 
     getStudentsUserByCurrentUserTeacher(): void {
-        this.marksService.getStudentsByTeacher(this.currentUser.id, this.schoolSelected, this.classroomSelected)
+        this.services.getStudentsByTeacher(this.currentUser.id, this.schoolSelected, this.classroomSelected)
             .subscribe(
                 (users) => {
                     this.users = users;
@@ -84,7 +76,7 @@ export class SchoolReportsComponent implements OnInit {
     }
 
     getStudentUserByCurrentUserTeacher(): void {
-        this.marksService.getStudentUserByIdUser(this.userSelected)
+        this.services.getStudentUserByIdUser(this.userSelected)
             .subscribe(
                 (users) => {
                     this.users = [];
@@ -94,65 +86,65 @@ export class SchoolReportsComponent implements OnInit {
                 });
     }
 
-    saveMark() {
-        for (let i = 0; i < this.marks.length; i++) {
-            if (undefined !== this.marks[i]  && undefined !== this.coefficients[i]) {
-                if (!this.isNumber(this.marks[i].trim())) {
-                    alert('Saisir une moyenne valide');
-                    return;
-                } else if (parseFloat(this.marks[i].trim()) < 0 || parseFloat(this.marks[i].trim()) > 20) {
-                    alert('Saisir une moyenne entre 0 et 20');
-                    return;
-                } else if (!this.isNumber(this.coefficients[i].trim())) {
-                    alert('Saisir un coefficient valide');
-                    return;
-                } else if (parseFloat(this.coefficients[i].trim()) < 0 || parseFloat(this.coefficients[i].trim()) > 15) {
-                    alert('Saisir un coefficient entre 0 et 15');
-                    return;
-                } else  {
-                    this.marksService.getStudentByIdUser(i).subscribe(
-                        (student) => {
-                            const e = new Evaluation(
-                                null,
-                                parseFloat(this.marks[i].trim()),
-                                new Date().toISOString().slice(0, 16),
-                                this.comments[i].trim(),
-                                null,
-                                null,
-                                student.id,
-                                null,
-                                null
-                            );
+    // saveMark() {
+    //     for (let i = 0; i < this.marks.length; i++) {
+    //         if (undefined !== this.marks[i]  && undefined !== this.coefficients[i]) {
+    //             if (!this.isNumber(this.marks[i].trim())) {
+    //                 alert('Saisir une moyenne valide');
+    //                 return;
+    //             } else if (parseFloat(this.marks[i].trim()) < 0 || parseFloat(this.marks[i].trim()) > 20) {
+    //                 alert('Saisir une moyenne entre 0 et 20');
+    //                 return;
+    //             } else if (!this.isNumber(this.coefficients[i].trim())) {
+    //                 alert('Saisir un coefficient valide');
+    //                 return;
+    //             } else if (parseFloat(this.coefficients[i].trim()) < 0 || parseFloat(this.coefficients[i].trim()) > 15) {
+    //                 alert('Saisir un coefficient entre 0 et 15');
+    //                 return;
+    //             } else  {
+    //                 this.services.getStudentByIdUser(i).subscribe(
+    //                     (student) => {
+    //                         const e = new Evaluation(
+    //                             null,
+    //                             parseFloat(this.marks[i].trim()),
+    //                             new Date().toISOString().slice(0, 16),
+    //                             this.comments[i].trim(),
+    //                             null,
+    //                             null,
+    //                             student.id,
+    //                             null,
+    //                             null
+    //                         );
+    //
+    //                         this.evaluationService.create(e)
+    //                             .subscribe(
+    //                                 (evaluation) => {
+    //                                     if (i === this.marks.length - 1 && evaluation) {
+    //                                         alert('Moyenne enregistré');
+    //                                     }
+    //                                 }, (firstError) => {
+    //                                     console.log(JSON.parse(firstError.body).message);
+    //                                 });
+    //                     }, (secondError) => {
+    //                         console.log(JSON.parse(secondError.body).message);
+    //                     });
+    //             }
+    //         }
+    //     }
+    // }
 
-                            this.evaluationService.create(e)
-                                .subscribe(
-                                    (evaluation) => {
-                                        if (i === this.marks.length - 1 && evaluation) {
-                                            alert('Moyenne enregistré');
-                                        }
-                                    }, (firstError) => {
-                                        console.log(JSON.parse(firstError.body).message);
-                                    });
-                        }, (secondError) => {
-                            console.log(JSON.parse(secondError.body).message);
-                        });
-                }
-            }
-        }
-    }
-
-    isNumber(value: string) {
-        let valid = true;
-        try {
-            parseFloat(value);
-        } catch (error) {
-            valid = false;
-        }
-        return valid;
-    }
+    // isNumber(value: string) {
+    //     let valid = true;
+    //     try {
+    //         parseFloat(value);
+    //     } catch (error) {
+    //         valid = false;
+    //     }
+    //     return valid;
+    // }
 
     downloadSchoolReport() {
-        this.schoolReportService.downloadSchoolReport().subscribe((response) => {
+        this.services.downloadSchoolReport().subscribe((response) => {
             saveAs(response, 'bulletin');
         }, (error) =>  {
             console.log(error);

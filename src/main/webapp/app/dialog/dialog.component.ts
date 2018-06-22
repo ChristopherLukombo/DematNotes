@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FileUploaderService} from './FileUploaderService';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
-import {MarksService} from '../marks/marks.service';
 import {Principal} from '../shared';
 import {Document, DocumentService} from '../entities/document';
 import {saveAs} from 'file-saver';
+import {Services} from '../services';
 
 @Component({
     selector: 'jhi-dialog',
@@ -29,8 +28,7 @@ export class DialogComponent implements OnInit {
 
     constructor(
         private principal: Principal,
-        private fileUploader: FileUploaderService,
-        private marksService: MarksService,
+        private services: Services,
         private documentService: DocumentService
     ) { }
 
@@ -52,8 +50,8 @@ export class DialogComponent implements OnInit {
                 alert('Fichier non valide !');
             } else {
                 this.progress.percentage = 0;
-                this.marksService.getStudentByIdUser(account.id).subscribe((student) => {
-                    this.fileUploader.uploadImage(this.currentFileUpload, (student != null) ? student.id : 1).
+                this.services.getStudentByIdUser(account.id).subscribe((student) => {
+                    this.services.uploadPicture(this.currentFileUpload, (student != null) ? student.id : 1).
                     subscribe((event) => {
                         if (event.type === HttpEventType.UploadProgress) {
                             this.progress.percentage = Math.round(100 * event.loaded / event.total);
@@ -79,8 +77,8 @@ export class DialogComponent implements OnInit {
 
     private getFiles() {
         this.principal.identity().then((account) => {
-            this.marksService.getStudentByIdUser(account.id).subscribe((student) => {
-                this.fileUploader.getFiles(student.id).subscribe((documents) => {
+            this.services.getStudentByIdUser(account.id).subscribe((student) => {
+                this.services.getDocuments(student.id).subscribe((documents) => {
                     this.documents = documents;
                     console.log(documents);
                 });
@@ -96,7 +94,7 @@ export class DialogComponent implements OnInit {
      */
     public downloadDocument(idDocument) {
         this.documentService.find(idDocument).subscribe((document) => {
-            this.fileUploader.downloadDocument(idDocument).subscribe((response) => {
+            this.services.downloadDocument(idDocument).subscribe((response) => {
                 saveAs(response, document.body.entitled);
                 console.log(response);
             }, (error) => {
@@ -108,7 +106,7 @@ export class DialogComponent implements OnInit {
     }
 
     public deleteDocument(idDocument) {
-        this.fileUploader.deleteFile(idDocument).subscribe((response) => {
+        this.services.deleteDocument(idDocument).subscribe((response) => {
             this.getFiles();
             console.log(response);
         }, (error) => {

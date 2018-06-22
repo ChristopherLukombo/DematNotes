@@ -1,13 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {Principal} from '../shared';
-import {MarksService} from './marks.service';
 import {User} from '../shared/user/user.model';
 import {School} from '../entities/school';
 import {Classroom} from '../entities/classroom';
 import {Evaluation, EvaluationService} from '../entities/evaluation';
 import {MatDialog} from '@angular/material';
-import {FormControl} from '@angular/forms';
 import {Module} from '../entities/module';
+import {Services} from '../services';
 
 @Component({
     selector: 'jhi-marks',
@@ -45,10 +44,6 @@ export class MarksComponent implements OnInit {
     marks: string[] = Array<string>(this.users.length);
     comments: string[] = Array<string>(this.users.length);
 
-    // marksReport: string[] = Array<string>(this.usersReport.length);
-    // commentsReport: string[] = Array<string>(this.usersReport.length);
-    // coefficientsReport: string[] = Array<string>(this.usersReport.length);
-
     chartOptions = {
         responsive: true
     };
@@ -66,15 +61,13 @@ export class MarksComponent implements OnInit {
 
     containsData = false;
 
-    myControl: FormControl = new FormControl();
-
     modules: Module[];
 
     idModule: number;
 
     constructor(
         private principal: Principal,
-        private marksService: MarksService,
+        private services: Services,
         private evaluationService: EvaluationService,
         public dialog: MatDialog
     ) {}
@@ -92,13 +85,13 @@ export class MarksComponent implements OnInit {
     private loadCurrentUser(): void {
         this.principal.identity().then((account) => {
             this.currentUser = account;
-            this.marksService.getSchoolsByTeacher(account.id).subscribe((schools) => {
+            this.services.getSchoolsByTeacher(account.id).subscribe((schools) => {
                 this.schools = schools;
             }, (error) => {
                 console.log(JSON.parse(error.body).message);
             });
 
-            this.marksService.getModules(account.id).subscribe((modules) => {
+            this.services.getModules(account.id).subscribe((modules) => {
                 this.modules = modules;
             }, (error) => {
                 console.log(JSON.parse(error.body).message);
@@ -109,7 +102,7 @@ export class MarksComponent implements OnInit {
     private loadCurrentUserReport(): void {
         this.principal.identity().then((account) => {
             this.currentUserReport = account;
-            this.marksService.getSchoolsByTeacher(
+            this.services.getSchoolsByTeacher(
                 account.id
             ).subscribe(
                 (schools) => {
@@ -123,7 +116,7 @@ export class MarksComponent implements OnInit {
     private loadCurrentUserGraph(): void {
         this.principal.identity().then((account) => {
             this.currentUserGraph = account;
-            this.marksService.getSchoolsByTeacher(
+            this.services.getSchoolsByTeacher(
                 account.id
             ).subscribe(
                 (schools) => {
@@ -135,7 +128,7 @@ export class MarksComponent implements OnInit {
     }
 
     public loadChartData(): void {
-        this.marksService.getData(
+        this.services.getData(
             this.schoolSelectedGraph,
             this.classroomSelectedGraph
         ).subscribe(
@@ -150,7 +143,7 @@ export class MarksComponent implements OnInit {
     }
 
     getClassroomsByCurrentUserTeacher(): void {
-        this.marksService.getClassroomsByTeacher(
+        this.services.getClassroomsByTeacher(
             this.currentUser.id,
             this.schoolSelected
         ).subscribe((classrooms) => {
@@ -163,7 +156,7 @@ export class MarksComponent implements OnInit {
     }
 
     getClassroomsByCurrentUserTeacherReport(): void {
-        this.marksService.getClassroomsByTeacher(
+        this.services.getClassroomsByTeacher(
             this.currentUserReport.id,
             this.schoolSelectedReport
         ).subscribe((classrooms) => {
@@ -176,7 +169,7 @@ export class MarksComponent implements OnInit {
     }
 
     getClassroomsByCurrentUserTeacherGraph(): void {
-        this.marksService.getClassroomsByTeacher(
+        this.services.getClassroomsByTeacher(
             this.currentUserGraph.id,
             this.schoolSelectedGraph
         ).subscribe((classrooms) => {
@@ -189,7 +182,7 @@ export class MarksComponent implements OnInit {
     }
 
     getStudentsUserByCurrentUserTeacher(): void {
-        this.marksService.getStudentsByTeacher(
+        this.services.getStudentsByTeacher(
             this.currentUser.id,
             this.schoolSelected,
             this.classroomSelected
@@ -201,7 +194,7 @@ export class MarksComponent implements OnInit {
     }
 
     getStudentsUserByCurrentUserTeacherReport(): void {
-        this.marksService.getStudentsByTeacher(
+        this.services.getStudentsByTeacher(
             this.currentUserReport.id,
             this.schoolSelectedReport,
             this.classroomSelectedReport
@@ -214,7 +207,7 @@ export class MarksComponent implements OnInit {
 
     getStudentsUserByCurrentUserTeacherGraph(): void {
         console.log( this.classroomSelectedGraph);
-        this.marksService.getStudentsByTeacher(
+        this.services.getStudentsByTeacher(
             this.currentUserGraph.id,
             this.schoolSelectedGraph,
             this.classroomSelectedGraph
@@ -226,7 +219,7 @@ export class MarksComponent implements OnInit {
     }
 
     getStudentUserByCurrentUserTeacher(): void {
-        this.marksService.getStudentUserByIdUser(
+        this.services.getStudentUserByIdUser(
             this.userSelected
         ).subscribe((users) => {
             this.users = [];
@@ -237,7 +230,7 @@ export class MarksComponent implements OnInit {
     }
 
     getStudentUserByCurrentUserTeacherReport(): void {
-        this.marksService.getStudentUserByIdUser(
+        this.services.getStudentUserByIdUser(
             this.userSelectedReport
         ).subscribe((user) => {
             this.usersReport = [];
@@ -248,7 +241,7 @@ export class MarksComponent implements OnInit {
     }
 
     getStudentUserByCurrentUserTeacherGraph(): void {
-        this.marksService.getStudentUserByIdUser(
+        this.services.getStudentUserByIdUser(
             this.userSelectedGraph
         ).subscribe((user) => {
             this.usersGraph = [];
@@ -272,7 +265,7 @@ export class MarksComponent implements OnInit {
                     alert('Saisir une moyenne entre 0 et 20');
                     return;
                 }  else {
-                    this.marksService.getStudentByIdUser(i).subscribe(
+                    this.services.getStudentByIdUser(i).subscribe(
                         (student) => {
                             const e = new Evaluation(
                                 null,

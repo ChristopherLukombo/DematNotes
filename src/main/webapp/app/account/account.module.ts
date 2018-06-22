@@ -18,6 +18,7 @@ import {
     SettingsComponent,
     accountState
 } from './';
+import {SettingsService} from './settings/settings.service';
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import {
         ActivateService,
         PasswordService,
         PasswordResetInitService,
-        PasswordResetFinishService
+        PasswordResetFinishService,
+        SettingsService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

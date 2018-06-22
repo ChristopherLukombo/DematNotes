@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpRequest} from '@angular/common/http';
 import {SERVER_API_URL} from './app.constants';
 import {School} from './entities/school';
 import {Classroom} from './entities/classroom';
@@ -9,6 +9,8 @@ import {ChartData} from './marks';
 import {Module} from './entities/module';
 import {Results} from './results/results.model';
 import {Observable} from 'rxjs/Observable';
+import {Absence} from './entities/absence';
+import {Document} from './entities/document';
 
 @Injectable()
 export class Services {
@@ -16,6 +18,8 @@ export class Services {
     private resourceUrl =  SERVER_API_URL + 'api';
 
     constructor(private http: HttpClient) { }
+
+    // Part General
 
     /**
      *
@@ -66,6 +70,8 @@ export class Services {
         return this.http.get<User>(this.resourceUrl + '/marks/getUser/' + `${idUser}`);
     }
 
+    // Part Marks
+
     /**
      * Returns the chartData according School ID and Classroom ID
      * @param idSchool
@@ -85,6 +91,8 @@ export class Services {
         return this.http.get<Module[]>(this.resourceUrl + '/marks/teacher/modules/' + `${idUser}`);
     }
 
+    // Part Results
+
     /**
      * Returns the results according the Student's User ID
      * @param idUser
@@ -92,6 +100,84 @@ export class Services {
      */
     getResultsByStudent(idUser): Observable<Results> {
         return this.http.get<Results>(this.resourceUrl + '/results/student/' + `${idUser}`);
+    }
+
+    // Part SchoolReport
+
+    /**
+     * Downloads a schoolReport
+     * @returns {Observable<Blob>}
+     */
+    downloadSchoolReport() {
+        return this.http.get(this.resourceUrl + '/schoolReport/export', {responseType: 'blob'});
+    }
+
+    /**
+     * Returns all absences for student
+     * @param {number} idStudent
+     * @returns {Observable<Absence[]>}
+     */
+    getAbsencesByStudent(idStudent: number) {
+        return this.http.get<Absence[]>(this.resourceUrl + '/schoolLife/absences/' + `${idStudent}`);
+    }
+
+    /**
+     * Returns all Delay for a student
+     * @param {number} idStudent
+     * @returns {Observable<Absence[]>}
+     */
+    getDelayStudentsByStudent(idStudent: number) {
+        return this.http.get<Absence[]>(this.resourceUrl + '/schoolLife/delayStudent/' + `${idStudent}`);
+    }
+
+    // Part Profile
+
+    /**
+     * Uploads picture profile for a user
+     * @param {File} file
+     * @param idStudent
+     * @returns {Observable<HttpEvent<any>>}
+     */
+    uploadPicture(file: File, idStudent: any) {
+        const formdata: FormData = new FormData();
+        formdata.append('file', file);
+
+        const req = new HttpRequest('POST', this.resourceUrl +  '/schoolLife/upload/' + `${idStudent}`, formdata, {
+            reportProgress: true,
+            responseType: 'text',
+
+        });
+
+        return this.http.request(req);
+    }
+
+    // Part Documents User
+
+    /**
+     * Returns all documents for a user
+     * @param idUser
+     * @returns {Observable<Document[]>}
+     */
+    getDocuments(idUser) {
+        return this.http.get<Document[]>(this.resourceUrl + '/schoolLife/getAllFiles/' + `${idUser}`);
+    }
+
+    /**
+     * Downloads a document
+     * @param idDocument
+     * @returns {Observable<Blob>}
+     */
+    downloadDocument(idDocument) {
+        return this.http.get(this.resourceUrl + '/schoolLife/download/' + `${idDocument}`, {responseType: 'blob'});
+    }
+
+    /**
+     * Deletes the document for a student
+     * @param idDocument
+     * @returns {Observable<Boolean>}
+     */
+    deleteDocument(idDocument) {
+        return this.http.delete<Boolean>(this.resourceUrl + '/schoolLife/delete/' + `${idDocument}`);
     }
 
 }

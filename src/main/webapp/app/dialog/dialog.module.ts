@@ -1,8 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 import {DematNotesSharedModule} from '../shared';
-import {MarksComponent} from './marks.component';
-import {marksRoute} from './marks.route';
 import {
     MatAutocompleteModule,
     MatButtonToggleModule,
@@ -17,8 +14,8 @@ import {
 import {MatListModule} from '@angular/material/list';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {CdkTableModule} from '@angular/cdk/table';
-import {ChartsModule} from 'ng2-charts';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {DialogComponent} from './dialog.component';
 import {Services} from '../services';
 
 @NgModule({
@@ -37,7 +34,6 @@ import {Services} from '../services';
     ],
     imports: [
         DematNotesSharedModule,
-        RouterModule.forChild([marksRoute]),
         ReactiveFormsModule,
         FormsModule,
         MatMenuModule,
@@ -47,20 +43,20 @@ import {Services} from '../services';
         MatFormFieldModule,
         MatButtonToggleModule,
         MatIconModule,
-        ChartsModule,
         MatDialogModule,
-        MatAutocompleteModule,
         MatListModule,
         MatGridListModule
     ],
     declarations: [
-        MarksComponent,
+        DialogComponent
     ],
     entryComponents: [
+        DialogComponent
     ],
     providers: [
         Services
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class DematNotesMarksModule {}
+export class DematNotesDialogModule {
+}

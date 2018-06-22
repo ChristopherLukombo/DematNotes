@@ -1,15 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {Principal} from '../shared';
-import {MarksService} from '../marks/marks.service';
 import {User} from '../shared/user/user.model';
 import {School} from '../entities/school';
 import {Classroom} from '../entities/classroom';
 import {MatDialog, MatIconRegistry} from '@angular/material';
 import {DomSanitizer} from '@angular/platform-browser';
 import {DialogComponent} from '../dialog/dialog.component';
-import {SchoolLifeService} from './school-life.service';
 import {Absence} from '../entities/absence';
 import {DelayStudent} from '../entities/delay-student';
+import {Services} from '../services';
 
 @Component({
     selector: 'jhi-school-life',
@@ -34,11 +33,10 @@ export class SchoolLifeComponent implements OnInit {
 
     constructor(
         private principal: Principal,
-        private marksService: MarksService,
+        private services: Services,
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer,
         public dialog: MatDialog,
-        private schoolLifeService: SchoolLifeService
     ) {
         this.iconRegistry.addSvgIcon(
             'upload',
@@ -53,14 +51,14 @@ export class SchoolLifeComponent implements OnInit {
         this.principal.identity().then((account) => {
             this.currentUser = account;
 
-            this.marksService.getStudentByIdUser(account.id).subscribe((student) => {
+            this.services.getStudentByIdUser(account.id).subscribe((student) => {
                 if (student) {
-                    this.schoolLifeService.getAbsencesByStudent(student.id).subscribe((absences) => {
+                    this.services.getAbsencesByStudent(student.id).subscribe((absences) => {
                         this.absences = absences;
                     }, (secondError) => {
                         console.log(JSON.parse(secondError.body).message);
                     });
-                    this.schoolLifeService.getDelayStudentsByStudent(student.id).subscribe((delayStudents) => {
+                    this.services.getDelayStudentsByStudent(student.id).subscribe((delayStudents) => {
                         this.delayStudents = delayStudents;
                     }, (secondError) => {
                         console.log(JSON.parse(secondError.body).message);
@@ -70,7 +68,7 @@ export class SchoolLifeComponent implements OnInit {
                 console.log(JSON.parse(firstError.body).message);
             });
 
-            this.marksService.getSchoolsByTeacher(
+            this.services.getSchoolsByTeacher(
                 account.id
             ).subscribe((schools) => {
                 this.schools = schools;
@@ -81,7 +79,7 @@ export class SchoolLifeComponent implements OnInit {
     }
 
     getClassroomsByCurrentUserTeacher(): void {
-        this.marksService.getClassroomsByTeacher(
+        this.services.getClassroomsByTeacher(
             this.currentUser.id,
             this.schoolSelected
         ).subscribe((classrooms) => {
@@ -94,7 +92,7 @@ export class SchoolLifeComponent implements OnInit {
     }
 
     getStudentsUserByCurrentUserTeacher(): void {
-        this.marksService.getStudentsByTeacher(
+        this.services.getStudentsByTeacher(
             this.currentUser.id,
             this.schoolSelected,
             this.classroomSelected).subscribe((users) => {
@@ -105,7 +103,7 @@ export class SchoolLifeComponent implements OnInit {
     }
 
     getStudentUserByCurrentUserTeacher(): void {
-        this.marksService.getStudentUserByIdUser(
+        this.services.getStudentUserByIdUser(
             this.userSelected
         ).subscribe(
             (users) => {

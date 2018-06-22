@@ -17,33 +17,8 @@ import {DematNotesAdminModule} from './admin/admin.module';
 import {DematNotesAccountModule} from './account/account.module';
 import {DematNotesEntityModule} from './entities/entity.module';
 import {PaginationConfig} from './blocks/config/uib-pagination.config';
-import {MatListModule} from '@angular/material/list';
-import {MatGridListModule} from '@angular/material/grid-list';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ChartsModule} from 'ng2-charts';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CdkTableModule} from '@angular/cdk/table';
-import {
-    MatAutocompleteModule,
-    MatButtonToggleModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatMenuModule,
-    MatSelectModule,
-    MatTableModule,
-    MatTabsModule
-} from '@angular/material';
-
-import {MarksComponent} from './marks/marks.component';
-import {SchoolReportsComponent} from './school-reports/school-reports.component';
-import {ResultsComponent} from './results/results.component';
-import {SchoolLifeComponent} from './school-life/school-life.component';
-import {SchoolReportService} from './school-reports/school-reports.service';
-
-import {MarksService} from './marks/marks.service';
-import {DialogComponent} from './dialog/dialog.component';
 import {
     ActiveMenuDirective,
     ErrorComponent,
@@ -53,25 +28,13 @@ import {
     PageRibbonComponent,
     ProfileService
 } from './layouts';
-import {FileUploaderService} from './dialog/FileUploaderService';
-import {SchoolLifeService} from './school-life/school-life.service';
-import {SettingsService} from './account/settings/settings.service';
-import {Services} from './services';
+import {DematNotesMarksModule} from './marks/marks.module';
+import {DematNotesSchoolReportsModule} from './school-reports/school-reports.module';
+import {DematNotesSchoolLifeModule} from './school-life/school-life.module';
+import {DematNotesResultsModule} from './results/results.module';
+import {DematNotesDialogModule} from './dialog/dialog.module';
 
 @NgModule({
-    exports: [
-        MatMenuModule,
-        MatTabsModule,
-        MatSelectModule,
-        MatTableModule,
-        MatFormFieldModule,
-        MatIconModule,
-        CdkTableModule,
-        MatDialogModule,
-        MatAutocompleteModule,
-        MatListModule,
-        MatGridListModule,
-    ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -83,20 +46,11 @@ import {Services} from './services';
         DematNotesAccountModule,
         DematNotesEntityModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
-        ReactiveFormsModule,
-        FormsModule,
-        MatMenuModule,
-        MatTabsModule,
-        MatSelectModule,
-        MatTableModule,
-        MatFormFieldModule,
-        MatButtonToggleModule,
-        MatIconModule,
-        ChartsModule,
-        MatDialogModule,
-        MatAutocompleteModule,
-        MatListModule,
-        MatGridListModule
+        DematNotesMarksModule,
+        DematNotesSchoolReportsModule,
+        DematNotesSchoolLifeModule,
+        DematNotesResultsModule,
+        DematNotesDialogModule,
     ],
     declarations: [
         JhiMainComponent,
@@ -105,14 +59,6 @@ import {Services} from './services';
         PageRibbonComponent,
         ActiveMenuDirective,
         FooterComponent,
-        MarksComponent,
-        SchoolReportsComponent,
-        ResultsComponent,
-        SchoolLifeComponent,
-        DialogComponent,
-    ],
-    entryComponents: [
-        DialogComponent
     ],
     providers: [
         ProfileService,
@@ -151,12 +97,6 @@ import {Services} from './services';
                 Injector
             ]
         },
-        SchoolReportService,
-        MarksService,
-        SchoolLifeService,
-        FileUploaderService,
-        SettingsService,
-        Services
     ],
     bootstrap: [ JhiMainComponent ]
 })

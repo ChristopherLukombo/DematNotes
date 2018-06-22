@@ -21,15 +21,41 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import org.csid.domain.Inscription;
+import org.csid.domain.School;
+import org.csid.domain.Student;
+import org.csid.domain.User;
+import org.csid.repository.InscriptionRepository;
+import org.csid.repository.SchoolRepository;
+import org.csid.repository.StudentRepository;
+import org.csid.repository.UserRepository;
 import org.csid.service.ISchoolReportService;
+import org.csid.service.mapper.StudentMapper;
+import org.csid.service.mapper.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.List;
 @Service("ISchoolReportService")
 public class SchoolReportServiceImpl_ implements ISchoolReportService {
-
+	
+	private final Logger log = LoggerFactory.getLogger(SchoolReportServiceImpl_.class);
+	
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private StudentRepository studentRepository;
+	@Autowired
+	private InscriptionRepository inscriptionRepository;
+	@Autowired
+	private SchoolRepository schoolRepository;
+	
     @Override
-    public File generateSchoolReport() {
+    public File generateSchoolReport(Long idUser, LocalDate dateInscription) {
         File pdfFile = null;
         FileOutputStream fos = null;
 
@@ -41,9 +67,13 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             PdfWriter writer = PdfWriter.getInstance(document, baos);
             Paragraph paragraph = new Paragraph();
             Font fontTitle = new Font(FontFamily.HELVETICA, 16, Font.BOLD);
-            Font fontWord = new Font(FontFamily.HELVETICA, 12, Font.BOLD);
+            //Font fontWord = new Font(FontFamily.HELVETICA, 12, Font.BOLD);
             Font fontContent = new Font(FontFamily.HELVETICA, 10);
             Font fontComment = new Font(FontFamily.HELVETICA, 6);
+            
+            User user = userRepository.findOne(idUser);
+            Student student = studentRepository.findStudentByUser(user);
+            List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(dateInscription);
             
             document.open();
             
@@ -54,9 +84,9 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             table.getDefaultCell().setUseAscender(true);
             table.getDefaultCell().setUseDescender(true);
             
-            table.addCell(getPdfPCellCustomized("Lycee Jules Verne\n70 avenue Jean Jaurès\n93 000 Bobigny\n01 48 10 22 15 - 15 08 09 14 94", null, 4, 10.0f, "left", true));
+            table.addCell(getPdfPCellCustomized("\n70 avenue Jean Jaurès\n93 000 Bobigny\n01 48 10 22 15 - 15 08 09 14 94", null, 4, 10.0f, "left", true));
             
-            table.addCell(getPdfPCellCustomized("Nom - Prénom : KOK Junior\nNé(e) le : 19/08/1993\nClasse : 2BTS SIO\nAnnée scolaire : 2016 - 2017", null, 4, 10.0f, "left", true));
+            table.addCell(getPdfPCellCustomized("Nom - Prénom : "+user.getLastName()+" "+user.getFirstName()+"\nNé(e) le : "+student.getDateOfBirth()+"\nClasse : TODO\nAnnée scolaire : TODO", null, 4, 10.0f, "left", true));
             
             Image img = Image.getInstance(this.generateQrCode());
             cell.setColspan(1);
@@ -70,11 +100,6 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             document.add(paragraph);
             
             //Bloc 2 Moyennes
-//            table = new PdfPTable(9);
-//            table.setWidthPercentage(100);
-//            table.getDefaultCell().setUseAscender(true);
-//            table.getDefaultCell().setUseDescender(true);
-            
             table = initPdfPTable(9, 100);
             
             //Entilted Moyennes
@@ -108,7 +133,6 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             	cell.setColspan(1);
             	cell.setPadding(5.0f);
                 table.addCell(cell);
-                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
                 
                 cell = new PdfPCell(new Paragraph("\nAllons les enfants de la patriiiie. Le jour de gloireeee est arivéeeeee!!!\n\n", fontContent));
             	cell.setColspan(7);
@@ -117,7 +141,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             }
             cell = new PdfPCell(new Phrase("\nMoyenne générale\n"));
         	cell.setColspan(3);
-        	cell.setPadding(10.0f);
+        	cell.setPadding(5.0f);
             table.addCell(cell);
             
             paragraph = new Paragraph("12.65");

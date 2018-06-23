@@ -57,7 +57,7 @@ export class ResultsComponent implements OnInit {
     public getClassroomsTeacher(): void {
         this.services.getClassrooms(this.currentUser.id, this.schoolIndexSelected)
             .subscribe((classrooms) => {
-                this.reset();
+                // this.reset();
                 this.classrooms = classrooms;
             }, (error) => {
                 console.log(JSON.parse(error.body).message);
@@ -72,21 +72,21 @@ export class ResultsComponent implements OnInit {
         this.userIndexSelected = undefined;
     }
 
-    public getStudentsByTeacher(): void {
-        this.services.getStudents(this.currentUser.id, this.schoolIndexSelected, this.classroomIndexSelected)
-            .subscribe((users) => {
-                this.users = users;
-            }, (error) => {
-                console.log(JSON.parse(error.body).message);
-            });
-    }
-
     public getStudentByTeacher(): void {
         this.services.getResultsByStudent(this.userIndexSelected)
             .subscribe((results) => {
                 this.results = results;
             }, (error) => {
                 console.log(JSON.parse(error).message);
+            });
+    }
+
+    public getStudentsByTeacher(): void {
+        this.services.getStudents(this.currentUser.id, this.schoolIndexSelected, this.classroomIndexSelected)
+            .subscribe((users) => {
+                this.users = users;
+            }, (error) => {
+                console.log(JSON.parse(error.body).message);
             });
     }
 

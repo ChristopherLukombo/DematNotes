@@ -1,9 +1,8 @@
 package org.csid.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import org.csid.service.ISchoolLifeService;
-import org.csid.service.dto.AbsenceDTO;
-import org.csid.service.dto.DelayStudentDTO;
-import org.csid.service.dto.DocumentDTO;
+import org.csid.service.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,31 +13,105 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.*;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
 public class SchoolLifeController {
 
-    private final Logger log = LoggerFactory.getLogger(SchoolLifeController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SchoolLifeController.class);
 
     @Autowired
     private ISchoolLifeService schoolLifeService;
 
-    @RequestMapping(value="schoolLife/absences/{idStudent}", method = RequestMethod.GET)
-    public List<AbsenceDTO> getAbsencesByStudent(@PathVariable final Long idStudent) {
-        return schoolLifeService.getAbsencesByStudent(idStudent);
+    @RequestMapping(value="schoolLife/absences/{accountCode}", method = RequestMethod.GET)
+    public ResponseEntity<List<AbsenceDTO>> getAbsences(@PathVariable final Long accountCode) throws Exception {
+        LOGGER.info("Call API service getAbsences ...");
+
+        List<AbsenceDTO> absenceDTOS;
+        try {
+            absenceDTOS = schoolLifeService.getAbsences(accountCode);
+        } catch (Exception e) {
+            LOGGER.error("Error during absences collecting : " + e.getMessage());
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during absences collecting");
+        }
+
+        if (absenceDTOS == null) {
+            LOGGER.info("Call API getAbsences : No content !");
+            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
+        }
+
+        return new ResponseEntity<>(absenceDTOS, HttpStatus.OK);
     }
 
-    @RequestMapping(value="schoolLife/delayStudent/{idStudent}", method = RequestMethod.GET)
-    public List<DelayStudentDTO> getDelayStudentsByStudent(@PathVariable final Long idStudent) {
-        return schoolLifeService.getDelayStudentsByStudent(idStudent);
+    @RequestMapping(value="schoolLife/delayStudents/{accountCode}", method = RequestMethod.GET)
+    public ResponseEntity<List<DelayStudentDTO>> getDelayStudents(@PathVariable final Long accountCode)
+        throws Exception {
+        LOGGER.info("Call API service getDelayStudents ...");
+
+        List<DelayStudentDTO> delayStudentDTOS;
+        try {
+            delayStudentDTOS = schoolLifeService.getDelayStudents(accountCode);
+        } catch (Exception e) {
+            LOGGER.error("Error during delays collecting : " + e.getMessage());
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during delays collecting");
+        }
+
+        if (delayStudentDTOS == null) {
+            LOGGER.info("Call API getDelayStudents : No content !");
+            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
+        }
+
+        return new ResponseEntity<>(delayStudentDTOS, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "schoolLife/modules/{accountCode}/{idClassroom}", method = RequestMethod.GET)
+    public ResponseEntity<List<ModuleDTO>> getModules(@PathVariable final Long accountCode,
+                                                      @PathVariable final Long idClassroom) throws Exception {
+        LOGGER.info("Call API service getModules ...");
+
+        List<ModuleDTO> moduleDTOS;
+
+        try {
+            moduleDTOS = schoolLifeService.getModules(accountCode, idClassroom);
+        } catch (Exception e) {
+            LOGGER.error("Error during modules collecting : " + e.getMessage());
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during modules collecting");
+        }
+
+        if (moduleDTOS == null) {
+            LOGGER.info("Call API getModules : No content !");
+            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
+        }
+
+        return new ResponseEntity<>(moduleDTOS, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "schoolLife/AbsencesModules", method = RequestMethod.POST)
+    @Timed
+    public ResponseEntity<Object> saveAbsencesModules(@RequestBody AbsenceSearchDTO absenceSearchDTO) throws Exception {
+        LOGGER.info("Call API service saveAbsencesModules ...");
+
+        AbsenceDTO absenceDTO;
+
+        try{
+            absenceDTO = schoolLifeService.saveAbsencesModules(absenceSearchDTO);
+        } catch (Exception e) {
+            LOGGER.error("Error during modules saving : " + e.getMessage());
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during modules saving");
+        }
+
+        return new ResponseEntity<>(absenceDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/schoolLife/upload/{idStudent}", method = RequestMethod.POST)
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable("idStudent") Long idStudent) {
+    public @ResponseBody ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
+                                                           @PathVariable("idStudent") Long idStudent) {
         final String message;
 
         try {
@@ -59,7 +132,7 @@ public class SchoolLifeController {
     @RequestMapping(value = "/schoolLife/download/{idDocument}", method = RequestMethod.GET)
     public ResponseEntity<Object> downloadDocument(final HttpServletResponse response, @PathVariable("idDocument")  final Long idDocument) throws Exception {
 
-        log.info("[API] Call API Service downloadDocument");
+        LOGGER.info("[API] Call API Service downloadDocument");
 
         File file;
         final String contentType;
@@ -82,10 +155,10 @@ public class SchoolLifeController {
             FileCopyUtils.copy(inputStream, response.getOutputStream());
             response.getOutputStream().flush();
         } catch(final FileNotFoundException e) {
-            log.error("File not found", file.getPath());
+            LOGGER.error("File not found", file.getPath());
             throw new Exception(HttpStatus.NOT_FOUND.value() + " File not found " + file.getPath());
         } catch(final IOException e) {
-            log.error("Error during file copy", file.getPath());
+            LOGGER.error("Error during file copy", file.getPath());
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during copy " + file.getPath());
         }
 
@@ -94,7 +167,7 @@ public class SchoolLifeController {
 
     @RequestMapping(value = "/schoolLife/delete/{idDocument}", method = RequestMethod.DELETE)
     public Boolean deleteFile(@PathVariable final Long idDocument) {
-        log.info("[API] Call API Service deleteDocument");
+        LOGGER.info("[API] Call API Service deleteDocument");
 
         return schoolLifeService.deleteFile(idDocument);
     }

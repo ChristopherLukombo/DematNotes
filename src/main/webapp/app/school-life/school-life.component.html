@@ -2,83 +2,141 @@
 <mat-tab-group>
     <mat-tab label="Feuille d'appel">
         <span>Appel du : </span>
-         <!-- Listes déroulante -->
-         <mat-form-field>
-            <mat-select name="schoolSelected" [(ngModel)]="schoolSelected" (ngModelChange)="getClassroomsByCurrentUserTeacher()" placeholder="Ecoles">
-                <mat-option *ngFor="let school of schools" [value]="school.id">
-                    {{ school.wording }} - {{school.city}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
 
-        <mat-form-field *ngIf="schoolSelected && this.classrooms.length > 0">
-            <mat-select name="classroomSelected" [(ngModel)]="classroomSelected" (ngModelChange)="getStudentsUserByCurrentUserTeacher()" placeholder="Classes">
-                <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
-                    {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+        <form #f="ngForm" (ngSubmit)="saveAbsences()">
+            <!-- Listes déroulante -->
+            <mat-form-field>
+                <mat-select name="schoolSelected" [(ngModel)]="this.schoolSelected"
+                            (ngModelChange)="this.getClassrooms()"
+                            placeholder="Ecoles">
+                    <mat-option *ngFor="let school of this.schools" [value]="school.id">
+                        {{ school.wording }} - {{school.city}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <mat-form-field *ngIf="classroomSelected">
-            <mat-select name="userSelected" [(ngModel)]="userSelected" (ngModelChange)="getStudentUserByCurrentUserTeacher()" placeholder="Etudiants">
-                <mat-option *ngFor="let user of users" [value]="user.id">
-                    {{ user.firstName }} -  {{ user.lastName }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+            <mat-form-field *ngIf="schoolSelected && this.classrooms.length > 0">
+                <mat-select name="classroomSelected" [(ngModel)]="classroomSelected"
+                            (ngModelChange)="this.getStudents()"
+                            placeholder="Classes">
+                    <mat-option *ngFor="let classroom of this.classrooms" [value]="classroom.id">
+                        {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <!--<button type="submit" class="btn btn-dark" name="validate" (click)="saveAbsences()">Valider</button>-->
+            <mat-form-field *ngIf="this.classroomSelected">
+                <mat-select name="moduleSelected" [(ngModel)]="this.moduleSelected" #module="ngModel"
+                            placeholder="Modules" required>
+                    <mat-option *ngFor="let module of modules" [value]="module.id">
+                        {{ module.entitled }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-    <div *ngIf="classroomSelected">
-        <table class="table table-striped tab">
-            <thead>
-            <tr>
-                <th scope="col"> # </th>
-                <th scope="col"> Prénom </th>
-                <th scope="col"> Nom </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let user of users">
-                <td scope="row"></td>
-                <td> {{user.firstName}} </td>
-                <td> {{user.lastName}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+            <div class="alert alert-danger" role="alert" *ngIf="(module?.errors)">
+                <div *ngIf="module?.touched && module?.errors">
+                    Le module est obligatoire
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-warning" name="validate" [disabled]="!f.form.valid">Valider</button>
+
+            <div class="form-group">
+                <label class="form-control-label" jhiTranslate="dematNotesApp.absence.startDate" for="field_startDate">Start
+                    Date</label>
+                <div class="d-flex">
+                    <input id="field_startDate" type="datetime-local" class="form-control" name="startDate"
+                           [(ngModel)]="absenceSearch.startDate"
+                           required/>
+                </div>
+                <div [hidden]="!(f.controls.startDate?.dirty && f.controls.startDate?.invalid)">
+                    <small class="form-text text-danger"
+                           [hidden]="!f.controls.startDate?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                    <small class="form-text text-danger"
+                           [hidden]="!f.controls.startDate?.errors?.ZonedDateTimelocal"
+                           jhiTranslate="f.validation.ZonedDateTimelocal">
+                        This field should be a date and time.
+                    </small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-control-label" jhiTranslate="dematNotesApp.absence.endDate" for="field_endDate">End
+                    Date</label>
+                <div class="d-flex">
+                    <input id="field_endDate" type="datetime-local" class="form-control" name="endDate"
+                           [(ngModel)]="absenceSearch.endDate"
+                           required/>
+                </div>
+                <div [hidden]="!(f.controls.endDate?.dirty && f.controls.endDate?.invalid)">
+                    <small class="form-text text-danger"
+                           [hidden]="!f.controls.endDate?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                    <small class="form-text text-danger"
+                           [hidden]="!f.controls.endDate?.errors?.ZonedDateTimelocal"
+                           jhiTranslate="entity.validation.ZonedDateTimelocal">
+                        This field should be a date and time.
+                    </small>
+                </div>
+            </div>
+
+            <div *ngIf="classroomSelected">
+                <table class="table table-striped tab">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Prénom</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Absence</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let user of users">
+                        <td scope="row"></td>
+                        <td>{{user.firstName}}</td>
+                        <td>{{user.lastName}}</td>
+                        <td>
+                            <mat-checkbox [(ngModel)]="this.absencesSelected[this.user.id]"
+                                          [ngModelOptions]="{standalone: true}" required></mat-checkbox>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+
     </mat-tab>
 
     <!-- Mon espace pour l'étudiant -->
-    <mat-tab label="Mon espace" *ngIf="this.absences">
+    <mat-tab label="Mon espace">
         <span style="float:right;">
             <mat-icon svgIcon="upload" (click)="openDialog()" class="icon"></mat-icon>
         </span>
-        <span>Mon parcours : </span>
+        <span>Mon parcours :</span>
 
-        <table class="table table-striped tab">
+        <table class="table table-striped tab" *ngIf="this.absences || this.delayStudents">
             <thead>
             <tr>
-                <th scope="col"> # </th>
-                <th scope="col"> Prénom </th>
-                <th scope="col"> Nom </th>
-                <th scope="col"> Nombre d'absences </th>
-                <th scope="col"> Nombre de retards  </th>
+                <th scope="col">#</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Nombre d'absences</th>
+                <th scope="col">Nombre de retards</th>
             </tr>
             </thead>
             <tbody>
             <tr>
                 <td scope="row"></td>
-                <td> {{currentUser.firstName}} </td>
-                <td> {{currentUser.lastName}} </td>
-                <td> {{this.absences.length}} </td>
-                <td> {{this.delayStudents.length}} </td>
+                <td>{{this.currentUser.firstName}}</td>
+                <td>{{this.currentUser.lastName}}</td>
+                <td>{{this.absences.length}}</td>
+                <td>{{this.delayStudents.length}}</td>
             </tr>
             </tbody>
         </table>
 
     </mat-tab>
 </mat-tab-group>
-
-<img src="../../content/images/upload.svg" style="display:none;">
-

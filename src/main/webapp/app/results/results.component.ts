@@ -46,7 +46,7 @@ export class ResultsComponent implements OnInit {
     }
 
     private getSchools(account): void {
-        this.services.getSchoolsByTeacher(account.id)
+        this.services.getSchools(account.id)
             .subscribe((schools) => {
                 this.schools = schools;
             }, (error) => {
@@ -55,7 +55,7 @@ export class ResultsComponent implements OnInit {
     }
 
     public getClassroomsTeacher(): void {
-        this.services.getClassroomsByTeacher(this.currentUser.id, this.schoolIndexSelected)
+        this.services.getClassrooms(this.currentUser.id, this.schoolIndexSelected)
             .subscribe((classrooms) => {
                 this.reset();
                 this.classrooms = classrooms;
@@ -73,7 +73,7 @@ export class ResultsComponent implements OnInit {
     }
 
     public getStudentsByTeacher(): void {
-        this.services.getStudentsByTeacher(this.currentUser.id, this.schoolIndexSelected, this.classroomIndexSelected)
+        this.services.getStudents(this.currentUser.id, this.schoolIndexSelected, this.classroomIndexSelected)
             .subscribe((users) => {
                 this.users = users;
             }, (error) => {

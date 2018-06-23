@@ -13,7 +13,7 @@
 
         <mat-form-field *ngIf="schoolIndexSelected && this.classrooms !== null && this.classrooms.length > 0">
             <mat-select name="classroomSelected" [(ngModel)]="classroomIndexSelected"
-                        (ngModelChange)="this.getStudentsByTeacher()" placeholder="Classes">
+                        (ngModelChange)="this.getStudents()" placeholder="Classes">
                 <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
                     {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
                 </mat-option>

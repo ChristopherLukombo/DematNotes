@@ -1,5 +1,5 @@
-import { Route } from '@angular/router';
-import { UserRouteAccessService } from '../shared';
+import {Route} from '@angular/router';
+import {UserRouteAccessService} from '../shared';
 import {SchoolLifeComponent} from './school-life.component';
 
 export const schoolLifeRoute: Route = {

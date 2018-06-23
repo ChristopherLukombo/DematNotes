@@ -19,6 +19,10 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {CdkTableModule} from '@angular/cdk/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Services} from '../services';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
     exports: [
@@ -33,6 +37,9 @@ import {Services} from '../services';
         MatAutocompleteModule,
         MatListModule,
         MatGridListModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule
     ],
     imports: [
         DematNotesSharedModule,
@@ -49,7 +56,12 @@ import {Services} from '../services';
         MatDialogModule,
         MatAutocompleteModule,
         MatListModule,
-        MatGridListModule
+        MatGridListModule,
+        MatCheckboxModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        CommonModule,
+        ReactiveFormsModule
     ],
     declarations: [
         SchoolLifeComponent,
@@ -57,7 +69,7 @@ import {Services} from '../services';
     entryComponents: [
     ],
     providers: [
-        Services
+        Services,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

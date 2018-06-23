@@ -11,13 +11,16 @@ import {Results} from './results/results.model';
 import {Observable} from 'rxjs/Observable';
 import {Absence} from './entities/absence';
 import {Document} from './entities/document';
+import {DelayStudent} from './entities/delay-student';
+import {JhiDateUtils} from 'ng-jhipster';
+import {AbsenceSearch} from './school-life/absenceSearch';
 
 @Injectable()
 export class Services {
 
     private resourceUrl =  SERVER_API_URL + 'api';
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private dateUtils: JhiDateUtils) { }
 
     // Part General
 
@@ -27,7 +30,7 @@ export class Services {
      * @param {number} idUser
      * @returns {Observable<School[]>}
      */
-    getSchoolsByTeacher(idUser: number): Observable<School[]> {
+    getSchools(idUser: number): Observable<School[]> {
         return this.http.get<School[]>(this.resourceUrl + '/marks/displaySchools/' + `${idUser}`);
     }
 
@@ -37,7 +40,7 @@ export class Services {
      * @param idSchool
      * @returns {Observable<Classroom[]>}
      */
-    getClassroomsByTeacher(idUser, idSchool): Observable<Classroom[]> {
+    getClassrooms(idUser, idSchool): Observable<Classroom[]> {
         return this.http.get<Classroom[]>(this.resourceUrl + '/marks/displayClassrooms/' + `${idUser}/${idSchool}`);
     }
 
@@ -48,7 +51,7 @@ export class Services {
      * @param idClassroom
      * @returns {Observable<User[]>}
      */
-    getStudentsByTeacher(idUser, idSchool, idClassroom): Observable<User[]> {
+    getStudents(idUser, idSchool, idClassroom): Observable<User[]> {
         return this.http.get<User[]>(this.resourceUrl + '/marks/displayStudents/' + `${idUser}/${idSchool}/${idClassroom}`);
     }
 
@@ -114,20 +117,50 @@ export class Services {
 
     /**
      * Returns all absences for student
-     * @param {number} idStudent
+     * @param {number} accountCode
      * @returns {Observable<Absence[]>}
      */
-    getAbsencesByStudent(idStudent: number) {
-        return this.http.get<Absence[]>(this.resourceUrl + '/schoolLife/absences/' + `${idStudent}`);
+    getAbsences(accountCode: number) {
+        return this.http.get<Absence[]>(this.resourceUrl + '/schoolLife/absences/' + `${accountCode}`);
     }
 
     /**
      * Returns all Delay for a student
-     * @param {number} idStudent
+     * @param {number} accountCode
      * @returns {Observable<Absence[]>}
      */
-    getDelayStudentsByStudent(idStudent: number) {
-        return this.http.get<Absence[]>(this.resourceUrl + '/schoolLife/delayStudent/' + `${idStudent}`);
+    getDelayStudents(accountCode: number) {
+        return this.http.get<DelayStudent[]>(this.resourceUrl + '/schoolLife/delayStudents/' + `${accountCode}`);
+    }
+
+    /**
+     * Returns modules according teacher ID and Classroom ID
+     * @param {number} accountCode
+     * @param {number} idClassroom
+     * @returns {Observable<Module[]>}
+     */
+    getModulesByTeacherAndClassroom(accountCode: number, idClassroom: number) {
+        return this.http.get<Module[]>(this.resourceUrl + '/schoolLife/modules/' + `${accountCode}` + '/' + `${idClassroom}`);
+    }
+
+    /**
+     * Saves Absences of students in a module
+     * @returns {Observable<Absence>}
+     */
+    saveAbsencesModules(absenceSearch) {
+        return this.http.post<Absence>(this.resourceUrl + '/schoolLife/AbsencesModules', this.convert(absenceSearch));
+    }
+
+    /**
+     * Convert a AbsenceSearch to a JSON which can be sent to the server.
+     */
+    private convert(absenceSearch: AbsenceSearch): AbsenceSearch {
+        const copy: Absence = Object.assign({}, absenceSearch);
+
+        copy.startDate = this.dateUtils.toDate(absenceSearch.startDate);
+
+        copy.endDate = this.dateUtils.toDate(absenceSearch.endDate);
+        return copy;
     }
 
     // Part Profile
@@ -139,10 +172,10 @@ export class Services {
      * @returns {Observable<HttpEvent<any>>}
      */
     uploadPicture(file: File, idStudent: any) {
-        const formdata: FormData = new FormData();
-        formdata.append('file', file);
+        const formData: FormData = new FormData();
+        formData.append('file', file);
 
-        const req = new HttpRequest('POST', this.resourceUrl +  '/schoolLife/upload/' + `${idStudent}`, formdata, {
+        const req = new HttpRequest('POST', this.resourceUrl +  '/schoolLife/upload/' + `${idStudent}`, formData, {
             reportProgress: true,
             responseType: 'text',
 

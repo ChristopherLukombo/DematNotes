@@ -9,27 +9,34 @@ import {DialogComponent} from '../dialog/dialog.component';
 import {Absence} from '../entities/absence';
 import {DelayStudent} from '../entities/delay-student';
 import {Services} from '../services';
+import {Module} from '../entities/module';
+import {AbsenceSearch} from './absenceSearch';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
     selector: 'jhi-school-life',
     templateUrl: './school-life.component.html'
 })
 export class SchoolLifeComponent implements OnInit {
-    currentUser: any;
+    currentUser: User = new User();
 
     schools: School[] = [];
     classrooms: Classroom[] = [];
     users: User[] = [];
+    modules: Module[] = [];
 
     schoolSelected;
     classroomSelected;
     userSelected;
+    moduleSelected;
 
-    marks: string[] = Array<string>(this.users.length);
-    comments: string[] = Array<string>(this.users.length);
+    absences: Absence[] = [];
+    delayStudents: DelayStudent[] = [];
 
-    absences: Absence[];
-    delayStudents: DelayStudent[];
+    imgUpload = require('../../content/images/upload.svg');
+
+    absencesSelected: number[] = Array<number>(this.users.length);
+    absenceSearch: AbsenceSearch = new AbsenceSearch();
 
     constructor(
         private principal: Principal,
@@ -40,75 +47,85 @@ export class SchoolLifeComponent implements OnInit {
     ) {
         this.iconRegistry.addSvgIcon(
             'upload',
-            this.sanitizer.bypassSecurityTrustResourceUrl('../../content/4d599ba6bf2eb50c397d5aefd3b20e00.svg'));
+            this.sanitizer
+                .bypassSecurityTrustResourceUrl(this.imgUpload)
+        );
     }
 
     ngOnInit(): void {
         this.loadCurrentUser();
     }
 
+    /**
+     * Load Current User logged in
+     */
     private loadCurrentUser(): void {
-        this.principal.identity().then((account) => {
-            this.currentUser = account;
+        this.principal.identity().then((currentUser) => {
+            this.currentUser = currentUser;
+            // As soon as we know current User
+            // We loaded All
+            this.getSchools(currentUser);
+            this.getAbsences(currentUser);
+            this.getDelayStudents(currentUser);
+        });
+    }
 
-            this.services.getStudentByIdUser(account.id).subscribe((student) => {
-                if (student) {
-                    this.services.getAbsencesByStudent(student.id).subscribe((absences) => {
-                        this.absences = absences;
-                    }, (secondError) => {
-                        console.log(JSON.parse(secondError.body).message);
-                    });
-                    this.services.getDelayStudentsByStudent(student.id).subscribe((delayStudents) => {
-                        this.delayStudents = delayStudents;
-                    }, (secondError) => {
-                        console.log(JSON.parse(secondError.body).message);
-                    });
-                }
-            }, (firstError) => {
-                console.log(JSON.parse(firstError.body).message);
-            });
+    // Part Teacher
 
-            this.services.getSchoolsByTeacher(
-                account.id
-            ).subscribe((schools) => {
+    private getSchools(account): void {
+        this.services.getSchools(account.id)
+            .subscribe((schools) => {
                 this.schools = schools;
             }, (error) => {
                 console.log(JSON.parse(error.body).message);
             });
-        });
     }
 
-    getClassroomsByCurrentUserTeacher(): void {
-        this.services.getClassroomsByTeacher(
-            this.currentUser.id,
-            this.schoolSelected
-        ).subscribe((classrooms) => {
-            this.userSelected = undefined;
-            this.classroomSelected = undefined;
-            this.classrooms = classrooms;
-        }, (error) => {
-            console.log(JSON.parse(error.body).message);
-        });
+    public getClassrooms(): void {
+        this.services.getClassrooms(this.currentUser.id, this.schoolSelected)
+            .subscribe((classrooms) => {
+                this.userSelected = undefined;
+                this.classroomSelected = undefined;
+                this.classrooms = classrooms;
+            }, (error) => {
+                console.log(JSON.parse(error.body).message);
+            });
     }
 
-    getStudentsUserByCurrentUserTeacher(): void {
-        this.services.getStudentsByTeacher(
-            this.currentUser.id,
-            this.schoolSelected,
-            this.classroomSelected).subscribe((users) => {
-            this.users = users;
-        }, (error) => {
-            console.log(JSON.parse(error.body).message);
-        });
+    private getModules(): void {
+        this.services.getModulesByTeacherAndClassroom(this.currentUser.id, this.classroomSelected)
+            .subscribe((modules) => {
+                this.modules = modules;
+            }, (error) => {
+                console.log(JSON.parse(error.body).message);
+            });
     }
 
-    getStudentUserByCurrentUserTeacher(): void {
-        this.services.getStudentUserByIdUser(
-            this.userSelected
-        ).subscribe(
-            (users) => {
-                this.users = [];
-                this.users.push(users);
+    public getStudents(): void {
+        this.services.getStudents(this.currentUser.id, this.schoolSelected, this.classroomSelected)
+            .subscribe((users) => {
+                this.users = users;
+                this.getModules();
+            }, (error) => {
+                console.log(JSON.parse(error.body).message);
+            });
+    }
+
+    // Part Student
+
+    private getAbsences(account): void {
+        this.services.getAbsences(account.id)
+            .subscribe((absences) => {
+                this.absences = absences;
+            }, (error) => {
+                console.log(JSON.parse(error.body).message);
+            });
+    }
+
+    private getDelayStudents(account): void {
+        this.services.getDelayStudents(account.id)
+            .subscribe((delayStudents) => {
+                this.delayStudents = delayStudents;
             }, (error) => {
                 console.log(JSON.parse(error.body).message);
             });
@@ -128,4 +145,30 @@ export class SchoolLifeComponent implements OnInit {
         });
     }
 
+    public saveAbsences(): void {
+        const accountsCode = this.getAccountsCode();
+
+        this.absenceSearch.moduleId = this.moduleSelected;
+        this.absenceSearch.accounts = accountsCode;
+
+        this.services.saveAbsencesModules(this.absenceSearch).subscribe((response) => {
+            console.log('ok ' + response);
+        }, (error) => {
+            console.log(JSON.parse(error.body).message);
+        });
+
+    }
+
+    private getAccountsCode() {
+        const accountsCode = [];
+
+        for (let i = 0; i < this.absencesSelected.length; i++) {
+            if (this.absencesSelected[i] !== undefined) {
+                if (!accountsCode.includes(i)) {
+                    accountsCode.push(i);
+                }
+            }
+        }
+        return accountsCode;
+    }
 }

@@ -12,7 +12,7 @@
     <div class="row">
     </div>
     <br/>
-    <div class="table-responsive" *ngIf="students">
+    <div class="table-responsive" *ngIf="accountsCode">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -31,7 +31,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let student of students ;trackBy: trackId">
+            <tr *ngFor="let student of accountsCode ;trackBy: trackId">
                 <td><a [routerLink]="['../student', student.id ]">{{student.id}}</a></td>
                 <td>{{student.ine}}</td>
                 <td>{{student.email}}</td>

@@ -36,8 +36,8 @@
         </div>
         <div class="form-group">
             <label jhiTranslate="dematNotesApp.inscription.student" for="field_student">Student</label>
-            <select class="form-control" id="field_student" multiple name="student" [(ngModel)]="inscription.students">
-                <option [ngValue]="getSelected(inscription.students, studentOption)" *ngFor="let studentOption of students; trackBy: trackStudentById">{{studentOption.id}}</option>
+            <select class="form-control" id="field_student" multiple name="student" [(ngModel)]="inscription.accountsCode">
+                <option [ngValue]="getSelected(inscription.accountsCode, studentOption)" *ngFor="let studentOption of accountsCode; trackBy: trackStudentById">{{studentOption.id}}</option>
             </select>
         </div>
     </div>

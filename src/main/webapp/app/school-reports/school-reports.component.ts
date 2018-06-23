@@ -43,7 +43,7 @@ export class SchoolReportsComponent implements OnInit {
     private loadCurrentUser(): void {
         this.principal.identity().then((account) => {
             this.currentUser = account;
-            this.services.getSchoolsByTeacher(account.id)
+            this.services.getSchools(account.id)
                 .subscribe(
                     (schools) => {
                         this.schools = schools;
@@ -54,7 +54,7 @@ export class SchoolReportsComponent implements OnInit {
     }
 
     getClassroomsByCurrentUserTeacher(): void {
-        this.services.getClassroomsByTeacher(this.currentUser.id, this.schoolSelected)
+        this.services.getClassrooms(this.currentUser.id, this.schoolSelected)
             .subscribe(
                 (classrooms) => {
                     this.userSelected = undefined;
@@ -66,7 +66,7 @@ export class SchoolReportsComponent implements OnInit {
     }
 
     getStudentsUserByCurrentUserTeacher(): void {
-        this.services.getStudentsByTeacher(this.currentUser.id, this.schoolSelected, this.classroomSelected)
+        this.services.getStudents(this.currentUser.id, this.schoolSelected, this.classroomSelected)
             .subscribe(
                 (users) => {
                     this.users = users;

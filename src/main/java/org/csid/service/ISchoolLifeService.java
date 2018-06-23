@@ -1,8 +1,6 @@
 package org.csid.service;
 
-import org.csid.service.dto.AbsenceDTO;
-import org.csid.service.dto.DelayStudentDTO;
-import org.csid.service.dto.DocumentDTO;
+import org.csid.service.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,9 +11,33 @@ import java.util.Map;
 @Service
 public interface ISchoolLifeService {
 
-    List<AbsenceDTO> getAbsencesByStudent(final Long idStudent);
+    /**
+     * Returns the absences of a student according to accountCode User
+     * @param accountCode
+     * @return the list of entities
+     */
+    List<AbsenceDTO> getAbsences(final Long accountCode) throws Exception;
 
-    List<DelayStudentDTO> getDelayStudentsByStudent(final Long idStudent);
+    /**
+     * Returns the delays of a student according to accountCode User
+     * @param accountCode
+     * @return the list of entities
+     */
+    List<DelayStudentDTO> getDelayStudents(final Long accountCode) throws Exception;
+
+    /**
+     * Returns the modules of a Teacher link to the classroom
+     * @param accountCode
+     * @param idClassroom
+     * @return the list of entities
+     */
+    List<ModuleDTO> getModules(final Long accountCode, final Long idClassroom) throws Exception;
+
+    /**
+     * Saves Absences of students in a module according to accountCode User
+     * @return Absence
+     */
+    AbsenceDTO saveAbsencesModules(AbsenceSearchDTO absenceSearchDTO) throws Exception;
 
     void store(MultipartFile file, Long idStudent);
 

@@ -35,7 +35,7 @@
                     </div>
                 </td>
                 <td>
-                    <span *ngFor="let student of absence.students; let last = last">
+                    <span *ngFor="let student of absence.accountsCode; let last = last">
                             <a class="form-control-static" [routerLink]="['../student', student?.id ]">{{student.id}}</a>{{last ? '' : ', '}}
                         </span>
                 </td>

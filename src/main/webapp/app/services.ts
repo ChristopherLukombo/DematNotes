@@ -163,19 +163,19 @@ export class Services {
         return copy;
     }
 
-    // Part Profile
+    // Part Documents User
 
     /**
      * Uploads picture profile for a user
      * @param {File} file
-     * @param idStudent
+     * @param accountCode
      * @returns {Observable<HttpEvent<any>>}
      */
-    uploadPicture(file: File, idStudent: any) {
+    uploadPicture(file: File, accountCode: number) {
         const formData: FormData = new FormData();
         formData.append('file', file);
 
-        const req = new HttpRequest('POST', this.resourceUrl +  '/schoolLife/upload/' + `${idStudent}`, formData, {
+        const req = new HttpRequest('POST', this.resourceUrl +  '/schoolLife/upload/' + `${accountCode}`, formData, {
             reportProgress: true,
             responseType: 'text',
 
@@ -184,15 +184,13 @@ export class Services {
         return this.http.request(req);
     }
 
-    // Part Documents User
-
     /**
      * Returns all documents for a user
-     * @param idUser
+     * @param accountCode
      * @returns {Observable<Document[]>}
      */
-    getDocuments(idUser) {
-        return this.http.get<Document[]>(this.resourceUrl + '/schoolLife/getAllFiles/' + `${idUser}`);
+    getDocuments(accountCode) {
+        return this.http.get<Document[]>(this.resourceUrl + '/schoolLife/getAllFiles/' + `${accountCode}`);
     }
 
     /**

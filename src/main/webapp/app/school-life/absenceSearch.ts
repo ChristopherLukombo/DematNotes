@@ -6,7 +6,7 @@ export class AbsenceSearch implements BaseEntity {
         public startDate?: any,
         public endDate?: any,
         public moduleId?: number,
-        public accounts?: number[],
+        public accountsCode?: number[],
     ) {
     }
 }

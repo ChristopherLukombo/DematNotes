@@ -149,7 +149,7 @@ export class SchoolLifeComponent implements OnInit {
         const accountsCode = this.getAccountsCode();
 
         this.absenceSearch.moduleId = this.moduleSelected;
-        this.absenceSearch.accounts = accountsCode;
+        this.absenceSearch.accountsCode = accountsCode;
 
         this.services.saveAbsencesModules(this.absenceSearch).subscribe((response) => {
             console.log('ok ' + response);

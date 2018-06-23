@@ -1,6 +1,5 @@
 package org.csid.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import org.csid.service.ISchoolLifeService;
 import org.csid.service.dto.*;
 import org.slf4j.Logger;
@@ -13,12 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.*;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -93,7 +89,6 @@ public class SchoolLifeController {
     }
 
     @RequestMapping(value = "schoolLife/AbsencesModules", method = RequestMethod.POST)
-    @Timed
     public ResponseEntity<Object> saveAbsencesModules(@RequestBody AbsenceSearchDTO absenceSearchDTO) throws Exception {
         LOGGER.info("Call API service saveAbsencesModules ...");
 
@@ -109,30 +104,49 @@ public class SchoolLifeController {
         return new ResponseEntity<>(absenceDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/schoolLife/upload/{idStudent}", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
-                                                           @PathVariable("idStudent") Long idStudent) {
+    /**
+     * Upload a file for student according to accountCode
+     * @param file
+     * @param accountCode
+     */
+    @RequestMapping(value = "/schoolLife/upload/{accountCode}", method = RequestMethod.POST)
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
+                                             @PathVariable("accountCode") Long accountCode) {
+        LOGGER.info("Call API service uploadFile ...");
         final String message;
 
         try {
-            this.schoolLifeService.store(file, idStudent);
-            message = "You successfully uploaded " + file.getOriginalFilename() + "!";
+            this.schoolLifeService.store(file, accountCode);
+            message = "Successfully uploaded " + file.getOriginalFilename() + "!";
         } catch (Exception e) {
+            LOGGER.error(HttpStatus.INTERNAL_SERVER_ERROR + " FAIL to upload " + file.getOriginalFilename() + "!" + e.getMessage());
             throw new RuntimeException(HttpStatus.INTERNAL_SERVER_ERROR + " FAIL to upload " + file.getOriginalFilename() + "!" + e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @RequestMapping(value = "/schoolLife/getAllFiles/{idStudent}", method = RequestMethod.GET)
-    public List<DocumentDTO> getAllFiles(@PathVariable("idStudent") final Long idStudent) {
-        return this.schoolLifeService.getAllFiles(idStudent);
+    @RequestMapping(value = "/schoolLife/getAllFiles/{accountCode}", method = RequestMethod.GET)
+    public ResponseEntity<List<DocumentDTO>> getAllFiles(@PathVariable("accountCode") final Long accountCode) throws Exception {
+        LOGGER.info("Call API service uploadFile ...");
+
+        List<DocumentDTO> documentDTOS;
+
+        try {
+            documentDTOS = this.schoolLifeService.getAllFiles(accountCode);
+        } catch (Exception e) {
+            LOGGER.error("Error during files uploading : " + e.getMessage());
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during files uploading");
+        }
+
+        return new ResponseEntity<>(documentDTOS, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/schoolLife/download/{idDocument}", method = RequestMethod.GET)
-    public ResponseEntity<Object> downloadDocument(final HttpServletResponse response, @PathVariable("idDocument")  final Long idDocument) throws Exception {
+    public ResponseEntity<Object> downloadDocument(final HttpServletResponse response,
+                                                   @PathVariable("idDocument")  final Long idDocument) throws Exception {
 
-        LOGGER.info("[API] Call API Service downloadDocument");
+        LOGGER.info("Call API Service downloadDocument ...");
 
         File file;
         final String contentType;
@@ -166,10 +180,19 @@ public class SchoolLifeController {
     }
 
     @RequestMapping(value = "/schoolLife/delete/{idDocument}", method = RequestMethod.DELETE)
-    public Boolean deleteFile(@PathVariable final Long idDocument) {
-        LOGGER.info("[API] Call API Service deleteDocument");
+    public ResponseEntity<Boolean> deleteFile(@PathVariable final Long idDocument) throws Exception {
+        LOGGER.info("Call API Service deleteDocument");
 
-        return schoolLifeService.deleteFile(idDocument);
+        Boolean isDeleted;
+
+        try {
+            isDeleted = schoolLifeService.deleteFile(idDocument);
+        } catch (Exception e) {
+            LOGGER.error("Error during file deleting : " + e.getMessage());
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during file deleting");
+        }
+
+        return new ResponseEntity<>(isDeleted, HttpStatus.OK);
     }
 
 }

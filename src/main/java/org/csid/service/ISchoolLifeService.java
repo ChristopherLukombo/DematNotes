@@ -39,12 +39,34 @@ public interface ISchoolLifeService {
      */
     AbsenceDTO saveAbsencesModules(AbsenceSearchDTO absenceSearchDTO) throws Exception;
 
-    void store(MultipartFile file, Long idStudent);
+    /**
+     * Upload a file for student according to accountCode
+     * @param file
+     * @param accountCode
+     */
+    void store(MultipartFile file, Long accountCode) throws Exception;
 
-    List<DocumentDTO> getAllFiles(final Long idStudent);
+    /**
+     * Returns a list of all Files uploaded
+     * @param accountCode
+     * @return list of entities
+     * @throws Exception
+     */
+    List<DocumentDTO> getAllFiles(final Long accountCode) throws Exception;
 
-    Map<String,File> getFile(final Long idDocument);
+    /**
+     * Returns a Map which contains type of file and the file
+     * @param idDocument
+     * @return Map<String,File>
+     */
+    Map<String,File> getFile(final Long idDocument) throws Exception;
 
-    Boolean deleteFile(final Long idDocument);
+    /**
+     * Delete File and return true if it's deleting
+     * @param idDocument
+     * @return Boolean
+     * @throws Exception
+     */
+    Boolean deleteFile(final Long idDocument) throws Exception;
 
 }

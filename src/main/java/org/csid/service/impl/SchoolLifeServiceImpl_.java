@@ -4,7 +4,10 @@ import org.csid.domain.*;
 import org.csid.repository.*;
 import org.csid.service.ISchoolLifeService;
 import org.csid.service.dto.*;
-import org.csid.service.mapper.*;
+import org.csid.service.mapper.AbsenceMapper;
+import org.csid.service.mapper.DelayStudentMapper;
+import org.csid.service.mapper.DocumentMapper;
+import org.csid.service.mapper.ModuleMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,9 +59,6 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
     @Autowired
     private StudentRepository studentRepository;
-
-    @Autowired
-    private StudentMapper studentMapper;
 
     @Autowired
     private TeacherRepository teacherRepository;
@@ -160,7 +159,6 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
         final List<ModuleDTO> moduleDTOS = new ArrayList<>();
 
         try {
-
             user = userRepository.findOne(accountCode);
             teacher = teacherRepository.findByUser(user);
             classroom = classroomRepository.findOne(idClassroom);
@@ -227,8 +225,39 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
         }
     }
 
-    public void store(MultipartFile file, Long idStudent) {
-        final Path rootLocation = Paths.get(path + "/schoolLife/" + idStudent);
+    /**
+     * Uploads a file for student according to accountCode
+     * @param file
+     * @param accountCode
+     */
+    public void store(MultipartFile file, Long accountCode) throws Exception {
+        User user;
+        Student student;
+
+        try {
+            user = userRepository.findOne(accountCode);
+            student = studentRepository.findStudentByUser(user);
+
+            final Path rootLocation = createFolder(file, student);
+
+            Files.copy(file.getInputStream(), rootLocation.resolve(file.getOriginalFilename()));
+
+            final Document document = new Document();
+            document.setStudent(student);
+            document.setEntitled(file.getOriginalFilename());
+            document.setUrl(student.getId() + "/" + file.getOriginalFilename());
+            document.setVisible(true);
+            document.setType(file.getContentType());
+
+            documentRepository.save(document);
+        } catch (Exception e) {
+            LOGGER.error("Error during storing file " + e.getMessage());
+            throw new Exception("Error during storing file");
+        }
+    }
+
+    private Path createFolder(MultipartFile file, Student s) {
+        final Path rootLocation = Paths.get(path + "/schoolLife/" + s.getId());
 
         if (!new File(rootLocation + "").exists()) {
             new File(rootLocation + "").mkdirs();
@@ -240,60 +269,69 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
             fileTmp.delete();
         }
 
+        return rootLocation;
+    }
+
+    /**
+     * Returns a list of all Files uploaded
+     * @param accountCode
+     * @return list of entities
+     * @throws Exception
+     */
+    public List<DocumentDTO> getAllFiles(final Long accountCode) throws Exception {
         try {
-            Files.copy(file.getInputStream(), rootLocation.resolve(file.getOriginalFilename()));
+            final User user = userRepository.findOne(accountCode);
+            final Student student = studentRepository.findStudentByUser(user);
 
-            final Student student = studentRepository.findOne(idStudent);
+            final List<Document> documents = documentRepository.findAllByStudent(student);
 
-            final Document document = new Document();
-            document.setStudent(student);
-            document.setEntitled(file.getOriginalFilename());
-            document.setUrl(idStudent + "/" + file.getOriginalFilename());
-            document.setVisible(true);
-            document.setType(file.getContentType());
+            final List<DocumentDTO> documentDTOS = new ArrayList<>();
 
-            documentRepository.save(document);
+            for (int i = 0; i < documents.size(); i++) {
+                documentDTOS.add(i, documentMapper.toDto(documents.get(i)));
+                final String urlTemp = path + "/schoolLife/" + documentMapper.toDto(documents.get(i)).getUrl();
+                documentDTOS.get(i).setUrl(urlTemp);
+            }
 
+            return documentDTOS;
         } catch (Exception e) {
-            throw new RuntimeException("FAIL!");
+            LOGGER.error("Error during collecting files " + e.getMessage());
+            throw new Exception("Error during collecting files");
         }
     }
 
-    public List<DocumentDTO> getAllFiles(final Long idStudent) {
-        final Student student = studentRepository.findOne(idStudent);
+    /**
+     * Returns a Map which contains type of file and the file
+     * @param idDocument
+     * @return Map<String,File>
+     */
+    public Map<String,File> getFile(final Long idDocument) throws Exception {
+        try {
+            final Document document = documentRepository.findOne(idDocument);
+            final DocumentDTO documentDTO = documentMapper.toDto(document);
+            documentDTO.setUrl(path + "/schoolLife/" + documentDTO.getUrl());
+            final Map<String,File> content = new HashMap<>();
+            content.put(documentDTO.getType(), new File(documentDTO.getUrl()));
 
-        final List<Document> documents = documentRepository.findAllByStudent(student);
-
-        final List<DocumentDTO> documentDTOs = new ArrayList<>();
-
-        for (int i = 0; i < documents.size(); i++) {
-            documentDTOs.add(i, documentMapper.toDto(documents.get(i)));
-            final String urlTemp = path + "/schoolLife/" + documentMapper.toDto(documents.get(i)).getUrl();
-            documentDTOs.get(i).setUrl(urlTemp);
+            return content;
+        } catch (Exception e) {
+            LOGGER.error("Error during downloading file " + e.getMessage());
+            throw new Exception("Error during downloading file");
         }
-
-        return documentDTOs;
     }
 
-    public Map<String,File> getFile(final Long idDocument) {
-        final Document document = documentRepository.findOne(idDocument);
+    /**
+     * Delete File and return true if it's deleting
+     * @param idDocument
+     * @return Boolean
+     * @throws Exception
+     */
+    public Boolean deleteFile(final Long idDocument) throws Exception {
+        try {
+            final Document document = documentRepository.findOne(idDocument);
+            Boolean isDeleted = false;
 
-        final DocumentDTO documentDTO = documentMapper.toDto(document);
-        documentDTO.setUrl(path + "/schoolLife/" + documentDTO.getUrl());
-
-        Map<String,File> content = new HashMap<>();
-        content.put(documentDTO.getType(), new File(documentDTO.getUrl()));
-
-        return content;
-    }
-
-    public Boolean deleteFile(final Long idDocument) {
-        final Document document = documentRepository.findOne(idDocument);
-
-        Boolean isDeleted = false;
-
-        if (document != null) {
-            try {
+            if (document != null) {
                 final File file = new File(path + "/schoolLife/" + document.getUrl());
 
                 if (file.exists()) {
@@ -301,14 +339,14 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
                     isDeleted = true;
                 }
 
-            } catch (final Exception e) {
-                e.printStackTrace();
-            } finally {
                 documentRepository.delete(idDocument);
             }
-        }
 
-        return isDeleted;
+            return isDeleted;
+        } catch (Exception e) {
+            LOGGER.error("Error during deleting file " + e.getMessage());
+            throw new Exception("Error during deleting file");
+        }
     }
 
 }

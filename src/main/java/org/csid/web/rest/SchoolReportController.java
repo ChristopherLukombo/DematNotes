@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.time.LocalDate;
 
 
 
@@ -35,7 +36,11 @@ public class SchoolReportController {
         File fileSchoolReportPDF;
 
         try {
-            fileSchoolReportPDF = schoolReportService.generateSchoolReport();
+        	Long idUser = (long) 4;
+        	LocalDate dateInscription = null;
+        	//dateInscription.parse("2017-10-15");
+        	
+            fileSchoolReportPDF = schoolReportService.generateSchoolReport(idUser, dateInscription);
         } catch(final Exception e) {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during retrieving file : " + e.getMessage());
         }

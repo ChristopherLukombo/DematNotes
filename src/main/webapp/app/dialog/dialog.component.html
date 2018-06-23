@@ -1,25 +1,41 @@
-<h2> Documents </h2>
+<h2>Documents</h2>
 <div *ngIf="currentFileUpload" class="progress">
     <div class="progress-bar progress-bar-info progress-bar-striped"
          role="progressbar" attr.aria-valuenow="{{progress.percentage}}"
          aria-valuemin="0" aria-valuemax="100"
          [ngStyle]="{width:progress.percentage+'%'}">
-        {{progress.percentage}}%</div>
+        {{progress.percentage}}%
+    </div>
 </div>
 
-<label class="btn btn-default">
-    <input type="file" (change)="selectFile($event)">
-</label>
+<form>
+    <div class="form-group">
+        <label class="btn btn-default" for="file">
+            <input type="file" name="file" id="file" (change)="this.selectFile($event)" ngModel #file="ngModel"
+                   accept=".pdf,.jpeg,.png,.svg,.pdf" name="MAX_FILE_SIZE" value="10485760"/>
+            <small class="form-text text-muted" jhiTranslate="global.messageFilesAllowed">
+                The documents authorized to upload must have the following extension: jpg, png, gif, svg and pdf.
+            </small>
+        </label>
+    </div>
 
-<button class="btn btn-success" [disabled]="!selectedFiles" (click)="upload()">Upload</button>
-<br/>
+    <div class="alert alert-danger" role="alert" *ngIf="file.errors?.invalid">
+        <div *ngIf="file.errors?.invalid">
+
+        </div>
+    </div>
+
+    <button class="btn btn-warning" [disabled]="!selectedFile" (click)="this.upload()">Upload</button>
+</form>
+
 <div class="container" style="width:400px">
     <div style="color: blue; margin-bottom: 20px">
+        <div *ngIf="this.documents.length === 0 && this.documents !== null">Pas de documents</div>
         <table class="table table-hover" *ngIf="this.documents.length > 0 && this.documents !== null">
             <thead>
             <tr>
-                <th scope="col"> Documents </th>
-                <th scope="col"> Action </th>
+                <th scope="col">Documents</th>
+                <th scope="col">Action</th>
             </tr>
             </thead>
             <tbody>

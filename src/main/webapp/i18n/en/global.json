@@ -103,7 +103,9 @@
         "ribbon": {
             "dev":"Development"
         },
-        "item-count": "Showing {{first}} - {{second}} of {{total}} items."
+        "item-count": "Showing {{first}} - {{second}} of {{total}} items.",
+        "messageFilesAllowed": "The documents authorized to upload must have the following extension: jpg, png, gif, svg and pdf.",
+        "messageFileNotValid": "The file is not valid"
     },
     "entity": {
         "action": {

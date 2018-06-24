@@ -24,17 +24,6 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="dematNotesApp.intervention.yearPeriod" for="field_yearPeriod">Year Period</label>
-            <input type="text" class="form-control" name="yearPeriod" id="field_yearPeriod"
-                [(ngModel)]="intervention.yearPeriod" required/>
-            <div [hidden]="!(editForm.controls.yearPeriod?.dirty && editForm.controls.yearPeriod?.invalid)">
-                <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.yearPeriod?.errors?.required" jhiTranslate="entity.validation.required">
-                   This field is required.
-                </small>
-            </div>
-        </div>
-        <div class="form-group">
             <label class="form-control-label" jhiTranslate="dematNotesApp.intervention.startDate" for="field_startDate">Start Date</label>
             <div class="d-flex">
                 <input id="field_startDate" type="datetime-local" class="form-control" name="startDate" [(ngModel)]="intervention.startDate"

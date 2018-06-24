@@ -1,0 +1,34 @@
+
+<div *ngIf="yearPeriod">
+    <h2><span jhiTranslate="dematNotesApp.yearPeriod.detail.title">Year Period</span> {{yearPeriod.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.yearPeriod.entitled">Entitled</span></dt>
+        <dd>
+            <span>{{yearPeriod.entitled}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.yearPeriod.startDate">Start Date</span></dt>
+        <dd>
+            <span>{{yearPeriod.startDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.yearPeriod.endDate">End Date</span></dt>
+        <dd>
+            <span>{{yearPeriod.endDate | date:'mediumDate'}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'year-period/'+ yearPeriod.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

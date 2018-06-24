@@ -1,0 +1,24 @@
+
+{
+    "dematNotesApp": {
+        "assignmentYearPeriod" : {
+            "home": {
+                "title": "AssignmentYearPeriods",
+                "createLabel": "Créer un nouveau Assignment Year Period",
+                "createOrEditLabel": "Créer ou éditer un Assignment Year Period"
+            },
+            "created": "Un nouveau Assignment Year Period a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Assignment Year Period avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Assignment Year Period avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Assignment Year Period {{ id }} ?"
+            },
+            "detail": {
+                "title": "Assignment Year Period"
+            },
+            "school": "School",
+            "yearPeriod": "Year Period",
+            "classroom": "Classroom"
+        }
+    }
+}

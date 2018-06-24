@@ -17,7 +17,6 @@
             <thead>
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
-            <th><span jhiTranslate="dematNotesApp.manager.email">Email</span></th>
             <th><span jhiTranslate="dematNotesApp.manager.mobilePhoneNumber">Mobile Phone Number</span></th>
             <th><span jhiTranslate="dematNotesApp.manager.fixePhoneNumber">Fixe Phone Number</span></th>
             <th><span jhiTranslate="dematNotesApp.manager.address">Address</span></th>
@@ -32,7 +31,6 @@
             <tbody>
             <tr *ngFor="let manager of managers ;trackBy: trackId">
                 <td><a [routerLink]="['../manager', manager.id ]">{{manager.id}}</a></td>
-                <td>{{manager.email}}</td>
                 <td>{{manager.mobilePhoneNumber}}</td>
                 <td>{{manager.fixePhoneNumber}}</td>
                 <td>{{manager.address}}</td>

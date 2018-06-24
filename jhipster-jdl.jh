@@ -1,6 +1,5 @@
 entity Student {
     ine String required
-    email String required pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
     mobilePhoneNumber String required minlength(10) maxlength(18) pattern(/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
     fixePhoneNumber String minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
     address String required 
@@ -11,7 +10,6 @@ entity Student {
 }
 
 entity Manager {
-    email String required pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
     mobilePhoneNumber String required minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
     fixePhoneNumber String minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
     address String required
@@ -22,7 +20,6 @@ entity Manager {
 }
 
 entity Teacher {
-    email String required pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
     mobilePhoneNumber String required minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
     fixePhoneNumber String minlength(10) maxlength(18) pattern (/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/)
     address String required
@@ -45,7 +42,6 @@ entity DelayStudent {
 
 entity Intervention {
     type String required
-    yearPeriod String required // Semestre 1 ou 2
     startDate ZonedDateTime required
     endDate ZonedDateTime required
 }
@@ -60,12 +56,10 @@ entity Evaluation {
     average Double required
     evaluationDate ZonedDateTime required
     comment String
-    yearPeriod String required // Semestre 1 ou 2
     validation String maxlength(10)
 }
 
 entity SchoolReport {
-    yearPeriod String required // Semestre 1 ou 2
     gradeAword String
     comment String
     creationDate LocalDate
@@ -106,6 +100,20 @@ entity Inscription {
 
 }
 
+entity YearPeriod {
+        entitled String required
+	startDate LocalDate required
+	endDate LocalDate
+}
+
+entity AssignmentManager {
+	
+}
+
+entity AssignmentYearPeriod {
+
+}
+
 relationship ManyToOne {
     Student{user} to User
     Teacher{user} to User
@@ -129,6 +137,9 @@ relationship ManyToOne {
 relationship ManyToOne {
     Evaluation{student} to Student
     Evaluation{module} to Module
+    SchoolReport{yearPeriod} to YearPeriod
+    SchoolReport{student} to Student
+    SchoolReport{manager} to Manager
 }
 
 relationship ManyToMany {
@@ -166,6 +177,26 @@ relationship ManyToOne {
 relationship ManyToOne {
     Teacher{specialModule} to Module
 }
+
+relationship ManyToMany {
+    AssignmentManager{manager} to Manager
+}
+
+relationship ManyToOne {
+   AssignmentManager{schoolYear} to SchoolYear
+   AssignmentManager{school} to School
+}
+
+relationship ManyToMany {
+   AssignmentYearPeriod{yearPeriod} to YearPeriod
+   AssignmentYearPeriod{classroom} to Classroom
+  
+}
+
+relationship ManyToOne {
+   AssignmentYearPeriod{school} to School
+}
+
 
 dto * with mapstruct
 

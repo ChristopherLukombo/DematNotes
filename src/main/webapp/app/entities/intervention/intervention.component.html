@@ -18,7 +18,6 @@
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
             <th><span jhiTranslate="dematNotesApp.intervention.type">Type</span></th>
-            <th><span jhiTranslate="dematNotesApp.intervention.yearPeriod">Year Period</span></th>
             <th><span jhiTranslate="dematNotesApp.intervention.startDate">Start Date</span></th>
             <th><span jhiTranslate="dematNotesApp.intervention.endDate">End Date</span></th>
             <th><span jhiTranslate="dematNotesApp.intervention.module">Module</span></th>
@@ -30,7 +29,6 @@
             <tr *ngFor="let intervention of interventions ;trackBy: trackId">
                 <td><a [routerLink]="['../intervention', intervention.id ]">{{intervention.id}}</a></td>
                 <td>{{intervention.type}}</td>
-                <td>{{intervention.yearPeriod}}</td>
                 <td>{{intervention.startDate | date:'medium'}}</td>
                 <td>{{intervention.endDate | date:'medium'}}</td>
                 <td>

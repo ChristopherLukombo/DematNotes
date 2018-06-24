@@ -49,9 +49,6 @@ public class InterventionResourceIntTest {
     private static final String DEFAULT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_YEAR_PERIOD = "AAAAAAAAAA";
-    private static final String UPDATED_YEAR_PERIOD = "BBBBBBBBBB";
-
     private static final ZonedDateTime DEFAULT_START_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_START_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
@@ -103,7 +100,6 @@ public class InterventionResourceIntTest {
     public static Intervention createEntity(EntityManager em) {
         Intervention intervention = new Intervention()
             .type(DEFAULT_TYPE)
-            .yearPeriod(DEFAULT_YEAR_PERIOD)
             .startDate(DEFAULT_START_DATE)
             .endDate(DEFAULT_END_DATE);
         return intervention;
@@ -131,7 +127,6 @@ public class InterventionResourceIntTest {
         assertThat(interventionList).hasSize(databaseSizeBeforeCreate + 1);
         Intervention testIntervention = interventionList.get(interventionList.size() - 1);
         assertThat(testIntervention.getType()).isEqualTo(DEFAULT_TYPE);
-        assertThat(testIntervention.getYearPeriod()).isEqualTo(DEFAULT_YEAR_PERIOD);
         assertThat(testIntervention.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testIntervention.getEndDate()).isEqualTo(DEFAULT_END_DATE);
     }
@@ -162,25 +157,6 @@ public class InterventionResourceIntTest {
         int databaseSizeBeforeTest = interventionRepository.findAll().size();
         // set the field null
         intervention.setType(null);
-
-        // Create the Intervention, which fails.
-        InterventionDTO interventionDTO = interventionMapper.toDto(intervention);
-
-        restInterventionMockMvc.perform(post("/api/interventions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(interventionDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Intervention> interventionList = interventionRepository.findAll();
-        assertThat(interventionList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkYearPeriodIsRequired() throws Exception {
-        int databaseSizeBeforeTest = interventionRepository.findAll().size();
-        // set the field null
-        intervention.setYearPeriod(null);
 
         // Create the Intervention, which fails.
         InterventionDTO interventionDTO = interventionMapper.toDto(intervention);
@@ -243,8 +219,7 @@ public class InterventionResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(intervention.getId().intValue())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
-            .andExpect(jsonPath("$.[*].yearPeriod").value(hasItem(DEFAULT_YEAR_PERIOD)))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(sameInstant(DEFAULT_START_DATE))))
             .andExpect(jsonPath("$.[*].endDate").value(hasItem(sameInstant(DEFAULT_END_DATE))));
     }
@@ -260,8 +235,7 @@ public class InterventionResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(intervention.getId().intValue()))
-            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
-            .andExpect(jsonPath("$.yearPeriod").value(DEFAULT_YEAR_PERIOD))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.startDate").value(sameInstant(DEFAULT_START_DATE)))
             .andExpect(jsonPath("$.endDate").value(sameInstant(DEFAULT_END_DATE)));
     }
@@ -287,7 +261,6 @@ public class InterventionResourceIntTest {
         em.detach(updatedIntervention);
         updatedIntervention
             .type(UPDATED_TYPE)
-            .yearPeriod(UPDATED_YEAR_PERIOD)
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE);
         InterventionDTO interventionDTO = interventionMapper.toDto(updatedIntervention);
@@ -302,7 +275,6 @@ public class InterventionResourceIntTest {
         assertThat(interventionList).hasSize(databaseSizeBeforeUpdate);
         Intervention testIntervention = interventionList.get(interventionList.size() - 1);
         assertThat(testIntervention.getType()).isEqualTo(UPDATED_TYPE);
-        assertThat(testIntervention.getYearPeriod()).isEqualTo(UPDATED_YEAR_PERIOD);
         assertThat(testIntervention.getStartDate()).isEqualTo(UPDATED_START_DATE);
         assertThat(testIntervention.getEndDate()).isEqualTo(UPDATED_END_DATE);
     }

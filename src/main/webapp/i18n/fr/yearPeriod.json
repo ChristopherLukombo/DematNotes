@@ -1,0 +1,24 @@
+
+{
+    "dematNotesApp": {
+        "yearPeriod" : {
+            "home": {
+                "title": "YearPeriods",
+                "createLabel": "Créer un nouveau Year Period",
+                "createOrEditLabel": "Créer ou éditer un Year Period"
+            },
+            "created": "Un nouveau Year Period a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Year Period avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Year Period avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Year Period {{ id }} ?"
+            },
+            "detail": {
+                "title": "Year Period"
+            },
+            "entitled": "Entitled",
+            "startDate": "Start Date",
+            "endDate": "End Date"
+        }
+    }
+}

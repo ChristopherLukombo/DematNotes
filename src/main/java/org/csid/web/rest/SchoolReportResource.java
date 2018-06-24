@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -44,7 +43,7 @@ public class SchoolReportResource {
      */
     @PostMapping("/school-reports")
     @Timed
-    public ResponseEntity<SchoolReportDTO> createSchoolReport(@Valid @RequestBody SchoolReportDTO schoolReportDTO) throws URISyntaxException {
+    public ResponseEntity<SchoolReportDTO> createSchoolReport(@RequestBody SchoolReportDTO schoolReportDTO) throws URISyntaxException {
         log.debug("REST request to save SchoolReport : {}", schoolReportDTO);
         if (schoolReportDTO.getId() != null) {
             throw new BadRequestAlertException("A new schoolReport cannot already have an ID", ENTITY_NAME, "idexists");
@@ -66,7 +65,7 @@ public class SchoolReportResource {
      */
     @PutMapping("/school-reports")
     @Timed
-    public ResponseEntity<SchoolReportDTO> updateSchoolReport(@Valid @RequestBody SchoolReportDTO schoolReportDTO) throws URISyntaxException {
+    public ResponseEntity<SchoolReportDTO> updateSchoolReport(@RequestBody SchoolReportDTO schoolReportDTO) throws URISyntaxException {
         log.debug("REST request to update SchoolReport : {}", schoolReportDTO);
         if (schoolReportDTO.getId() == null) {
             return createSchoolReport(schoolReportDTO);

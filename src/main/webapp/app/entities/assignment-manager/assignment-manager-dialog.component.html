@@ -1,0 +1,45 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myAssignmentManagerLabel" jhiTranslate="dematNotesApp.assignmentManager.home.createOrEditLabel">Create or edit a Assignment Manager</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!assignmentManager.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="assignmentManager.id" readonly />
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.assignmentManager.schoolYear" for="field_schoolYear">School Year</label>
+            <select class="form-control" id="field_schoolYear" name="schoolYear" [(ngModel)]="assignmentManager.schoolYearId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="schoolYearOption.id" *ngFor="let schoolYearOption of schoolyears; trackBy: trackSchoolYearById">{{schoolYearOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.assignmentManager.school" for="field_school">School</label>
+            <select class="form-control" id="field_school" name="school" [(ngModel)]="assignmentManager.schoolId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="schoolOption.id" *ngFor="let schoolOption of schools; trackBy: trackSchoolById">{{schoolOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label jhiTranslate="dematNotesApp.assignmentManager.manager" for="field_manager">Manager</label>
+            <select class="form-control" id="field_manager" multiple name="manager" [(ngModel)]="assignmentManager.managers">
+                <option [ngValue]="getSelected(assignmentManager.managers, managerOption)" *ngFor="let managerOption of managers; trackBy: trackManagerById">{{managerOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

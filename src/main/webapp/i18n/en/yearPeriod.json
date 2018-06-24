@@ -1,0 +1,24 @@
+
+{
+    "dematNotesApp": {
+        "yearPeriod" : {
+            "home": {
+                "title": "Year Periods",
+                "createLabel": "Create a new Year Period",
+                "createOrEditLabel": "Create or edit a Year Period"
+            },
+            "created": "A new Year Period is created with identifier {{ param }}",
+            "updated": "A Year Period is updated with identifier {{ param }}",
+            "deleted": "A Year Period is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Year Period {{ id }}?"
+            },
+            "detail": {
+                "title": "Year Period"
+            },
+            "entitled": "Entitled",
+            "startDate": "Start Date",
+            "endDate": "End Date"
+        }
+    }
+}

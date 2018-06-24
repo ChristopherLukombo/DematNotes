@@ -17,7 +17,6 @@
                 "title": "Intervention"
             },
             "type": "Type",
-            "yearPeriod": "Year Period",
             "startDate": "Start Date",
             "endDate": "End Date",
             "module": "Module",

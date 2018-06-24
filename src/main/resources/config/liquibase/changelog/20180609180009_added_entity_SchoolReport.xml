@@ -21,10 +21,6 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="year_period" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-
             <column name="grade_aword" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -34,6 +30,18 @@
             </column>
 
             <column name="creation_date" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="year_period_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="student_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="manager_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 

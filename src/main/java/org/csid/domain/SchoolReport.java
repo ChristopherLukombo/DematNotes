@@ -3,7 +3,6 @@ package org.csid.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -25,10 +24,6 @@ public class SchoolReport implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
-    @Column(name = "year_period", nullable = false)
-    private String yearPeriod;
-
     @Column(name = "grade_aword")
     private String gradeAword;
 
@@ -42,6 +37,15 @@ public class SchoolReport implements Serializable {
     @JsonIgnore
     private Set<Evaluation> evaluations = new HashSet<>();
 
+    @ManyToOne
+    private YearPeriod yearPeriod;
+
+    @ManyToOne
+    private Student student;
+
+    @ManyToOne
+    private Manager manager;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -49,19 +53,6 @@ public class SchoolReport implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getYearPeriod() {
-        return yearPeriod;
-    }
-
-    public SchoolReport yearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
-        return this;
-    }
-
-    public void setYearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
     }
 
     public String getGradeAword() {
@@ -127,6 +118,45 @@ public class SchoolReport implements Serializable {
     public void setEvaluations(Set<Evaluation> evaluations) {
         this.evaluations = evaluations;
     }
+
+    public YearPeriod getYearPeriod() {
+        return yearPeriod;
+    }
+
+    public SchoolReport yearPeriod(YearPeriod yearPeriod) {
+        this.yearPeriod = yearPeriod;
+        return this;
+    }
+
+    public void setYearPeriod(YearPeriod yearPeriod) {
+        this.yearPeriod = yearPeriod;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public SchoolReport student(Student student) {
+        this.student = student;
+        return this;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Manager getManager() {
+        return manager;
+    }
+
+    public SchoolReport manager(Manager manager) {
+        this.manager = manager;
+        return this;
+    }
+
+    public void setManager(Manager manager) {
+        this.manager = manager;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -153,7 +183,6 @@ public class SchoolReport implements Serializable {
     public String toString() {
         return "SchoolReport{" +
             "id=" + getId() +
-            ", yearPeriod='" + getYearPeriod() + "'" +
             ", gradeAword='" + getGradeAword() + "'" +
             ", comment='" + getComment() + "'" +
             ", creationDate='" + getCreationDate() + "'" +

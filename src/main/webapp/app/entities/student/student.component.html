@@ -12,13 +12,12 @@
     <div class="row">
     </div>
     <br/>
-    <div class="table-responsive" *ngIf="accountsCode">
+    <div class="table-responsive" *ngIf="students">
         <table class="table table-striped">
             <thead>
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
             <th><span jhiTranslate="dematNotesApp.student.ine">Ine</span></th>
-            <th><span jhiTranslate="dematNotesApp.student.email">Email</span></th>
             <th><span jhiTranslate="dematNotesApp.student.mobilePhoneNumber">Mobile Phone Number</span></th>
             <th><span jhiTranslate="dematNotesApp.student.fixePhoneNumber">Fixe Phone Number</span></th>
             <th><span jhiTranslate="dematNotesApp.student.address">Address</span></th>
@@ -31,10 +30,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let student of accountsCode ;trackBy: trackId">
+            <tr *ngFor="let student of students ;trackBy: trackId">
                 <td><a [routerLink]="['../student', student.id ]">{{student.id}}</a></td>
                 <td>{{student.ine}}</td>
-                <td>{{student.email}}</td>
                 <td>{{student.mobilePhoneNumber}}</td>
                 <td>{{student.fixePhoneNumber}}</td>
                 <td>{{student.address}}</td>

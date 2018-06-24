@@ -19,10 +19,6 @@ public class StudentDTO implements Serializable {
     private String ine;
 
     @NotNull
-    @Pattern(regexp = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
-    private String email;
-
-    @NotNull
     @Size(min = 10, max = 18)
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
     private String mobilePhoneNumber;
@@ -63,14 +59,6 @@ public class StudentDTO implements Serializable {
 
     public void setIne(String ine) {
         this.ine = ine;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getMobilePhoneNumber() {
@@ -163,7 +151,6 @@ public class StudentDTO implements Serializable {
         return "StudentDTO{" +
             "id=" + getId() +
             ", ine='" + getIne() + "'" +
-            ", email='" + getEmail() + "'" +
             ", mobilePhoneNumber='" + getMobilePhoneNumber() + "'" +
             ", fixePhoneNumber='" + getFixePhoneNumber() + "'" +
             ", address='" + getAddress() + "'" +

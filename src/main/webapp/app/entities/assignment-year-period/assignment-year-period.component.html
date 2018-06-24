@@ -1,0 +1,74 @@
+<div>
+    <h2>
+        <span jhiTranslate="dematNotesApp.assignmentYearPeriod.home.title">Assignment Year Periods</span>
+        <button class="btn btn-primary float-right jh-create-entity create-assignment-year-period" [routerLink]="['/', { outlets: { popup: ['assignment-year-period-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span  jhiTranslate="dematNotesApp.assignmentYearPeriod.home.createLabel">
+            Create new Assignment Year Period
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="assignmentYearPeriods">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="dematNotesApp.assignmentYearPeriod.school">School</span></th>
+            <th><span jhiTranslate="dematNotesApp.assignmentYearPeriod.yearPeriod">Year Period</span></th>
+            <th><span jhiTranslate="dematNotesApp.assignmentYearPeriod.classroom">Classroom</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let assignmentYearPeriod of assignmentYearPeriods ;trackBy: trackId">
+                <td><a [routerLink]="['../assignment-year-period', assignmentYearPeriod.id ]">{{assignmentYearPeriod.id}}</a></td>
+                <td>
+                    <div *ngIf="assignmentYearPeriod.schoolId">
+                        <a [routerLink]="['../school', assignmentYearPeriod.schoolId  ]" >{{assignmentYearPeriod.schoolId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <span *ngFor="let yearPeriod of assignmentYearPeriod.yearPeriods; let last = last">
+                            <a class="form-control-static" [routerLink]="['../year-period', yearPeriod?.id ]">{{yearPeriod.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td>
+                    <span *ngFor="let classroom of assignmentYearPeriod.classrooms; let last = last">
+                            <a class="form-control-static" [routerLink]="['../classroom', classroom?.id ]">{{classroom.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../assignment-year-period', assignmentYearPeriod.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'assignment-year-period/'+ assignmentYearPeriod.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'assignment-year-period/'+ assignmentYearPeriod.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

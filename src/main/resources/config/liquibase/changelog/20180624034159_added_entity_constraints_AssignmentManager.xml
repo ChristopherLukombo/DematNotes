@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity AssignmentManager.
+    -->
+    <changeSet id="20180624034159-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="school_year_id"
+                                 baseTableName="assignment_manager"
+                                 constraintName="fk_assignment_manager_school_year_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="school_year"/>
+
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="assignment_manager"
+                                 constraintName="fk_assignment_manager_school_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="school"/>
+
+        <addForeignKeyConstraint baseColumnNames="assignment_managers_id"
+                                 baseTableName="assignment_manager_manager"
+                                 constraintName="fk_assignment_manager_manager_assignment_managers_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="assignment_manager"/>
+        <addForeignKeyConstraint baseColumnNames="managers_id"
+                                 baseTableName="assignment_manager_manager"
+                                 constraintName="fk_assignment_manager_manager_managers_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="manager"/>
+        
+    </changeSet>
+</databaseChangeLog>

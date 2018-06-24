@@ -15,6 +15,9 @@ import { DematNotesSchoolYearModule } from './school-year/school-year.module';
 import { DematNotesDocumentModule } from './document/document.module';
 import { DematNotesAssignmentModuleModule } from './assignment-module/assignment-module.module';
 import { DematNotesInscriptionModule } from './inscription/inscription.module';
+import { DematNotesYearPeriodModule } from './year-period/year-period.module';
+import { DematNotesAssignmentManagerModule } from './assignment-manager/assignment-manager.module';
+import { DematNotesAssignmentYearPeriodModule } from './assignment-year-period/assignment-year-period.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -34,6 +37,9 @@ import { DematNotesInscriptionModule } from './inscription/inscription.module';
         DematNotesDocumentModule,
         DematNotesAssignmentModuleModule,
         DematNotesInscriptionModule,
+        DematNotesYearPeriodModule,
+        DematNotesAssignmentManagerModule,
+        DematNotesAssignmentYearPeriodModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

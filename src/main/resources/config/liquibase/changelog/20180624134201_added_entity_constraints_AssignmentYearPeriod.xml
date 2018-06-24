@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity AssignmentYearPeriod.
+    -->
+    <changeSet id="20180624134201-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="assignment_year_period"
+                                 constraintName="fk_assignment_year_period_school_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="school"/>
+
+        <addForeignKeyConstraint baseColumnNames="assignment_year_periods_id"
+                                 baseTableName="assignment_year_period_year_period"
+                                 constraintName="fk_assignment_year_period_year_period_assignment_year_periods_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="assignment_year_period"/>
+        <addForeignKeyConstraint baseColumnNames="year_periods_id"
+                                 baseTableName="assignment_year_period_year_period"
+                                 constraintName="fk_assignment_year_period_year_period_year_periods_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="year_period"/>
+        
+        <addForeignKeyConstraint baseColumnNames="assignment_year_periods_id"
+                                 baseTableName="assignment_year_period_classroom"
+                                 constraintName="fk_assignment_year_period_classroom_assignment_year_periods_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="assignment_year_period"/>
+        <addForeignKeyConstraint baseColumnNames="classrooms_id"
+                                 baseTableName="assignment_year_period_classroom"
+                                 constraintName="fk_assignment_year_period_classroom_classrooms_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="classroom"/>
+        
+    </changeSet>
+</databaseChangeLog>

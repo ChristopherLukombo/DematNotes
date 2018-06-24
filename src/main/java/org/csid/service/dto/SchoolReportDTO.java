@@ -2,7 +2,6 @@ package org.csid.service.dto;
 
 
 import java.time.LocalDate;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,14 +14,17 @@ public class SchoolReportDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
-    private String yearPeriod;
-
     private String gradeAword;
 
     private String comment;
 
     private LocalDate creationDate;
+
+    private Long yearPeriodId;
+
+    private Long studentId;
+
+    private Long managerId;
 
     public Long getId() {
         return id;
@@ -30,14 +32,6 @@ public class SchoolReportDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getYearPeriod() {
-        return yearPeriod;
-    }
-
-    public void setYearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
     }
 
     public String getGradeAword() {
@@ -62,6 +56,30 @@ public class SchoolReportDTO implements Serializable {
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Long getYearPeriodId() {
+        return yearPeriodId;
+    }
+
+    public void setYearPeriodId(Long yearPeriodId) {
+        this.yearPeriodId = yearPeriodId;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
+
+    public Long getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(Long managerId) {
+        this.managerId = managerId;
     }
 
     @Override
@@ -89,7 +107,6 @@ public class SchoolReportDTO implements Serializable {
     public String toString() {
         return "SchoolReportDTO{" +
             "id=" + getId() +
-            ", yearPeriod='" + getYearPeriod() + "'" +
             ", gradeAword='" + getGradeAword() + "'" +
             ", comment='" + getComment() + "'" +
             ", creationDate='" + getCreationDate() + "'" +

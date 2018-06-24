@@ -20,7 +20,6 @@
             <th><span jhiTranslate="dematNotesApp.evaluation.average">Average</span></th>
             <th><span jhiTranslate="dematNotesApp.evaluation.evaluationDate">Evaluation Date</span></th>
             <th><span jhiTranslate="dematNotesApp.evaluation.comment">Comment</span></th>
-            <th><span jhiTranslate="dematNotesApp.evaluation.yearPeriod">Year Period</span></th>
             <th><span jhiTranslate="dematNotesApp.evaluation.validation">Validation</span></th>
             <th><span jhiTranslate="dematNotesApp.evaluation.student">Student</span></th>
             <th><span jhiTranslate="dematNotesApp.evaluation.module">Module</span></th>
@@ -34,7 +33,6 @@
                 <td>{{evaluation.average}}</td>
                 <td>{{evaluation.evaluationDate | date:'medium'}}</td>
                 <td>{{evaluation.comment}}</td>
-                <td>{{evaluation.yearPeriod}}</td>
                 <td>{{evaluation.validation}}</td>
                 <td>
                     <div *ngIf="evaluation.studentId">

@@ -259,11 +259,11 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
     private Path createFolder(MultipartFile file, Student s) {
         final Path rootLocation = Paths.get(path + "/schoolLife/" + s.getId());
 
-        if (!new File(rootLocation + "").exists()) {
-            new File(rootLocation + "").mkdirs();
+        if (!new File(rootLocation.toString()).exists()) {
+            new File(rootLocation.toString()).mkdirs();
         }
 
-        final File fileTmp = new File(rootLocation + "/" + file.getOriginalFilename());
+        final File fileTmp = new File(rootLocation.toString() + "/" + file.getOriginalFilename());
 
         if(fileTmp.exists()) {
             fileTmp.delete();

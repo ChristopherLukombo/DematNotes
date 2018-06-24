@@ -33,10 +33,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="year_period" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-
             <column name="jhi_validation" type="varchar(10)">
                 <constraints nullable="true" />
             </column>

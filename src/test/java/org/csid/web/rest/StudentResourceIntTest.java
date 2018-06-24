@@ -46,9 +46,6 @@ public class StudentResourceIntTest {
     private static final String DEFAULT_INE = "AAAAAAAAAA";
     private static final String UPDATED_INE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_EMAIL = "o@q.vs";
-    private static final String UPDATED_EMAIL = "_@i0.zy";
-
     private static final String DEFAULT_MOBILE_PHONE_NUMBER = "8821514359";
     private static final String UPDATED_MOBILE_PHONE_NUMBER = "+515591313343";
 
@@ -115,7 +112,6 @@ public class StudentResourceIntTest {
     public static Student createEntity(EntityManager em) {
         Student student = new Student()
             .ine(DEFAULT_INE)
-            .email(DEFAULT_EMAIL)
             .mobilePhoneNumber(DEFAULT_MOBILE_PHONE_NUMBER)
             .fixePhoneNumber(DEFAULT_FIXE_PHONE_NUMBER)
             .address(DEFAULT_ADDRESS)
@@ -148,7 +144,6 @@ public class StudentResourceIntTest {
         assertThat(studentList).hasSize(databaseSizeBeforeCreate + 1);
         Student testStudent = studentList.get(studentList.size() - 1);
         assertThat(testStudent.getIne()).isEqualTo(DEFAULT_INE);
-        assertThat(testStudent.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testStudent.getMobilePhoneNumber()).isEqualTo(DEFAULT_MOBILE_PHONE_NUMBER);
         assertThat(testStudent.getFixePhoneNumber()).isEqualTo(DEFAULT_FIXE_PHONE_NUMBER);
         assertThat(testStudent.getAddress()).isEqualTo(DEFAULT_ADDRESS);
@@ -184,25 +179,6 @@ public class StudentResourceIntTest {
         int databaseSizeBeforeTest = studentRepository.findAll().size();
         // set the field null
         student.setIne(null);
-
-        // Create the Student, which fails.
-        StudentDTO studentDTO = studentMapper.toDto(student);
-
-        restStudentMockMvc.perform(post("/api/students")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(studentDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkEmailIsRequired() throws Exception {
-        int databaseSizeBeforeTest = studentRepository.findAll().size();
-        // set the field null
-        student.setEmail(null);
 
         // Create the Student, which fails.
         StudentDTO studentDTO = studentMapper.toDto(student);
@@ -341,15 +317,14 @@ public class StudentResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(student.getId().intValue())))
-            .andExpect(jsonPath("$.[*].ine").value(hasItem(DEFAULT_INE)))
-            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
-            .andExpect(jsonPath("$.[*].mobilePhoneNumber").value(hasItem(DEFAULT_MOBILE_PHONE_NUMBER)))
-            .andExpect(jsonPath("$.[*].fixePhoneNumber").value(hasItem(DEFAULT_FIXE_PHONE_NUMBER)))
-            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
-            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
-            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE)))
+            .andExpect(jsonPath("$.[*].ine").value(hasItem(DEFAULT_INE.toString())))
+            .andExpect(jsonPath("$.[*].mobilePhoneNumber").value(hasItem(DEFAULT_MOBILE_PHONE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].fixePhoneNumber").value(hasItem(DEFAULT_FIXE_PHONE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS.toString())))
+            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
+            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE.toString())))
             .andExpect(jsonPath("$.[*].dateOfBirth").value(hasItem(DEFAULT_DATE_OF_BIRTH.toString())))
-            .andExpect(jsonPath("$.[*].placeOfBirth").value(hasItem(DEFAULT_PLACE_OF_BIRTH)));
+            .andExpect(jsonPath("$.[*].placeOfBirth").value(hasItem(DEFAULT_PLACE_OF_BIRTH.toString())));
     }
 
     @Test
@@ -363,15 +338,14 @@ public class StudentResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(student.getId().intValue()))
-            .andExpect(jsonPath("$.ine").value(DEFAULT_INE))
-            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
-            .andExpect(jsonPath("$.mobilePhoneNumber").value(DEFAULT_MOBILE_PHONE_NUMBER))
-            .andExpect(jsonPath("$.fixePhoneNumber").value(DEFAULT_FIXE_PHONE_NUMBER))
-            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS))
-            .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
-            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE))
+            .andExpect(jsonPath("$.ine").value(DEFAULT_INE.toString()))
+            .andExpect(jsonPath("$.mobilePhoneNumber").value(DEFAULT_MOBILE_PHONE_NUMBER.toString()))
+            .andExpect(jsonPath("$.fixePhoneNumber").value(DEFAULT_FIXE_PHONE_NUMBER.toString()))
+            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS.toString()))
+            .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
+            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE.toString()))
             .andExpect(jsonPath("$.dateOfBirth").value(DEFAULT_DATE_OF_BIRTH.toString()))
-            .andExpect(jsonPath("$.placeOfBirth").value(DEFAULT_PLACE_OF_BIRTH));
+            .andExpect(jsonPath("$.placeOfBirth").value(DEFAULT_PLACE_OF_BIRTH.toString()));
     }
 
     @Test
@@ -395,7 +369,6 @@ public class StudentResourceIntTest {
         em.detach(updatedStudent);
         updatedStudent
             .ine(UPDATED_INE)
-            .email(UPDATED_EMAIL)
             .mobilePhoneNumber(UPDATED_MOBILE_PHONE_NUMBER)
             .fixePhoneNumber(UPDATED_FIXE_PHONE_NUMBER)
             .address(UPDATED_ADDRESS)
@@ -415,7 +388,6 @@ public class StudentResourceIntTest {
         assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
         Student testStudent = studentList.get(studentList.size() - 1);
         assertThat(testStudent.getIne()).isEqualTo(UPDATED_INE);
-        assertThat(testStudent.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testStudent.getMobilePhoneNumber()).isEqualTo(UPDATED_MOBILE_PHONE_NUMBER);
         assertThat(testStudent.getFixePhoneNumber()).isEqualTo(UPDATED_FIXE_PHONE_NUMBER);
         assertThat(testStudent.getAddress()).isEqualTo(UPDATED_ADDRESS);

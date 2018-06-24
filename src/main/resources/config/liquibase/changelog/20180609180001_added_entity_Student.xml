@@ -25,10 +25,6 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="email" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-
             <column name="mobile_phone_number" type="varchar(18)">
                 <constraints nullable="false" />
             </column>

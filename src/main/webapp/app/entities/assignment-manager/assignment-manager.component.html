@@ -1,0 +1,74 @@
+<div>
+    <h2>
+        <span jhiTranslate="dematNotesApp.assignmentManager.home.title">Assignment Managers</span>
+        <button class="btn btn-primary float-right jh-create-entity create-assignment-manager" [routerLink]="['/', { outlets: { popup: ['assignment-manager-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span  jhiTranslate="dematNotesApp.assignmentManager.home.createLabel">
+            Create new Assignment Manager
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="assignmentManagers">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="dematNotesApp.assignmentManager.schoolYear">School Year</span></th>
+            <th><span jhiTranslate="dematNotesApp.assignmentManager.school">School</span></th>
+            <th><span jhiTranslate="dematNotesApp.assignmentManager.manager">Manager</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let assignmentManager of assignmentManagers ;trackBy: trackId">
+                <td><a [routerLink]="['../assignment-manager', assignmentManager.id ]">{{assignmentManager.id}}</a></td>
+                <td>
+                    <div *ngIf="assignmentManager.schoolYearId">
+                        <a [routerLink]="['../school-year', assignmentManager.schoolYearId  ]" >{{assignmentManager.schoolYearId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="assignmentManager.schoolId">
+                        <a [routerLink]="['../school', assignmentManager.schoolId  ]" >{{assignmentManager.schoolId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <span *ngFor="let manager of assignmentManager.managers; let last = last">
+                            <a class="form-control-static" [routerLink]="['../manager', manager?.id ]">{{manager.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../assignment-manager', assignmentManager.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'assignment-manager/'+ assignmentManager.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'assignment-manager/'+ assignmentManager.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

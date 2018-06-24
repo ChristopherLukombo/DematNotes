@@ -40,13 +40,6 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "yearPeriod",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
             "fieldName": "validation",
             "fieldType": "String",
             "fieldValidateRules": [

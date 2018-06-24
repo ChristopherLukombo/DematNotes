@@ -4,10 +4,6 @@
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="dematNotesApp.schoolReport.yearPeriod">Year Period</span></dt>
-        <dd>
-            <span>{{schoolReport.yearPeriod}}</span>
-        </dd>
         <dt><span jhiTranslate="dematNotesApp.schoolReport.gradeAword">Grade Aword</span></dt>
         <dd>
             <span>{{schoolReport.gradeAword}}</span>
@@ -19,6 +15,24 @@
         <dt><span jhiTranslate="dematNotesApp.schoolReport.creationDate">Creation Date</span></dt>
         <dd>
             <span>{{schoolReport.creationDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.schoolReport.yearPeriod">Year Period</span></dt>
+        <dd>
+            <div *ngIf="schoolReport.yearPeriodId">
+                <a [routerLink]="['/year-period', schoolReport.yearPeriodId]">{{schoolReport.yearPeriodId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.schoolReport.student">Student</span></dt>
+        <dd>
+            <div *ngIf="schoolReport.studentId">
+                <a [routerLink]="['/student', schoolReport.studentId]">{{schoolReport.studentId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.schoolReport.manager">Manager</span></dt>
+        <dd>
+            <div *ngIf="schoolReport.managerId">
+                <a [routerLink]="['/manager', schoolReport.managerId]">{{schoolReport.managerId}}</a>
+            </div>
         </dd>
     </dl>
 

@@ -1,10 +1,10 @@
 package org.csid.repository;
 
 import org.csid.domain.Inscription;
-import org.springframework.stereotype.Repository;
-
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,5 +23,6 @@ public interface InscriptionRepository extends JpaRepository<Inscription, Long> 
 
     @Query("select inscription from Inscription inscription left join fetch inscription.students where inscription.schoolYear.startDate<=:date and inscription.schoolYear.endDate>=:date")
     List<Inscription> findAllByCurrentSchoolYear(@Param("date") LocalDate date);
+
 
 }

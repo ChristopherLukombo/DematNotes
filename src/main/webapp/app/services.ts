@@ -14,6 +14,9 @@ import {Document} from './entities/document';
 import {DelayStudent} from './entities/delay-student';
 import {JhiDateUtils} from 'ng-jhipster';
 import {AbsenceSearch} from './school-life/absenceSearch';
+import {SchoolReport} from './entities/school-report';
+import {Evaluation} from './entities/evaluation';
+import {Manager} from './entities/manager';
 
 @Injectable()
 export class Services {
@@ -111,8 +114,8 @@ export class Services {
      * Downloads a schoolReport
      * @returns {Observable<Blob>}
      */
-    downloadSchoolReport() {
-        return this.http.get(this.resourceUrl + '/schoolReport/export', {responseType: 'blob'});
+    downloadSchoolReport(accountCode) {
+        return this.http.get(this.resourceUrl + '/schoolReport/export/' + `${accountCode}`, {responseType: 'blob'});
     }
 
     /**
@@ -211,4 +214,71 @@ export class Services {
         return this.http.delete<Boolean>(this.resourceUrl + '/schoolLife/delete/' + `${idDocument}`);
     }
 
+    // Part Manager
+
+    /**
+     *
+     * Returns the schools according to the manager's User ID
+     * @param {number} accountCode
+     * @returns {Observable<School[]>}
+     */
+    getSchoolsByManager(accountCode: number): Observable<School[]> {
+        return this.http.get<School[]>(this.resourceUrl + '/schoolReport/schools/' + `${accountCode}`);
+    }
+
+    /**
+     * Returns the classrooms according the manager's User ID and School ID
+     * @param idUser
+     * @param idSchool
+     * @returns {Observable<Classroom[]>}
+     */
+    getClassroomsByManager(accountCode, idSchool): Observable<Classroom[]> {
+        return this.http.get<Classroom[]>(this.resourceUrl + '/schoolReport/classrooms/' + `${accountCode}/${idSchool}`);
+    }
+
+    /**
+     * Returns the classrooms according the manager's User ID, School ID and Classroom ID
+     * @param accountCode
+     * @param idSchool
+     * @param idClassroom
+     * @returns {Observable<User[]>}
+     */
+    getStudentsByManager(accountCode, idSchool, idClassroom): Observable<User[]> {
+        return this.http.get<User[]>(this.resourceUrl + '/schoolReport/students/' + `${accountCode}/${idSchool}/${idClassroom}`);
+    }
+
+    /**
+     * Returns the student according the manager's User ID
+     * @param accountCode
+     * @returns {Observable<User>}
+     */
+    getStudentByManager(accountCode): Observable<User> {
+        return this.http.get<User>(this.resourceUrl + '/schoolReport/student/' + `${accountCode}`);
+    }
+
+    /**
+     * Saves a SchoolReport of a student
+     * @param {SchoolReport} schoolReport
+     * @returns {Observable<SchoolReport>}
+     */
+    saveSchoolReport(schoolReport: SchoolReport) {
+        return this.http.post<SchoolReport>(this.resourceUrl + '/schoolReport/save', schoolReport);
+    }
+
+    /**
+     * Returns evaluations of a Student
+     * @param accountCode
+     * @returns {Observable<Evaluation[]>}
+     */
+    getEvaluationsByStudent(accountCode) {
+        return this.http.get<Evaluation[]>(this.resourceUrl + '/schoolReport/evaluations/' + `${accountCode}`);
+    }
+
+    /**
+     * Returns a Manager according its user
+     * @param User
+     */
+    findManagerByUser(user) {
+        return this.http.post<Manager>(this.resourceUrl + '/schoolReport/manager', user);
+    }
 }

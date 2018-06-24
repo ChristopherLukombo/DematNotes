@@ -43,9 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = DematNotesApp.class)
 public class SchoolReportResourceIntTest {
 
-    private static final String DEFAULT_YEAR_PERIOD = "AAAAAAAAAA";
-    private static final String UPDATED_YEAR_PERIOD = "BBBBBBBBBB";
-
     private static final String DEFAULT_GRADE_AWORD = "AAAAAAAAAA";
     private static final String UPDATED_GRADE_AWORD = "BBBBBBBBBB";
 
@@ -99,7 +96,6 @@ public class SchoolReportResourceIntTest {
      */
     public static SchoolReport createEntity(EntityManager em) {
         SchoolReport schoolReport = new SchoolReport()
-            .yearPeriod(DEFAULT_YEAR_PERIOD)
             .gradeAword(DEFAULT_GRADE_AWORD)
             .comment(DEFAULT_COMMENT)
             .creationDate(DEFAULT_CREATION_DATE);
@@ -127,7 +123,6 @@ public class SchoolReportResourceIntTest {
         List<SchoolReport> schoolReportList = schoolReportRepository.findAll();
         assertThat(schoolReportList).hasSize(databaseSizeBeforeCreate + 1);
         SchoolReport testSchoolReport = schoolReportList.get(schoolReportList.size() - 1);
-        assertThat(testSchoolReport.getYearPeriod()).isEqualTo(DEFAULT_YEAR_PERIOD);
         assertThat(testSchoolReport.getGradeAword()).isEqualTo(DEFAULT_GRADE_AWORD);
         assertThat(testSchoolReport.getComment()).isEqualTo(DEFAULT_COMMENT);
         assertThat(testSchoolReport.getCreationDate()).isEqualTo(DEFAULT_CREATION_DATE);
@@ -155,25 +150,6 @@ public class SchoolReportResourceIntTest {
 
     @Test
     @Transactional
-    public void checkYearPeriodIsRequired() throws Exception {
-        int databaseSizeBeforeTest = schoolReportRepository.findAll().size();
-        // set the field null
-        schoolReport.setYearPeriod(null);
-
-        // Create the SchoolReport, which fails.
-        SchoolReportDTO schoolReportDTO = schoolReportMapper.toDto(schoolReport);
-
-        restSchoolReportMockMvc.perform(post("/api/school-reports")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(schoolReportDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<SchoolReport> schoolReportList = schoolReportRepository.findAll();
-        assertThat(schoolReportList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllSchoolReports() throws Exception {
         // Initialize the database
         schoolReportRepository.saveAndFlush(schoolReport);
@@ -183,9 +159,8 @@ public class SchoolReportResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(schoolReport.getId().intValue())))
-            .andExpect(jsonPath("$.[*].yearPeriod").value(hasItem(DEFAULT_YEAR_PERIOD)))
-            .andExpect(jsonPath("$.[*].gradeAword").value(hasItem(DEFAULT_GRADE_AWORD)))
-            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)))
+            .andExpect(jsonPath("$.[*].gradeAword").value(hasItem(DEFAULT_GRADE_AWORD.toString())))
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT.toString())))
             .andExpect(jsonPath("$.[*].creationDate").value(hasItem(DEFAULT_CREATION_DATE.toString())));
     }
 
@@ -200,9 +175,8 @@ public class SchoolReportResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(schoolReport.getId().intValue()))
-            .andExpect(jsonPath("$.yearPeriod").value(DEFAULT_YEAR_PERIOD))
-            .andExpect(jsonPath("$.gradeAword").value(DEFAULT_GRADE_AWORD))
-            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT))
+            .andExpect(jsonPath("$.gradeAword").value(DEFAULT_GRADE_AWORD.toString()))
+            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT.toString()))
             .andExpect(jsonPath("$.creationDate").value(DEFAULT_CREATION_DATE.toString()));
     }
 
@@ -226,7 +200,6 @@ public class SchoolReportResourceIntTest {
         // Disconnect from session so that the updates on updatedSchoolReport are not directly saved in db
         em.detach(updatedSchoolReport);
         updatedSchoolReport
-            .yearPeriod(UPDATED_YEAR_PERIOD)
             .gradeAword(UPDATED_GRADE_AWORD)
             .comment(UPDATED_COMMENT)
             .creationDate(UPDATED_CREATION_DATE);
@@ -241,7 +214,6 @@ public class SchoolReportResourceIntTest {
         List<SchoolReport> schoolReportList = schoolReportRepository.findAll();
         assertThat(schoolReportList).hasSize(databaseSizeBeforeUpdate);
         SchoolReport testSchoolReport = schoolReportList.get(schoolReportList.size() - 1);
-        assertThat(testSchoolReport.getYearPeriod()).isEqualTo(UPDATED_YEAR_PERIOD);
         assertThat(testSchoolReport.getGradeAword()).isEqualTo(UPDATED_GRADE_AWORD);
         assertThat(testSchoolReport.getComment()).isEqualTo(UPDATED_COMMENT);
         assertThat(testSchoolReport.getCreationDate()).isEqualTo(UPDATED_CREATION_DATE);

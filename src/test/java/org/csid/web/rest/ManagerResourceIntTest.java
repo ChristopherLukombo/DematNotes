@@ -43,9 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = DematNotesApp.class)
 public class ManagerResourceIntTest {
 
-    private static final String DEFAULT_EMAIL = "9@by.dwe";
-    private static final String UPDATED_EMAIL = "zq@3d.zbfy";
-
     private static final String DEFAULT_MOBILE_PHONE_NUMBER = "+276001821579";
     private static final String UPDATED_MOBILE_PHONE_NUMBER = "6013269933";
 
@@ -111,7 +108,6 @@ public class ManagerResourceIntTest {
      */
     public static Manager createEntity(EntityManager em) {
         Manager manager = new Manager()
-            .email(DEFAULT_EMAIL)
             .mobilePhoneNumber(DEFAULT_MOBILE_PHONE_NUMBER)
             .fixePhoneNumber(DEFAULT_FIXE_PHONE_NUMBER)
             .address(DEFAULT_ADDRESS)
@@ -143,7 +139,6 @@ public class ManagerResourceIntTest {
         List<Manager> managerList = managerRepository.findAll();
         assertThat(managerList).hasSize(databaseSizeBeforeCreate + 1);
         Manager testManager = managerList.get(managerList.size() - 1);
-        assertThat(testManager.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testManager.getMobilePhoneNumber()).isEqualTo(DEFAULT_MOBILE_PHONE_NUMBER);
         assertThat(testManager.getFixePhoneNumber()).isEqualTo(DEFAULT_FIXE_PHONE_NUMBER);
         assertThat(testManager.getAddress()).isEqualTo(DEFAULT_ADDRESS);
@@ -171,25 +166,6 @@ public class ManagerResourceIntTest {
         // Validate the Manager in the database
         List<Manager> managerList = managerRepository.findAll();
         assertThat(managerList).hasSize(databaseSizeBeforeCreate);
-    }
-
-    @Test
-    @Transactional
-    public void checkEmailIsRequired() throws Exception {
-        int databaseSizeBeforeTest = managerRepository.findAll().size();
-        // set the field null
-        manager.setEmail(null);
-
-        // Create the Manager, which fails.
-        ManagerDTO managerDTO = managerMapper.toDto(manager);
-
-        restManagerMockMvc.perform(post("/api/managers")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managerDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Manager> managerList = managerRepository.findAll();
-        assertThat(managerList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -317,14 +293,13 @@ public class ManagerResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(manager.getId().intValue())))
-            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
-            .andExpect(jsonPath("$.[*].mobilePhoneNumber").value(hasItem(DEFAULT_MOBILE_PHONE_NUMBER)))
-            .andExpect(jsonPath("$.[*].fixePhoneNumber").value(hasItem(DEFAULT_FIXE_PHONE_NUMBER)))
-            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
-            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
-            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE)))
+            .andExpect(jsonPath("$.[*].mobilePhoneNumber").value(hasItem(DEFAULT_MOBILE_PHONE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].fixePhoneNumber").value(hasItem(DEFAULT_FIXE_PHONE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS.toString())))
+            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
+            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE.toString())))
             .andExpect(jsonPath("$.[*].dateOfBirth").value(hasItem(DEFAULT_DATE_OF_BIRTH.toString())))
-            .andExpect(jsonPath("$.[*].placeOfBirth").value(hasItem(DEFAULT_PLACE_OF_BIRTH)));
+            .andExpect(jsonPath("$.[*].placeOfBirth").value(hasItem(DEFAULT_PLACE_OF_BIRTH.toString())));
     }
 
     @Test
@@ -338,14 +313,13 @@ public class ManagerResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(manager.getId().intValue()))
-            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
-            .andExpect(jsonPath("$.mobilePhoneNumber").value(DEFAULT_MOBILE_PHONE_NUMBER))
-            .andExpect(jsonPath("$.fixePhoneNumber").value(DEFAULT_FIXE_PHONE_NUMBER))
-            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS))
-            .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
-            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE))
+            .andExpect(jsonPath("$.mobilePhoneNumber").value(DEFAULT_MOBILE_PHONE_NUMBER.toString()))
+            .andExpect(jsonPath("$.fixePhoneNumber").value(DEFAULT_FIXE_PHONE_NUMBER.toString()))
+            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS.toString()))
+            .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
+            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE.toString()))
             .andExpect(jsonPath("$.dateOfBirth").value(DEFAULT_DATE_OF_BIRTH.toString()))
-            .andExpect(jsonPath("$.placeOfBirth").value(DEFAULT_PLACE_OF_BIRTH));
+            .andExpect(jsonPath("$.placeOfBirth").value(DEFAULT_PLACE_OF_BIRTH.toString()));
     }
 
     @Test
@@ -368,7 +342,6 @@ public class ManagerResourceIntTest {
         // Disconnect from session so that the updates on updatedManager are not directly saved in db
         em.detach(updatedManager);
         updatedManager
-            .email(UPDATED_EMAIL)
             .mobilePhoneNumber(UPDATED_MOBILE_PHONE_NUMBER)
             .fixePhoneNumber(UPDATED_FIXE_PHONE_NUMBER)
             .address(UPDATED_ADDRESS)
@@ -387,7 +360,6 @@ public class ManagerResourceIntTest {
         List<Manager> managerList = managerRepository.findAll();
         assertThat(managerList).hasSize(databaseSizeBeforeUpdate);
         Manager testManager = managerList.get(managerList.size() - 1);
-        assertThat(testManager.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testManager.getMobilePhoneNumber()).isEqualTo(UPDATED_MOBILE_PHONE_NUMBER);
         assertThat(testManager.getFixePhoneNumber()).isEqualTo(UPDATED_FIXE_PHONE_NUMBER);
         assertThat(testManager.getAddress()).isEqualTo(UPDATED_ADDRESS);

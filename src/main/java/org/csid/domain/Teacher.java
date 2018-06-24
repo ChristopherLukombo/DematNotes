@@ -23,11 +23,6 @@ public class Teacher implements Serializable {
     private Long id;
 
     @NotNull
-    @Pattern(regexp = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @NotNull
     @Size(min = 10, max = 18)
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
     @Column(name = "mobile_phone_number", length = 18, nullable = false)
@@ -72,19 +67,6 @@ public class Teacher implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Teacher email(String email) {
-        this.email = email;
-        return this;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getMobilePhoneNumber() {
@@ -229,7 +211,6 @@ public class Teacher implements Serializable {
     public String toString() {
         return "Teacher{" +
             "id=" + getId() +
-            ", email='" + getEmail() + "'" +
             ", mobilePhoneNumber='" + getMobilePhoneNumber() + "'" +
             ", fixePhoneNumber='" + getFixePhoneNumber() + "'" +
             ", address='" + getAddress() + "'" +

@@ -3,7 +3,6 @@ import { BaseEntity } from './../../shared';
 export class Teacher implements BaseEntity {
     constructor(
         public id?: number,
-        public email?: string,
         public mobilePhoneNumber?: string,
         public fixePhoneNumber?: string,
         public address?: string,

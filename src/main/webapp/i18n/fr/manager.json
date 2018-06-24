@@ -16,7 +16,6 @@
             "detail": {
                 "title": "Manager"
             },
-            "email": "Email",
             "mobilePhoneNumber": "Mobile Phone Number",
             "fixePhoneNumber": "Fixe Phone Number",
             "address": "Address",

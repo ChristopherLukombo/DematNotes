@@ -1,6 +1,5 @@
 package org.csid.repository;
 
-import org.csid.domain.SchoolYear;
 import org.csid.domain.Student;
 import org.csid.domain.User;
 import org.springframework.stereotype.Repository;

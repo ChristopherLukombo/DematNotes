@@ -6,16 +6,27 @@
             "relationshipName": "evaluations",
             "otherEntityName": "evaluation",
             "otherEntityRelationshipName": "schoolReport"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "yearPeriod",
+            "otherEntityName": "yearPeriod",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "student",
+            "otherEntityName": "student",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "manager",
+            "otherEntityName": "manager",
+            "otherEntityField": "id"
         }
     ],
     "fields": [
-        {
-            "fieldName": "yearPeriod",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
         {
             "fieldName": "gradeAword",
             "fieldType": "String"

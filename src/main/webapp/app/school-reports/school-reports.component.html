@@ -1,13 +1,17 @@
 <mat-tab-group>
     <mat-tab label="Bulletin">
         <span style="float:right;">
-            <mat-icon svgIcon="upload" (click)="downloadSchoolReport()" class="icon"></mat-icon>
-            <button (click)="downloadSchoolReport()"> Télécharger PDF </button>
+            <mat-icon svgIcon="download" (click)="downloadSchoolReport()" class="icon"></mat-icon>
         </span>
+        <span>Bulletin</span>
+    </mat-tab>
+
+    <mat-tab label="Remplir Bulletin">
         <span>Bulletin</span>
         <!-- Listes déroulante -->
         <mat-form-field>
-            <mat-select name="schoolSelected" [(ngModel)]="schoolSelected" (ngModelChange)="getClassroomsByCurrentUserTeacher()" placeholder="Ecoles">
+            <mat-select name="schoolSelected" [(ngModel)]="schoolSelected"
+                        (ngModelChange)="getClassroomsByCurrentManager()" placeholder="Ecoles">
                 <mat-option *ngFor="let school of schools" [value]="school.id">
                     {{ school.wording }} - {{school.city}}
                 </mat-option>
@@ -15,7 +19,8 @@
         </mat-form-field>
 
         <mat-form-field *ngIf="schoolSelected && this.classrooms.length > 0">
-            <mat-select name="classroomSelected" [(ngModel)]="classroomSelected" (ngModelChange)="getStudentsUserByCurrentUserTeacher()" placeholder="Classes">
+            <mat-select name="classroomSelected" [(ngModel)]="classroomSelected"
+                        (ngModelChange)="getStudentsByManager()" placeholder="Classes">
                 <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
                     {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
                 </mat-option>
@@ -23,32 +28,48 @@
         </mat-form-field>
 
         <mat-form-field *ngIf="classroomSelected">
-            <mat-select name="userSelected" [(ngModel)]="userSelected" (ngModelChange)="getStudentUserByCurrentUserTeacher()" placeholder="Etudiants">
+            <mat-select name="userSelected" [(ngModel)]="userSelected" (ngModelChange)="getStudentByManager()"
+                        placeholder="Etudiants">
                 <mat-option *ngFor="let user of users" [value]="user.id">
-                    {{ user.firstName }} -  {{ user.lastName }}
+                    {{ user.firstName }} - {{ user.lastName }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
-        <button type="submit" class="btn btn-dark" name="validate" (click)="saveMark()">Valider</button>
+        <button type="submit" class="btn btn-dark" name="validate" (click)="saveSchoolReport()">Valider</button>
 
-        <div *ngIf="classroomSelected">
-            <table class="table table-striped tab">
-                <thead>
-                <tr>
-                    <th scope="col"> # </th>
-                    <th scope="col"> Prénom </th>
-                    <th scope="col"> Nom </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let user of users">
-                    <td scope="row"></td>
-                    <td> {{user.firstName}} </td>
-                    <td> {{user.lastName}}</td>
-                </tr>
-                </tbody>
-            </table>
+        <div *ngIf="userSelected">
+
+            <p>
+                <label>Récompense</label>
+                <input type="text" name="gradeAword" [(ngModel)]="this.schoolReport.gradeAword"/>
+            </p>
+
+            <p>
+                <label>Commentaire</label>
+                <input type="text" name="comment" [(ngModel)]="this.schoolReport.comment"/>
+            </p>
+
+            <button (click)="saveSchoolReport()">Créer Bulletin</button>
         </div>
+
+        <table class="table table-striped tab" *ngIf="this.evaluations.length > 0">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Moyenne</th>
+                <th scope="col">Commentaire</th>
+                <th scope="col">Intitulé</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let evaluation of this.evaluations">
+                <td scope="row"></td>
+                <td>{{evaluation.average}}</td>
+                <td>{{evaluation.comment}}</td>
+                <td>{{evaluation.moduleId}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </mat-tab>
 </mat-tab-group>
-<img src="../../content/images/download.svg" style="display:none;">

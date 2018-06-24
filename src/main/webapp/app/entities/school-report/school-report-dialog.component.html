@@ -13,17 +13,6 @@
                    [(ngModel)]="schoolReport.id" readonly />
         </div>
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="dematNotesApp.schoolReport.yearPeriod" for="field_yearPeriod">Year Period</label>
-            <input type="text" class="form-control" name="yearPeriod" id="field_yearPeriod"
-                [(ngModel)]="schoolReport.yearPeriod" required/>
-            <div [hidden]="!(editForm.controls.yearPeriod?.dirty && editForm.controls.yearPeriod?.invalid)">
-                <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.yearPeriod?.errors?.required" jhiTranslate="entity.validation.required">
-                   This field is required.
-                </small>
-            </div>
-        </div>
-        <div class="form-group">
             <label class="form-control-label" jhiTranslate="dematNotesApp.schoolReport.gradeAword" for="field_gradeAword">Grade Aword</label>
             <input type="text" class="form-control" name="gradeAword" id="field_gradeAword"
                 [(ngModel)]="schoolReport.gradeAword" />
@@ -44,6 +33,27 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.schoolReport.yearPeriod" for="field_yearPeriod">Year Period</label>
+            <select class="form-control" id="field_yearPeriod" name="yearPeriod" [(ngModel)]="schoolReport.yearPeriodId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="yearPeriodOption.id" *ngFor="let yearPeriodOption of yearperiods; trackBy: trackYearPeriodById">{{yearPeriodOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.schoolReport.student" for="field_student">Student</label>
+            <select class="form-control" id="field_student" name="student" [(ngModel)]="schoolReport.studentId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="studentOption.id" *ngFor="let studentOption of students; trackBy: trackStudentById">{{studentOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.schoolReport.manager" for="field_manager">Manager</label>
+            <select class="form-control" id="field_manager" name="manager" [(ngModel)]="schoolReport.managerId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="managerOption.id" *ngFor="let managerOption of managers; trackBy: trackManagerById">{{managerOption.id}}</option>
+            </select>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">

@@ -43,9 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = DematNotesApp.class)
 public class TeacherResourceIntTest {
 
-    private static final String DEFAULT_EMAIL = "l@t.ujig";
-    private static final String UPDATED_EMAIL = "o@d.wlzp";
-
     private static final String DEFAULT_MOBILE_PHONE_NUMBER = "+657)712452087";
     private static final String UPDATED_MOBILE_PHONE_NUMBER = "+552)73915886";
 
@@ -111,7 +108,6 @@ public class TeacherResourceIntTest {
      */
     public static Teacher createEntity(EntityManager em) {
         Teacher teacher = new Teacher()
-            .email(DEFAULT_EMAIL)
             .mobilePhoneNumber(DEFAULT_MOBILE_PHONE_NUMBER)
             .fixePhoneNumber(DEFAULT_FIXE_PHONE_NUMBER)
             .address(DEFAULT_ADDRESS)
@@ -143,7 +139,6 @@ public class TeacherResourceIntTest {
         List<Teacher> teacherList = teacherRepository.findAll();
         assertThat(teacherList).hasSize(databaseSizeBeforeCreate + 1);
         Teacher testTeacher = teacherList.get(teacherList.size() - 1);
-        assertThat(testTeacher.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testTeacher.getMobilePhoneNumber()).isEqualTo(DEFAULT_MOBILE_PHONE_NUMBER);
         assertThat(testTeacher.getFixePhoneNumber()).isEqualTo(DEFAULT_FIXE_PHONE_NUMBER);
         assertThat(testTeacher.getAddress()).isEqualTo(DEFAULT_ADDRESS);
@@ -171,25 +166,6 @@ public class TeacherResourceIntTest {
         // Validate the Teacher in the database
         List<Teacher> teacherList = teacherRepository.findAll();
         assertThat(teacherList).hasSize(databaseSizeBeforeCreate);
-    }
-
-    @Test
-    @Transactional
-    public void checkEmailIsRequired() throws Exception {
-        int databaseSizeBeforeTest = teacherRepository.findAll().size();
-        // set the field null
-        teacher.setEmail(null);
-
-        // Create the Teacher, which fails.
-        TeacherDTO teacherDTO = teacherMapper.toDto(teacher);
-
-        restTeacherMockMvc.perform(post("/api/teachers")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(teacherDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Teacher> teacherList = teacherRepository.findAll();
-        assertThat(teacherList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -317,14 +293,13 @@ public class TeacherResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(teacher.getId().intValue())))
-            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
-            .andExpect(jsonPath("$.[*].mobilePhoneNumber").value(hasItem(DEFAULT_MOBILE_PHONE_NUMBER)))
-            .andExpect(jsonPath("$.[*].fixePhoneNumber").value(hasItem(DEFAULT_FIXE_PHONE_NUMBER)))
-            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
-            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
-            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE)))
+            .andExpect(jsonPath("$.[*].mobilePhoneNumber").value(hasItem(DEFAULT_MOBILE_PHONE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].fixePhoneNumber").value(hasItem(DEFAULT_FIXE_PHONE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS.toString())))
+            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
+            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE.toString())))
             .andExpect(jsonPath("$.[*].dateOfBirth").value(hasItem(DEFAULT_DATE_OF_BIRTH.toString())))
-            .andExpect(jsonPath("$.[*].placeOfBirth").value(hasItem(DEFAULT_PLACE_OF_BIRTH)));
+            .andExpect(jsonPath("$.[*].placeOfBirth").value(hasItem(DEFAULT_PLACE_OF_BIRTH.toString())));
     }
 
     @Test
@@ -338,14 +313,13 @@ public class TeacherResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(teacher.getId().intValue()))
-            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
-            .andExpect(jsonPath("$.mobilePhoneNumber").value(DEFAULT_MOBILE_PHONE_NUMBER))
-            .andExpect(jsonPath("$.fixePhoneNumber").value(DEFAULT_FIXE_PHONE_NUMBER))
-            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS))
-            .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
-            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE))
+            .andExpect(jsonPath("$.mobilePhoneNumber").value(DEFAULT_MOBILE_PHONE_NUMBER.toString()))
+            .andExpect(jsonPath("$.fixePhoneNumber").value(DEFAULT_FIXE_PHONE_NUMBER.toString()))
+            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS.toString()))
+            .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
+            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE.toString()))
             .andExpect(jsonPath("$.dateOfBirth").value(DEFAULT_DATE_OF_BIRTH.toString()))
-            .andExpect(jsonPath("$.placeOfBirth").value(DEFAULT_PLACE_OF_BIRTH));
+            .andExpect(jsonPath("$.placeOfBirth").value(DEFAULT_PLACE_OF_BIRTH.toString()));
     }
 
     @Test
@@ -368,7 +342,6 @@ public class TeacherResourceIntTest {
         // Disconnect from session so that the updates on updatedTeacher are not directly saved in db
         em.detach(updatedTeacher);
         updatedTeacher
-            .email(UPDATED_EMAIL)
             .mobilePhoneNumber(UPDATED_MOBILE_PHONE_NUMBER)
             .fixePhoneNumber(UPDATED_FIXE_PHONE_NUMBER)
             .address(UPDATED_ADDRESS)
@@ -387,7 +360,6 @@ public class TeacherResourceIntTest {
         List<Teacher> teacherList = teacherRepository.findAll();
         assertThat(teacherList).hasSize(databaseSizeBeforeUpdate);
         Teacher testTeacher = teacherList.get(teacherList.size() - 1);
-        assertThat(testTeacher.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testTeacher.getMobilePhoneNumber()).isEqualTo(UPDATED_MOBILE_PHONE_NUMBER);
         assertThat(testTeacher.getFixePhoneNumber()).isEqualTo(UPDATED_FIXE_PHONE_NUMBER);
         assertThat(testTeacher.getAddress()).isEqualTo(UPDATED_ADDRESS);

@@ -57,6 +57,26 @@ public class SettingsServiceImpl implements ISettingsService {
         }
 
         try {
+            File fichier =  new File(".sftp.ser") ;
+
+            // ouverture d'un flux sur un fichier
+            ObjectOutputStream oos =  new ObjectOutputStream(new FileOutputStream(fichier)) ;
+
+            userSFTP = new UserSFTP();
+
+            userSFTP.setPassword("test");
+            userSFTP.setUsername("test");
+            userSFTP.setPort(22);
+            userSFTP.setServer("109.12.191.106");
+
+            oos.writeObject(userSFTP);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
             final File f = new File(".sftp.ser");
             final ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
             userSFTP = (UserSFTP) ois.readObject();
@@ -65,6 +85,7 @@ public class SettingsServiceImpl implements ISettingsService {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
 
         String SFTPHOST =  userSFTP.getServer(); // SFTP Host Name or SFTP Host IP Address
         int SFTPPORT = userSFTP.getPort(); // SFTP Port Number

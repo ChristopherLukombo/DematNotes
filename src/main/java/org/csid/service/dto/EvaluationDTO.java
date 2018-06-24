@@ -23,9 +23,6 @@ public class EvaluationDTO implements Serializable {
 
     private String comment;
 
-    @NotNull
-    private String yearPeriod;
-
     @Size(max = 10)
     private String validation;
 
@@ -65,14 +62,6 @@ public class EvaluationDTO implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public String getYearPeriod() {
-        return yearPeriod;
-    }
-
-    public void setYearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
     }
 
     public String getValidation() {
@@ -135,7 +124,6 @@ public class EvaluationDTO implements Serializable {
             ", average=" + getAverage() +
             ", evaluationDate='" + getEvaluationDate() + "'" +
             ", comment='" + getComment() + "'" +
-            ", yearPeriod='" + getYearPeriod() + "'" +
             ", validation='" + getValidation() + "'" +
             "}";
     }

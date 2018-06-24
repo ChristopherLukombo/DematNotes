@@ -1,0 +1,40 @@
+
+<div *ngIf="assignmentManager">
+    <h2><span jhiTranslate="dematNotesApp.assignmentManager.detail.title">Assignment Manager</span> {{assignmentManager.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.assignmentManager.schoolYear">School Year</span></dt>
+        <dd>
+            <div *ngIf="assignmentManager.schoolYearId">
+                <a [routerLink]="['/school-year', assignmentManager.schoolYearId]">{{assignmentManager.schoolYearId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.assignmentManager.school">School</span></dt>
+        <dd>
+            <div *ngIf="assignmentManager.schoolId">
+                <a [routerLink]="['/school', assignmentManager.schoolId]">{{assignmentManager.schoolId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.assignmentManager.manager">Manager</span></dt>
+        <dd>
+            <span *ngFor="let manager of assignmentManager.managers; let last = last">
+                <a [routerLink]="['/manager', manager?.id ]">{{manager.id}}</a>{{last ? '' : ', '}}
+            </span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'assignment-manager/'+ assignmentManager.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

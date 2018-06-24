@@ -265,32 +265,32 @@ export class MarksComponent implements OnInit {
                     alert('Saisir une moyenne entre 0 et 20');
                     return;
                 }  else {
-                    this.services.getStudentByIdUser(i).subscribe(
-                        (student) => {
-                            const e = new Evaluation(
-                                null,
-                                parseFloat(this.marks[i].trim()),
-                                new Date().toISOString().slice(0, 16),
-                                (this.comments[i] != null && this.comments[i].trim().length > 0) ? this.comments[i].trim() : '',
-                                this.yearPeriod,
-                               null,
-                                student.id,
-                                this.idModule,
-                                null
-                            );
+                    // this.services.getStudentByIdUser(i).subscribe(
+                    //     (student) => {
+                    //         const e = new Evaluation(
+                    //             null,
+                    //             parseFloat(this.marks[i].trim()),
+                    //             new Date().toISOString().slice(0, 16),
+                    //             (this.comments[i] != null && this.comments[i].trim().length > 0) ? this.comments[i].trim() : '',
+                    //             this.yearPeriod,
+                    //            null,
+                    //             student.id,
+                    //             this.idModule,
+                    //             null
+                    //         );
 
-                            this.evaluationService.create(e).subscribe(
-                                (evaluation) => {
-                                    if (i === this.marks.length - 1 && evaluation) {
-                                        alert('Moyenne enregistrée');
-                                    }
-                                }, (firstError) => {
-                                    console.log(JSON.parse(firstError.body).message);
-                                });
+                            // this.evaluationService.create(e).subscribe(
+                            //     (evaluation) => {
+                            //         if (i === this.marks.length - 1 && evaluation) {
+                            //             alert('Moyenne enregistrée');
+                            //         }
+                            //     }, (firstError) => {
+                            //         console.log(JSON.parse(firstError.body).message);
+                            //     });
 
-                        }, (secondError) => {
-                            console.log(JSON.parse(secondError.body).message);
-                        });
+                        // }, (secondError) => {
+                        //     console.log(JSON.parse(secondError.body).message);
+                        // });
 
                 }
             }

@@ -26,6 +26,9 @@
                 "document": "Document",
                 "assignmentModule": "Assignment Module",
                 "inscription": "Inscription",
+                "yearPeriod": "Year Period",
+                "assignmentManager": "Assignment Manager",
+                "assignmentYearPeriod": "Assignment Year Period",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

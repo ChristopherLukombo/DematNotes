@@ -1,0 +1,40 @@
+
+<div *ngIf="assignmentYearPeriod">
+    <h2><span jhiTranslate="dematNotesApp.assignmentYearPeriod.detail.title">Assignment Year Period</span> {{assignmentYearPeriod.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="dematNotesApp.assignmentYearPeriod.school">School</span></dt>
+        <dd>
+            <div *ngIf="assignmentYearPeriod.schoolId">
+                <a [routerLink]="['/school', assignmentYearPeriod.schoolId]">{{assignmentYearPeriod.schoolId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.assignmentYearPeriod.yearPeriod">Year Period</span></dt>
+        <dd>
+            <span *ngFor="let yearPeriod of assignmentYearPeriod.yearPeriods; let last = last">
+                <a [routerLink]="['/year-period', yearPeriod?.id ]">{{yearPeriod.id}}</a>{{last ? '' : ', '}}
+            </span>
+        </dd>
+        <dt><span jhiTranslate="dematNotesApp.assignmentYearPeriod.classroom">Classroom</span></dt>
+        <dd>
+            <span *ngFor="let classroom of assignmentYearPeriod.classrooms; let last = last">
+                <a [routerLink]="['/classroom', classroom?.id ]">{{classroom.id}}</a>{{last ? '' : ', '}}
+            </span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'assignment-year-period/'+ assignmentYearPeriod.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

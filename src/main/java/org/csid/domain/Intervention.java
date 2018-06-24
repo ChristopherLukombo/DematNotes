@@ -29,10 +29,6 @@ public class Intervention implements Serializable {
     private String type;
 
     @NotNull
-    @Column(name = "year_period", nullable = false)
-    private String yearPeriod;
-
-    @NotNull
     @Column(name = "start_date", nullable = false)
     private ZonedDateTime startDate;
 
@@ -69,19 +65,6 @@ public class Intervention implements Serializable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getYearPeriod() {
-        return yearPeriod;
-    }
-
-    public Intervention yearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
-        return this;
-    }
-
-    public void setYearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
     }
 
     public ZonedDateTime getStartDate() {
@@ -172,7 +155,6 @@ public class Intervention implements Serializable {
         return "Intervention{" +
             "id=" + getId() +
             ", type='" + getType() + "'" +
-            ", yearPeriod='" + getYearPeriod() + "'" +
             ", startDate='" + getStartDate() + "'" +
             ", endDate='" + getEndDate() + "'" +
             "}";

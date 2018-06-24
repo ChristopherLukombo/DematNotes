@@ -1,0 +1,24 @@
+
+{
+    "dematNotesApp": {
+        "assignmentManager" : {
+            "home": {
+                "title": "AssignmentManagers",
+                "createLabel": "Créer un nouveau Assignment Manager",
+                "createOrEditLabel": "Créer ou éditer un Assignment Manager"
+            },
+            "created": "Un nouveau Assignment Manager a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Assignment Manager avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Assignment Manager avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Assignment Manager {{ id }} ?"
+            },
+            "detail": {
+                "title": "Assignment Manager"
+            },
+            "schoolYear": "School Year",
+            "school": "School",
+            "manager": "Manager"
+        }
+    }
+}

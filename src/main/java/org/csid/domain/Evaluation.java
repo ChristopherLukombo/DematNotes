@@ -33,10 +33,6 @@ public class Evaluation implements Serializable {
     @Column(name = "jhi_comment")
     private String comment;
 
-    @NotNull
-    @Column(name = "year_period", nullable = false)
-    private String yearPeriod;
-
     @Size(max = 10)
     @Column(name = "jhi_validation", length = 10)
     private String validation;
@@ -96,19 +92,6 @@ public class Evaluation implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public String getYearPeriod() {
-        return yearPeriod;
-    }
-
-    public Evaluation yearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
-        return this;
-    }
-
-    public void setYearPeriod(String yearPeriod) {
-        this.yearPeriod = yearPeriod;
     }
 
     public String getValidation() {
@@ -191,7 +174,6 @@ public class Evaluation implements Serializable {
             ", average=" + getAverage() +
             ", evaluationDate='" + getEvaluationDate() + "'" +
             ", comment='" + getComment() + "'" +
-            ", yearPeriod='" + getYearPeriod() + "'" +
             ", validation='" + getValidation() + "'" +
             "}";
     }

@@ -17,20 +17,36 @@
             <thead>
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
-            <th><span jhiTranslate="dematNotesApp.schoolReport.yearPeriod">Year Period</span></th>
             <th><span jhiTranslate="dematNotesApp.schoolReport.gradeAword">Grade Aword</span></th>
             <th><span jhiTranslate="dematNotesApp.schoolReport.comment">Comment</span></th>
             <th><span jhiTranslate="dematNotesApp.schoolReport.creationDate">Creation Date</span></th>
+            <th><span jhiTranslate="dematNotesApp.schoolReport.yearPeriod">Year Period</span></th>
+            <th><span jhiTranslate="dematNotesApp.schoolReport.student">Student</span></th>
+            <th><span jhiTranslate="dematNotesApp.schoolReport.manager">Manager</span></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let schoolReport of schoolReports ;trackBy: trackId">
                 <td><a [routerLink]="['../school-report', schoolReport.id ]">{{schoolReport.id}}</a></td>
-                <td>{{schoolReport.yearPeriod}}</td>
                 <td>{{schoolReport.gradeAword}}</td>
                 <td>{{schoolReport.comment}}</td>
                 <td>{{schoolReport.creationDate | date:'mediumDate'}}</td>
+                <td>
+                    <div *ngIf="schoolReport.yearPeriodId">
+                        <a [routerLink]="['../year-period', schoolReport.yearPeriodId  ]" >{{schoolReport.yearPeriodId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="schoolReport.studentId">
+                        <a [routerLink]="['../student', schoolReport.studentId  ]" >{{schoolReport.studentId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="schoolReport.managerId">
+                        <a [routerLink]="['../manager', schoolReport.managerId  ]" >{{schoolReport.managerId}}</a>
+                    </div>
+                </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

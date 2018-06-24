@@ -16,11 +16,13 @@
             "detail": {
                 "title": "School Report"
             },
-            "yearPeriod": "Year Period",
             "gradeAword": "Grade Aword",
             "comment": "Comment",
             "creationDate": "Creation Date",
-            "evaluations": "Evaluations"
+            "evaluations": "Evaluations",
+            "yearPeriod": "Year Period",
+            "student": "Student",
+            "manager": "Manager"
         }
     }
 }

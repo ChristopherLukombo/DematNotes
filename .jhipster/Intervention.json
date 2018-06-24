@@ -25,13 +25,6 @@
             ]
         },
         {
-            "fieldName": "yearPeriod",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
             "fieldName": "startDate",
             "fieldType": "ZonedDateTime",
             "fieldValidateRules": [

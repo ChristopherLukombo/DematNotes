@@ -55,9 +55,6 @@ public class EvaluationResourceIntTest {
     private static final String DEFAULT_COMMENT = "AAAAAAAAAA";
     private static final String UPDATED_COMMENT = "BBBBBBBBBB";
 
-    private static final String DEFAULT_YEAR_PERIOD = "AAAAAAAAAA";
-    private static final String UPDATED_YEAR_PERIOD = "BBBBBBBBBB";
-
     private static final String DEFAULT_VALIDATION = "AAAAAAAAAA";
     private static final String UPDATED_VALIDATION = "BBBBBBBBBB";
 
@@ -108,7 +105,6 @@ public class EvaluationResourceIntTest {
             .average(DEFAULT_AVERAGE)
             .evaluationDate(DEFAULT_EVALUATION_DATE)
             .comment(DEFAULT_COMMENT)
-            .yearPeriod(DEFAULT_YEAR_PERIOD)
             .validation(DEFAULT_VALIDATION);
         return evaluation;
     }
@@ -137,7 +133,6 @@ public class EvaluationResourceIntTest {
         assertThat(testEvaluation.getAverage()).isEqualTo(DEFAULT_AVERAGE);
         assertThat(testEvaluation.getEvaluationDate()).isEqualTo(DEFAULT_EVALUATION_DATE);
         assertThat(testEvaluation.getComment()).isEqualTo(DEFAULT_COMMENT);
-        assertThat(testEvaluation.getYearPeriod()).isEqualTo(DEFAULT_YEAR_PERIOD);
         assertThat(testEvaluation.getValidation()).isEqualTo(DEFAULT_VALIDATION);
     }
 
@@ -201,25 +196,6 @@ public class EvaluationResourceIntTest {
 
     @Test
     @Transactional
-    public void checkYearPeriodIsRequired() throws Exception {
-        int databaseSizeBeforeTest = evaluationRepository.findAll().size();
-        // set the field null
-        evaluation.setYearPeriod(null);
-
-        // Create the Evaluation, which fails.
-        EvaluationDTO evaluationDTO = evaluationMapper.toDto(evaluation);
-
-        restEvaluationMockMvc.perform(post("/api/evaluations")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(evaluationDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Evaluation> evaluationList = evaluationRepository.findAll();
-        assertThat(evaluationList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllEvaluations() throws Exception {
         // Initialize the database
         evaluationRepository.saveAndFlush(evaluation);
@@ -231,9 +207,8 @@ public class EvaluationResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(evaluation.getId().intValue())))
             .andExpect(jsonPath("$.[*].average").value(hasItem(DEFAULT_AVERAGE.doubleValue())))
             .andExpect(jsonPath("$.[*].evaluationDate").value(hasItem(sameInstant(DEFAULT_EVALUATION_DATE))))
-            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)))
-            .andExpect(jsonPath("$.[*].yearPeriod").value(hasItem(DEFAULT_YEAR_PERIOD)))
-            .andExpect(jsonPath("$.[*].validation").value(hasItem(DEFAULT_VALIDATION)));
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT.toString())))
+            .andExpect(jsonPath("$.[*].validation").value(hasItem(DEFAULT_VALIDATION.toString())));
     }
 
     @Test
@@ -249,9 +224,8 @@ public class EvaluationResourceIntTest {
             .andExpect(jsonPath("$.id").value(evaluation.getId().intValue()))
             .andExpect(jsonPath("$.average").value(DEFAULT_AVERAGE.doubleValue()))
             .andExpect(jsonPath("$.evaluationDate").value(sameInstant(DEFAULT_EVALUATION_DATE)))
-            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT))
-            .andExpect(jsonPath("$.yearPeriod").value(DEFAULT_YEAR_PERIOD))
-            .andExpect(jsonPath("$.validation").value(DEFAULT_VALIDATION));
+            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT.toString()))
+            .andExpect(jsonPath("$.validation").value(DEFAULT_VALIDATION.toString()));
     }
 
     @Test
@@ -277,7 +251,6 @@ public class EvaluationResourceIntTest {
             .average(UPDATED_AVERAGE)
             .evaluationDate(UPDATED_EVALUATION_DATE)
             .comment(UPDATED_COMMENT)
-            .yearPeriod(UPDATED_YEAR_PERIOD)
             .validation(UPDATED_VALIDATION);
         EvaluationDTO evaluationDTO = evaluationMapper.toDto(updatedEvaluation);
 
@@ -293,7 +266,6 @@ public class EvaluationResourceIntTest {
         assertThat(testEvaluation.getAverage()).isEqualTo(UPDATED_AVERAGE);
         assertThat(testEvaluation.getEvaluationDate()).isEqualTo(UPDATED_EVALUATION_DATE);
         assertThat(testEvaluation.getComment()).isEqualTo(UPDATED_COMMENT);
-        assertThat(testEvaluation.getYearPeriod()).isEqualTo(UPDATED_YEAR_PERIOD);
         assertThat(testEvaluation.getValidation()).isEqualTo(UPDATED_VALIDATION);
     }
 

@@ -9,6 +9,9 @@ import { DematNotesTestModule } from '../../../test.module';
 import { SchoolReportDialogComponent } from '../../../../../../main/webapp/app/entities/school-report/school-report-dialog.component';
 import { SchoolReportService } from '../../../../../../main/webapp/app/entities/school-report/school-report.service';
 import { SchoolReport } from '../../../../../../main/webapp/app/entities/school-report/school-report.model';
+import { YearPeriodService } from '../../../../../../main/webapp/app/entities/year-period';
+import { StudentService } from '../../../../../../main/webapp/app/entities/student';
+import { ManagerService } from '../../../../../../main/webapp/app/entities/manager';
 
 describe('Component Tests', () => {
 
@@ -24,6 +27,9 @@ describe('Component Tests', () => {
                 imports: [DematNotesTestModule],
                 declarations: [SchoolReportDialogComponent],
                 providers: [
+                    YearPeriodService,
+                    StudentService,
+                    ManagerService,
                     SchoolReportService
                 ]
             })

@@ -11,7 +11,6 @@ import {DelayStudent} from '../entities/delay-student';
 import {Services} from '../services';
 import {Module} from '../entities/module';
 import {AbsenceSearch} from './absenceSearch';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
     selector: 'jhi-school-life',

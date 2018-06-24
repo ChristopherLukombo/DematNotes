@@ -16,10 +16,6 @@ public class TeacherDTO implements Serializable {
     private Long id;
 
     @NotNull
-    @Pattern(regexp = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
-    private String email;
-
-    @NotNull
     @Size(min = 10, max = 18)
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
     private String mobilePhoneNumber;
@@ -54,14 +50,6 @@ public class TeacherDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getMobilePhoneNumber() {
@@ -161,7 +149,6 @@ public class TeacherDTO implements Serializable {
     public String toString() {
         return "TeacherDTO{" +
             "id=" + getId() +
-            ", email='" + getEmail() + "'" +
             ", mobilePhoneNumber='" + getMobilePhoneNumber() + "'" +
             ", fixePhoneNumber='" + getFixePhoneNumber() + "'" +
             ", address='" + getAddress() + "'" +

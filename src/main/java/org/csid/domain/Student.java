@@ -30,11 +30,6 @@ public class Student implements Serializable {
     private String ine;
 
     @NotNull
-    @Pattern(regexp = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @NotNull
     @Size(min = 10, max = 18)
     @Pattern(regexp = "^[+](\\d{3})\\)?(\\d{3})(\\d{5,6})$|^(\\d{10,10})$")
     @Column(name = "mobile_phone_number", length = 18, nullable = false)
@@ -93,19 +88,6 @@ public class Student implements Serializable {
 
     public void setIne(String ine) {
         this.ine = ine;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Student email(String email) {
-        this.email = email;
-        return this;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getMobilePhoneNumber() {
@@ -263,7 +245,6 @@ public class Student implements Serializable {
         return "Student{" +
             "id=" + getId() +
             ", ine='" + getIne() + "'" +
-            ", email='" + getEmail() + "'" +
             ", mobilePhoneNumber='" + getMobilePhoneNumber() + "'" +
             ", fixePhoneNumber='" + getFixePhoneNumber() + "'" +
             ", address='" + getAddress() + "'" +

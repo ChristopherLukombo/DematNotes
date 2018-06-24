@@ -32,6 +32,12 @@
                 <a [routerLink]="['/module', evaluation.moduleId]">{{evaluation.moduleId}}</a>
             </div>
         </dd>
+        <dt><span jhiTranslate="dematNotesApp.evaluation.teacher">Teacher</span></dt>
+        <dd>
+            <div *ngIf="evaluation.teacherId">
+                <a [routerLink]="['/teacher', evaluation.teacherId]">{{evaluation.teacherId}}</a>
+            </div>
+        </dd>
         <dt><span jhiTranslate="dematNotesApp.evaluation.schoolReport">School Report</span></dt>
         <dd>
             <div *ngIf="evaluation.schoolReportId">

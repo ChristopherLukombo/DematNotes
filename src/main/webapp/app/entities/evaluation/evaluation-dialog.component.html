@@ -76,6 +76,13 @@
             </select>
         </div>
         <div class="form-group">
+            <label class="form-control-label" jhiTranslate="dematNotesApp.evaluation.teacher" for="field_teacher">Teacher</label>
+            <select class="form-control" id="field_teacher" name="teacher" [(ngModel)]="evaluation.teacherId" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="teacherOption.id" *ngFor="let teacherOption of teachers; trackBy: trackTeacherById">{{teacherOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label class="form-control-label" jhiTranslate="dematNotesApp.evaluation.schoolReport" for="field_schoolReport">School Report</label>
             <select class="form-control" id="field_schoolReport" name="schoolReport" [(ngModel)]="evaluation.schoolReportId" >
                 <option [ngValue]="null"></option>

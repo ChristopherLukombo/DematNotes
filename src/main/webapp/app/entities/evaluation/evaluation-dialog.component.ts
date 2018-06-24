@@ -11,6 +11,7 @@ import { EvaluationPopupService } from './evaluation-popup.service';
 import { EvaluationService } from './evaluation.service';
 import { Student, StudentService } from '../student';
 import { Module, ModuleService } from '../module';
+import { Teacher, TeacherService } from '../teacher';
 import { SchoolReport, SchoolReportService } from '../school-report';
 
 @Component({
@@ -26,6 +27,8 @@ export class EvaluationDialogComponent implements OnInit {
 
     modules: Module[];
 
+    teachers: Teacher[];
+
     schoolreports: SchoolReport[];
 
     constructor(
@@ -34,6 +37,7 @@ export class EvaluationDialogComponent implements OnInit {
         private evaluationService: EvaluationService,
         private studentService: StudentService,
         private moduleService: ModuleService,
+        private teacherService: TeacherService,
         private schoolReportService: SchoolReportService,
         private eventManager: JhiEventManager
     ) {
@@ -45,6 +49,8 @@ export class EvaluationDialogComponent implements OnInit {
             .subscribe((res: HttpResponse<Student[]>) => { this.students = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.moduleService.query()
             .subscribe((res: HttpResponse<Module[]>) => { this.modules = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.teacherService.query()
+            .subscribe((res: HttpResponse<Teacher[]>) => { this.teachers = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.schoolReportService.query()
             .subscribe((res: HttpResponse<SchoolReport[]>) => { this.schoolreports = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
@@ -88,6 +94,10 @@ export class EvaluationDialogComponent implements OnInit {
     }
 
     trackModuleById(index: number, item: Module) {
+        return item.id;
+    }
+
+    trackTeacherById(index: number, item: Teacher) {
         return item.id;
     }
 

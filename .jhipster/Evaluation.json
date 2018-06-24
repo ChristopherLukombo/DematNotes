@@ -14,6 +14,12 @@
             "otherEntityField": "id"
         },
         {
+            "relationshipType": "many-to-one",
+            "relationshipName": "teacher",
+            "otherEntityName": "teacher",
+            "otherEntityField": "id"
+        },
+        {
             "relationshipName": "schoolReport",
             "otherEntityName": "schoolReport",
             "relationshipType": "many-to-one",

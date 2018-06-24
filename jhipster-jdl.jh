@@ -137,6 +137,7 @@ relationship ManyToOne {
 relationship ManyToOne {
     Evaluation{student} to Student
     Evaluation{module} to Module
+    Evaluation{teacher} to Teacher
     SchoolReport{yearPeriod} to YearPeriod
     SchoolReport{student} to Student
     SchoolReport{manager} to Manager

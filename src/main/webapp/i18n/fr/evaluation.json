@@ -22,6 +22,7 @@
             "validation": "Validation",
             "student": "Student",
             "module": "Module",
+            "teacher": "Teacher",
             "schoolReport": "School Report"
         }
     }

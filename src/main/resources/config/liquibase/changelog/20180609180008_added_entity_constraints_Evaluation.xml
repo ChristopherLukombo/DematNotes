@@ -20,6 +20,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="module"/>
 
+        <addForeignKeyConstraint baseColumnNames="teacher_id"
+                                 baseTableName="evaluation"
+                                 constraintName="fk_evaluation_teacher_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="teacher"/>
+
         <addForeignKeyConstraint baseColumnNames="school_report_id"
                                  baseTableName="evaluation"
                                  constraintName="fk_evaluation_school_report_id"

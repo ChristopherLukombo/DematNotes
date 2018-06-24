@@ -9,6 +9,7 @@ export class Evaluation implements BaseEntity {
         public validation?: string,
         public studentId?: number,
         public moduleId?: number,
+        public teacherId?: number,
         public schoolReportId?: number,
     ) {
     }

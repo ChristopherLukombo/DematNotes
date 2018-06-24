@@ -30,6 +30,8 @@ public class EvaluationDTO implements Serializable {
 
     private Long moduleId;
 
+    private Long teacherId;
+
     private Long schoolReportId;
 
     public Long getId() {
@@ -86,6 +88,14 @@ public class EvaluationDTO implements Serializable {
 
     public void setModuleId(Long moduleId) {
         this.moduleId = moduleId;
+    }
+
+    public Long getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Long teacherId) {
+        this.teacherId = teacherId;
     }
 
     public Long getSchoolReportId() {

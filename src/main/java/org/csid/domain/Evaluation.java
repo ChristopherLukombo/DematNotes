@@ -44,6 +44,9 @@ public class Evaluation implements Serializable {
     private Module module;
 
     @ManyToOne
+    private Teacher teacher;
+
+    @ManyToOne
     private SchoolReport schoolReport;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -131,6 +134,19 @@ public class Evaluation implements Serializable {
 
     public void setModule(Module module) {
         this.module = module;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public Evaluation teacher(Teacher teacher) {
+        this.teacher = teacher;
+        return this;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
     }
 
     public SchoolReport getSchoolReport() {

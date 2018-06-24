@@ -23,6 +23,7 @@
             <th><span jhiTranslate="dematNotesApp.evaluation.validation">Validation</span></th>
             <th><span jhiTranslate="dematNotesApp.evaluation.student">Student</span></th>
             <th><span jhiTranslate="dematNotesApp.evaluation.module">Module</span></th>
+            <th><span jhiTranslate="dematNotesApp.evaluation.teacher">Teacher</span></th>
             <th><span jhiTranslate="dematNotesApp.evaluation.schoolReport">School Report</span></th>
             <th></th>
             </tr>
@@ -42,6 +43,11 @@
                 <td>
                     <div *ngIf="evaluation.moduleId">
                         <a [routerLink]="['../module', evaluation.moduleId  ]" >{{evaluation.moduleId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="evaluation.teacherId">
+                        <a [routerLink]="['../teacher', evaluation.teacherId  ]" >{{evaluation.teacherId}}</a>
                     </div>
                 </td>
                 <td>

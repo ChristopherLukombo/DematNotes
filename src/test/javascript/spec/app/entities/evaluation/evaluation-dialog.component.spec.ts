@@ -11,6 +11,7 @@ import { EvaluationService } from '../../../../../../main/webapp/app/entities/ev
 import { Evaluation } from '../../../../../../main/webapp/app/entities/evaluation/evaluation.model';
 import { StudentService } from '../../../../../../main/webapp/app/entities/student';
 import { ModuleService } from '../../../../../../main/webapp/app/entities/module';
+import { TeacherService } from '../../../../../../main/webapp/app/entities/teacher';
 import { SchoolReportService } from '../../../../../../main/webapp/app/entities/school-report';
 
 describe('Component Tests', () => {
@@ -29,6 +30,7 @@ describe('Component Tests', () => {
                 providers: [
                     StudentService,
                     ModuleService,
+                    TeacherService,
                     SchoolReportService,
                     EvaluationService
                 ]

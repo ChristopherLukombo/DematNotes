@@ -149,7 +149,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         final Student student = studentRepository.findStudentByUser(user);
         final List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(currentDate);
 
-        final SchoolReport schoolReport = this.schoolReportRepository.getSchoolReportByStudentWhereYearPeriodMax(student.getId());
+        final SchoolReport schoolReport = this.schoolReportRepository.getSchoolReportByStudentWhereYearPeriodMax(student.getId()); // TODO tester le cas ou il y a rien
 
         final Set<Evaluation> evaluations = schoolReport.getEvaluations();
 
@@ -160,6 +160,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             .stream()
             .map(s -> schoolMapper.toEntity(s))
             .collect(Collectors.toList());
+
 
         PdfPCell cell = new PdfPCell();
         Font fontTitle = new Font(FontFamily.HELVETICA, 14, Font.BOLD);
@@ -202,7 +203,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
         for (Evaluation evaluation : evaluations) {
             //table moyennes
-            table.addCell(getPdfPCellCustomized(evaluation.getModule().getEntitled() + "\n\nM. Louis", fontContent, 3, 5.0f, "left", true));
+            table.addCell(getPdfPCellCustomized(evaluation.getModule().getEntitled() + "\n\nM. " +  evaluation.getTeacher().getUser().getLastName(), fontContent, 3, 5.0f, "left", true));
             table.addCell(getPdfPCellCustomized(Double.toString(evaluation.getAverage()), null, 1, 15.0f, "center", true));
             table.addCell(getPdfPCellCustomized("\n" + (evaluation.getComment() != null ? evaluation.getComment() : "")  + "\n\n", fontContent, 7, 5.0f, "left", true));
 

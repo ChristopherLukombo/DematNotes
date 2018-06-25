@@ -55,7 +55,7 @@
             <label class="form-control-label" jhiTranslate="dematNotesApp.document.student" for="field_student">Student</label>
             <select class="form-control" id="field_student" name="student" [(ngModel)]="document.studentId" >
                 <option [ngValue]="null"></option>
-                <option [ngValue]="studentOption.id" *ngFor="let studentOption of accountsCode; trackBy: trackStudentById">{{studentOption.id}}</option>
+                <option [ngValue]="studentOption.id" *ngFor="let studentOption of students; trackBy: trackStudentById">{{studentOption.id}}</option>
             </select>
         </div>
     </div>

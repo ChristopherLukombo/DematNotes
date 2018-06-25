@@ -20,7 +20,7 @@
         </dd>
         <dt><span jhiTranslate="dematNotesApp.delayStudent.student">Student</span></dt>
         <dd>
-            <span *ngFor="let student of delayStudent.accountsCode; let last = last">
+            <span *ngFor="let student of delayStudent.students; let last = last">
                 <a [routerLink]="['/student', student?.id ]">{{student.id}}</a>{{last ? '' : ', '}}
             </span>
         </dd>

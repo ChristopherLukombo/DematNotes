@@ -3,7 +3,7 @@ import {Principal} from '../shared';
 import {User} from '../shared/user/user.model';
 import {School} from '../entities/school';
 import {Classroom} from '../entities/classroom';
-import {Evaluation, EvaluationService} from '../entities/evaluation';
+import {EvaluationService} from '../entities/evaluation';
 import {MatDialog} from '@angular/material';
 import {Module} from '../entities/module';
 import {Services} from '../services';

@@ -16,7 +16,7 @@
             </mat-form-field>
 
             <mat-form-field *ngIf="schoolSelected && this.classrooms.length > 0">
-                <mat-select name="classroomSelected" [(ngModel)]="classroomSelected"
+                <mat-select name="classroomSelected" [(ngModel)]="this.classroomSelected"
                             (ngModelChange)="this.getStudents()"
                             placeholder="Classes">
                     <mat-option *ngFor="let classroom of this.classrooms" [value]="classroom.id">
@@ -28,17 +28,17 @@
             <mat-form-field *ngIf="this.classroomSelected">
                 <mat-select name="moduleSelected" [(ngModel)]="this.moduleSelected" #module="ngModel"
                             placeholder="Modules" required>
-                    <mat-option *ngFor="let module of modules" [value]="module.id">
+                    <mat-option *ngFor="let module of this.modules" [value]="module.id">
                         {{ module.entitled }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <div class="alert alert-danger" role="alert" *ngIf="(module?.errors)">
-                <div *ngIf="module?.touched && module?.errors">
-                    Le module est obligatoire
-                </div>
-            </div>
+            <!--<div class="alert alert-danger" role="alert" *ngIf="(module?.errors)">-->
+                <!--<div *ngIf="module?.touched && module?.errors">-->
+                    <!--Le module est obligatoire-->
+                <!--</div>-->
+            <!--</div>-->
 
             <button type="submit" class="btn btn-warning" name="validate" [disabled]="!f.form.valid">Valider</button>
 

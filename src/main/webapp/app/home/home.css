@@ -172,3 +172,14 @@ body {
 .example-container > * {
     width: 100%;
 }
+.home-text h1{
+    font-weight: 500;
+    padding-bottom: 15px;
+}
+.home-text {
+    position: absolute;
+    background: #000000a8;
+    width: 97%;
+    color: white;
+    padding: 25px;
+}

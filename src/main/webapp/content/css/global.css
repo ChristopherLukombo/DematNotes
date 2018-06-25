@@ -11,7 +11,8 @@ body, h1, h2, h3, h4 {
 }
 
 body {
-    background: #e4e5e6;
+    /*background: #e4e5e6;*/
+    background: #ffdc8c;
 }
 
 a {
@@ -255,7 +256,40 @@ ui bootstrap tweaks
     background-color: black;
     color: white;
 }
-
+.btn-warning {
+    color: #000;
+    background-color: #ffaa33;
+    border-color: #ffaa33;
+}
+.btn-warning.disabled, .btn-warning:disabled {
+    color: #212529;
+    background-color: #ffdc8c;
+    border-color: #ffaa33;
+}
+.btn-warning:not(:disabled):not(.disabled).active, .btn-warning:not(:disabled):not(.disabled):active, .show>.btn-warning.dropdown-toggle {
+    color: #000;
+    background-color: #fdb756;
+    border-color: #fdb756;
+}
+.btn-warning:hover {
+    color: #212529;
+    background-color: #fdb756;
+    border-color: #fdb756;
+}
+.dropdown-item.active, .dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color: #ffaa33;
+}
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background-color: #ffaa33;
+}
+.mat-form-field-ripple {
+    background-color: #ffaa33;
+}
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+    color: #ffaa33;
+}
 /**------ Partie Notes -----**/
 
 .example-container {
@@ -282,6 +316,9 @@ ui bootstrap tweaks
     max-height: 500px;
 }
 
+.mat-tab-body-content {
+    padding: 50px 30px;
+}
 /* jhipster-needle-css-add-main JHipster will add new css style */
 
 .icon:hover {
@@ -316,4 +353,5 @@ mat-grid-tile {
 
 mat-form-field {
     width: 300px;
+    padding: 15px;
 }

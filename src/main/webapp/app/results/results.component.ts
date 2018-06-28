@@ -64,13 +64,13 @@ export class ResultsComponent implements OnInit {
             });
     }
 
-    /**
-     * Resets the selected indexes
-     */
-    private reset(): void {
-        this.classroomIndexSelected = undefined;
-        this.userIndexSelected = undefined;
-    }
+    // /**
+    //  * Resets the selected indexes
+    //  */
+    // private reset(): void {
+    //     this.classroomIndexSelected = undefined;
+    //     this.userIndexSelected = undefined;
+    // }
 
     public getStudentByTeacher(): void {
         this.services.getResultsByStudent(this.userIndexSelected)

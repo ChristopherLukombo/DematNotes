@@ -24,7 +24,8 @@ import java.util.Collection;
 
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
-@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class, PropertiesConfig.class})
+// ApplicationProperties.class plus chargé
+@EnableConfigurationProperties({LiquibaseProperties.class, PropertiesConfig.class})
 public class DematNotesApp {
 
     private static final Logger log = LoggerFactory.getLogger(DematNotesApp.class);

@@ -35,6 +35,10 @@
             ]
         },
         {
+            "fieldName": "coefficient",
+            "fieldType": "Float"
+        },
+        {
             "fieldName": "evaluationDate",
             "fieldType": "ZonedDateTime",
             "fieldValidateRules": [

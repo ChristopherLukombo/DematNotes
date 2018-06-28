@@ -18,6 +18,8 @@ public class EvaluationDTO implements Serializable {
     @NotNull
     private Double average;
 
+    private Float coefficient;
+
     @NotNull
     private ZonedDateTime evaluationDate;
 
@@ -48,6 +50,14 @@ public class EvaluationDTO implements Serializable {
 
     public void setAverage(Double average) {
         this.average = average;
+    }
+
+    public Float getCoefficient() {
+        return coefficient;
+    }
+
+    public void setCoefficient(Float coefficient) {
+        this.coefficient = coefficient;
     }
 
     public ZonedDateTime getEvaluationDate() {
@@ -132,6 +142,7 @@ public class EvaluationDTO implements Serializable {
         return "EvaluationDTO{" +
             "id=" + getId() +
             ", average=" + getAverage() +
+            ", coefficient=" + getCoefficient() +
             ", evaluationDate='" + getEvaluationDate() + "'" +
             ", comment='" + getComment() + "'" +
             ", validation='" + getValidation() + "'" +

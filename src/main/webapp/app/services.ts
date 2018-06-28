@@ -17,13 +17,17 @@ import {AbsenceSearch} from './school-life/absenceSearch';
 import {SchoolReport} from './entities/school-report';
 import {Evaluation} from './entities/evaluation';
 import {Manager} from './entities/manager';
+import {MarksList} from './marks/marksList.model';
+import {StudentsList} from './marks/studentsList.model';
+import {ModulesList} from './marks/modulesList.model';
 
 @Injectable()
 export class Services {
 
-    private resourceUrl =  SERVER_API_URL + 'api';
+    private resourceUrl = SERVER_API_URL + 'api';
 
-    constructor(private http: HttpClient, private dateUtils: JhiDateUtils) { }
+    constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {
+    }
 
     // Part General
 
@@ -59,6 +63,18 @@ export class Services {
     }
 
     /**
+     * Returns the students according to the teacher
+     * @param userId
+     * @param schoolId
+     * @param classroomId
+     * @return Promise<StudentsList>
+     */
+    getStudentsByTeacher(userId: number, schoolId: number, classroomId: number): Promise<StudentsList> {
+        return this.http.get<StudentsList>(this.resourceUrl + '/marks/studentsList/' + `${userId}/${schoolId}/${classroomId}`)
+            .toPromise();
+    }
+
+    /**
      * Returns the student according the teacher's User ID
      * @param idUser
      * @returns {Observable<Student>}
@@ -79,6 +95,15 @@ export class Services {
     // Part Marks
 
     /**
+     * Saves all Evaluations collecting
+     * @param {MarksList} marksList
+     * @returns {Observable<MarksList>}
+     */
+    saveEvaluations(marksList: MarksList) {
+        return this.http.post<MarksList>(this.resourceUrl + '/marks/save/evaluations', marksList);
+    }
+
+    /**
      * Returns the chartData according School ID and Classroom ID
      * @param idSchool
      * @param idClassroom
@@ -90,11 +115,11 @@ export class Services {
 
     /**
      * Returns the modules according the teacher's User ID
-     * @param idUser
-     * @returns {Observable<Module[]>}
+     * @param userId
+     * @returns {Promise<ModulesList>}
      */
-    getModules(idUser): Observable<Module[]> {
-        return this.http.get<Module[]>(this.resourceUrl + '/marks/teacher/modules/' + `${idUser}`);
+    getModules(userId, schoolId, classroomId): Promise<ModulesList> {
+        return this.http.get<ModulesList>(this.resourceUrl + '/marks/teacher/modules/' + `${userId}/${schoolId}/${classroomId}`).toPromise();
     }
 
     // Part Results
@@ -178,7 +203,7 @@ export class Services {
         const formData: FormData = new FormData();
         formData.append('file', file);
 
-        const req = new HttpRequest('POST', this.resourceUrl +  '/schoolLife/upload/' + `${accountCode}`, formData, {
+        const req = new HttpRequest('POST', this.resourceUrl + '/schoolLife/upload/' + `${accountCode}`, formData, {
             reportProgress: true,
             responseType: 'text',
 
@@ -281,4 +306,5 @@ export class Services {
     findManagerByUser(user) {
         return this.http.post<Manager>(this.resourceUrl + '/schoolReport/manager', user);
     }
+
 }

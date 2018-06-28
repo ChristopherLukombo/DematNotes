@@ -1,12 +1,12 @@
 <mat-tab-group>
-    <mat-tab label="Bulletin">
+    <mat-tab label="Bulletin" *jhiHasAnyAuthority="['ROLE_STUDENT','ROLE_ADMIN']">
         <span style="float:right;">
             <mat-icon svgIcon="download" (click)="downloadSchoolReport()" class="icon"></mat-icon>
         </span>
-        <span>Bulletin</span>
+        <span>Voici votre bulletin !</span>
     </mat-tab>
 
-    <mat-tab label="Remplir Bulletin">
+    <mat-tab label="Remplir Bulletin" *jhiHasAnyAuthority="['ROLE_MANAGER','ROLE_ADMIN']">
         <span>Bulletin</span>
         <!-- Listes déroulante -->
         <mat-form-field>
@@ -36,8 +36,6 @@
             </mat-select>
         </mat-form-field>
 
-        <button type="submit" class="btn btn-dark" name="validate" (click)="saveSchoolReport()">Valider</button>
-
         <div *ngIf="userSelected">
 
             <p>
@@ -50,7 +48,7 @@
                 <input type="text" name="comment" [(ngModel)]="this.schoolReport.comment"/>
             </p>
 
-            <button (click)="saveSchoolReport()">Créer Bulletin</button>
+            <button type="submit" class="btn btn-warning" name="validate" (click)="saveSchoolReport()">Valider</button>
         </div>
 
         <table class="table table-striped tab" *ngIf="this.evaluations.length > 0">

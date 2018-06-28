@@ -1,5 +1,5 @@
 <mat-tab-group>
-    <mat-tab label="Résultats" cdkScrollable style="overflow-y: auto;overflow-x: auto; height: 200px">
+    <mat-tab label="Résultats" cdkScrollable style="overflow-y: auto;overflow-x: auto; height: 200px" *jhiHasAnyAuthority="['ROLE_STUDENT','ROLE_ADMIN']">
         <span>Résultats</span>
         <!-- Listes déroulante -->
         <mat-form-field>
@@ -35,7 +35,7 @@
             </div>
             <mat-grid-tile>
                 <div class="thumbnail">
-                    <img [src]="this.results.user.imageUrl" alt="Lights" style="width:100%">
+                    <img [src]="this.results.user.imageUrl" *ngIf="this.results.user.imageUrl" alt="Lights" style="width:100%">
                 </div>
             </mat-grid-tile>
             <mat-grid-tile>

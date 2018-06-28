@@ -1,13 +1,12 @@
 package org.csid.service;
 
-import org.csid.domain.Evaluation;
-import org.csid.domain.Manager;
-import org.csid.domain.User;
+import org.csid.domain.*;
 import org.csid.service.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -71,5 +70,30 @@ public interface ISchoolReportService {
      * @return ManagerDTO
      */
     ManagerDTO findByUser(UserDTO userDTO) throws Exception;
+
+    /**
+     * Returns average total for a student
+     * @param accountCode
+     * @return String
+     */
+    String getAverageFromEvaluation(final Long accountCode);
+
+    /**
+     * Find yearPeriod for a schoolReport
+     * @param periodDate
+     * @param school
+     * @param classroom
+     * @return YearPeriod
+     */
+    YearPeriod findYearPeriodForSchoolReport(LocalDate periodDate, School school, Classroom classroom);
+
+    /**
+     * Returns average for evaluation according a yearPeriod
+     * @param accountCode
+     * @param start
+     * @param end
+     * @return
+     */
+    double getAverageFromEvaluationByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end) throws Exception;
 
 }

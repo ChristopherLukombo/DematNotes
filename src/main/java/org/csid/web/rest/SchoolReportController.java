@@ -1,6 +1,5 @@
 package org.csid.web.rest;
 
-import org.csid.domain.*;
 import org.csid.service.ISchoolReportService;
 import org.csid.service.dto.*;
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -196,7 +194,7 @@ public class SchoolReportController {
         ManagerDTO managerDTO;
 
         try {
-            managerDTO =  this.schoolReportService.findByUser(userDTO);
+            managerDTO = this.schoolReportService.findByUser(userDTO);
         } catch (Exception e) {
             LOGGER.error("Error during collecting of manager " + e.getMessage());
             throw new Exception("Error during collecting of manager");

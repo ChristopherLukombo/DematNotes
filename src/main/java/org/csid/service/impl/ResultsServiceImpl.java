@@ -9,7 +9,7 @@ import org.csid.repository.UserRepository;
 import org.csid.service.ResultsService;
 import org.csid.service.dto.ResultsDTO;
 import org.csid.service.mapper.ResultsMapper;
-import org.csid.service.non.persistent.Results;
+import org.csid.domain.non.persistant.Results;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service("ResultsService")
 @Transactional

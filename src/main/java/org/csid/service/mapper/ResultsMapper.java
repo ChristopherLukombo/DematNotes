@@ -1,7 +1,7 @@
 package org.csid.service.mapper;
 
 import org.csid.service.dto.ResultsDTO;
-import org.csid.service.non.persistent.Results;
+import org.csid.domain.non.persistant.Results;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

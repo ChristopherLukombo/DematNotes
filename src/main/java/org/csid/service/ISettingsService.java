@@ -6,8 +6,18 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public interface ISettingsService {
 
-    void store(MultipartFile file, Long idUser);
+    /**
+     * Stores a image
+     * @param file
+     * @param idUser
+     */
+    void store(MultipartFile file, Long idUser) throws Exception;
 
+    /**
+     * Returns File in String
+     * @param idUser
+     * @return String
+     */
     String getFile(final Long idUser);
 
 }

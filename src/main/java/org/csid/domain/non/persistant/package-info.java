@@ -5,4 +5,4 @@
  * @author christopher
  *
  */
-package org.csid.service.non.persistent;
+package org.csid.domain.non.persistant;

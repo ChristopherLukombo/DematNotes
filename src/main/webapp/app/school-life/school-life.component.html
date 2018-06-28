@@ -1,6 +1,6 @@
 <!-- Feuille d'appel pour le professeur -->
 <mat-tab-group>
-    <mat-tab label="Feuille d'appel">
+    <mat-tab label="Feuille d'appel" *jhiHasAnyAuthority="['ROLE_TEACHER','ROLE_ADMIN']">
         <span>Appel du : </span>
 
         <form #f="ngForm" (ngSubmit)="saveAbsences()">
@@ -33,12 +33,6 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-
-            <!--<div class="alert alert-danger" role="alert" *ngIf="(module?.errors)">-->
-                <!--<div *ngIf="module?.touched && module?.errors">-->
-                    <!--Le module est obligatoire-->
-                <!--</div>-->
-            <!--</div>-->
 
             <button type="submit" class="btn btn-warning" name="validate" [disabled]="!f.form.valid">Valider</button>
 
@@ -111,7 +105,7 @@
     </mat-tab>
 
     <!-- Mon espace pour l'étudiant -->
-    <mat-tab label="Mon espace">
+    <mat-tab label="Mon espace" *jhiHasAnyAuthority="['ROLE_STUDENT'||'ROLE_ADMIN']">
         <span style="float:right;">
             <mat-icon svgIcon="upload" (click)="openDialog()" class="icon"></mat-icon>
         </span>

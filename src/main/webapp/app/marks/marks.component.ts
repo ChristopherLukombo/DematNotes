@@ -3,17 +3,20 @@ import {Principal} from '../shared';
 import {User} from '../shared/user/user.model';
 import {School} from '../entities/school';
 import {Classroom} from '../entities/classroom';
-import {EvaluationService} from '../entities/evaluation';
-import {MatDialog} from '@angular/material';
 import {Module} from '../entities/module';
 import {Services} from '../services';
+import {Evaluation} from '../entities/evaluation';
+import {MarksList} from './marksList.model';
+import {TeacherService} from '../entities/teacher';
+import {StudentsList} from './studentsList.model';
+import {ModulesList} from './modulesList.model';
 
 @Component({
     selector: 'jhi-marks',
     templateUrl: './marks.component.html'
 })
 export class MarksComponent implements OnInit {
-    currentUser: any;
+    currentUser: User = new User();
     currentUserReport: any;
     currentUserGraph: any;
 
@@ -41,7 +44,7 @@ export class MarksComponent implements OnInit {
     classroomSelectedGraph;
     userSelectedGraph;
 
-    marks: string[] = Array<string>(this.users.length);
+    averages: string[] = Array<string>(this.users.length);
     comments: string[] = Array<string>(this.users.length);
 
     chartOptions = {
@@ -56,50 +59,49 @@ export class MarksComponent implements OnInit {
     ];
 
     yearPeriod: string;
-
-    // chartLabels = ['January', 'February', 'Mars', 'April'];
-
     containsData = false;
 
-    modules: Module[];
+    modulesList: ModulesList = new ModulesList();
 
-    idModule: number;
+    idModule;
+    idStudent;
+
+    evaluations: Evaluation[] = [];
+
+    evals: Evaluation[] = Array<Evaluation>(this.users.length);
+
+    studentsList: StudentsList = new StudentsList();
+    statusMessage = '';
 
     constructor(
         private principal: Principal,
         private services: Services,
-        private evaluationService: EvaluationService,
-        public dialog: MatDialog
-    ) {}
+    ) {
+    }
 
     ngOnInit(): void {
-        this.loadCurrentUser();
-        this.loadCurrentUserReport();
-        this.loadCurrentUserGraph();
+        this.onLoadCurrentUser();
+        this.onLoadCurrentUserReport();
+        this.onLoadCurrentUserGraph();
     }
 
     onChartClick(event): void {
         console.log(event);
     }
 
-    private loadCurrentUser(): void {
-        this.principal.identity().then((account) => {
-            this.currentUser = account;
-            this.services.getSchools(account.id).subscribe((schools) => {
-                this.schools = schools;
-            }, (error) => {
-                console.log(JSON.parse(error.body).message);
+    private onLoadCurrentUser(): void {
+        this.principal.identity()
+            .then((account) => {
+                this.currentUser = account;
+                this.services.getSchools(account.id).subscribe((schools) => {
+                    this.schools = schools;
+                }, (error) => {
+                    console.log(JSON.parse(error.body).message);
+                });
             });
-
-            this.services.getModules(account.id).subscribe((modules) => {
-                this.modules = modules;
-            }, (error) => {
-                console.log(JSON.parse(error.body).message);
-            });
-        });
     }
 
-    private loadCurrentUserReport(): void {
+    private onLoadCurrentUserReport(): void {
         this.principal.identity().then((account) => {
             this.currentUserReport = account;
             this.services.getSchools(
@@ -113,7 +115,7 @@ export class MarksComponent implements OnInit {
         });
     }
 
-    private loadCurrentUserGraph(): void {
+    private onLoadCurrentUserGraph(): void {
         this.principal.identity().then((account) => {
             this.currentUserGraph = account;
             this.services.getSchools(
@@ -135,7 +137,6 @@ export class MarksComponent implements OnInit {
             (chartData) => {
                 this.containsData = true;
                 this.chartData = chartData as any [];
-                console.log(this.chartData);
             }, (error) => {
                 console.log(JSON.parse(error.body).message);
             }
@@ -150,6 +151,7 @@ export class MarksComponent implements OnInit {
             this.userSelected = undefined;
             this.classroomSelected = undefined;
             this.classrooms = classrooms;
+            console.log(this.users);
         }, (error) => {
             console.log(JSON.parse(error.body).message);
         });
@@ -182,14 +184,26 @@ export class MarksComponent implements OnInit {
     }
 
     getStudentsUserByCurrentUserTeacher(): void {
-        this.services.getStudents(
+        this.services.getModules(this.currentUser.id, this.schoolSelected, this.classroomSelected)
+            .then((modulesList) => {
+                this.modulesList = modulesList;
+            }).catch((error) => {
+            console.error(JSON.parse(error.body).message);
+        });
+
+        this.services.getStudentsByTeacher(
             this.currentUser.id,
             this.schoolSelected,
-            this.classroomSelected
-        ).subscribe((users) => {
-            this.users = users;
-        }, (error) => {
-            console.log(JSON.parse(error.body).message);
+            this.classroomSelected)
+            .then((studentsList) => {
+                if (studentsList == null) {
+                    this.statusMessage = 'Students are not presents';
+                } else {
+                    this.studentsList = studentsList;
+                }
+            }).catch((error) => {
+            this.statusMessage = 'Problem with the service, Please try after sometime';
+            console.error(JSON.parse(error.body).message);
         });
     }
 
@@ -206,24 +220,13 @@ export class MarksComponent implements OnInit {
     }
 
     getStudentsUserByCurrentUserTeacherGraph(): void {
-        console.log( this.classroomSelectedGraph);
         this.services.getStudents(
             this.currentUserGraph.id,
             this.schoolSelectedGraph,
             this.classroomSelectedGraph
         ).subscribe((users) => {
             this.usersGraph = users;
-        }, (error) => {
-            console.log(JSON.parse(error.body).message);
-        });
-    }
-
-    getStudentUserByCurrentUserTeacher(): void {
-        this.services.getStudentUserByIdUser(
-            this.userSelected
-        ).subscribe((users) => {
-            this.users = [];
-            this.users.push(users);
+            this.loadChartData();
         }, (error) => {
             console.log(JSON.parse(error.body).message);
         });
@@ -235,18 +238,15 @@ export class MarksComponent implements OnInit {
         ).subscribe((user) => {
             this.usersReport = [];
             this.usersReport.push(user);
-        }, (error) => {
-            console.log(JSON.parse(error.body).message);
-        });
-    }
 
-    getStudentUserByCurrentUserTeacherGraph(): void {
-        this.services.getStudentUserByIdUser(
-            this.userSelectedGraph
-        ).subscribe((user) => {
-            this.usersGraph = [];
-            this.usersGraph.push(user);
-            this.loadChartData();
+            this.services.getStudentByIdUser(user.id)
+                .subscribe((student) => {
+                    this.idStudent = student.id;
+                }, (error) => {
+                    console.error(JSON.parse(error.body).message);
+                }).unsubscribe();
+
+            this.getEvaluations(this.userSelectedReport);
         }, (error) => {
             console.log(JSON.parse(error.body).message);
         });
@@ -256,60 +256,50 @@ export class MarksComponent implements OnInit {
      * Save marks
      */
     saveMarks(): void {
-        for (let i = 0; i < this.marks.length; i++) {
-            if (undefined !== this.marks[i]) {
-                if (!this.isNumber(this.marks[i].trim())) {
-                    alert('Saisir une moyenne valide');
-                    return;
-                } else if (parseFloat(this.marks[i].trim()) < 0 || parseFloat(this.marks[i].trim()) > 20) {
-                    alert('Saisir une moyenne entre 0 et 20');
-                    return;
-                }  else {
-                    // this.services.getStudentByIdUser(i).subscribe(
-                    //     (student) => {
-                    //         const e = new Evaluation(
-                    //             null,
-                    //             parseFloat(this.marks[i].trim()),
-                    //             new Date().toISOString().slice(0, 16),
-                    //             (this.comments[i] != null && this.comments[i].trim().length > 0) ? this.comments[i].trim() : '',
-                    //             this.yearPeriod,
-                    //            null,
-                    //             student.id,
-                    //             this.idModule,
-                    //             null
-                    //         );
+        let i = 0;
+        let isFinished = false;
 
-                            // this.evaluationService.create(e).subscribe(
-                            //     (evaluation) => {
-                            //         if (i === this.marks.length - 1 && evaluation) {
-                            //             alert('Moyenne enregistrée');
-                            //         }
-                            //     }, (firstError) => {
-                            //         console.log(JSON.parse(firstError.body).message);
-                            //     });
+        while (i < this.studentsList.users.length && !isFinished) {
+            const evaluation = new Evaluation();
+            evaluation.average = parseFloat(this.averages[i]);
+            evaluation.comment = this.comments[i];
+            evaluation.moduleId = this.idModule;
+            evaluation.coefficient = this.modulesList.coefficients[0];
+            evaluation.average = parseFloat(this.averages[i]);
+            evaluation.studentId = this.idStudent;
+            evaluation.teacherId = null;
 
-                        // }, (secondError) => {
-                        //     console.log(JSON.parse(secondError.body).message);
-                        // });
+            this.evals.push(evaluation);
+            console.log(evaluation);
 
-                }
+            if (this.studentsList.users.length - 1 === i) {
+                isFinished = true;
             }
+            i++;
+        }
+
+        if (isFinished) {
+            const m = new MarksList();
+            m.evaluations = this.evals;
+            this.services.saveEvaluations(m)
+                .subscribe((response) => {
+                    if (response) {
+                        this.evals = [];
+                    }
+                }, (error) => {
+                    console.log(JSON.parse(error.body).message);
+                    this.evals = [];
+                });
         }
     }
 
-    /**
-     * Return true if value is a number
-     * @param {string} value to check if is number
-     * @returns {boolean}
-     */
-    isNumber(value: string) {
-        let valid = true;
-        try {
-            parseFloat(value);
-        } catch (error) {
-            valid = false;
-        }
-        return valid;
+    getEvaluations(accountCode): void {
+        this.services.getEvaluationsByStudent(accountCode)
+            .subscribe((evaluations) => {
+                this.evaluations = evaluations;
+            }, (error) => {
+                console.log(JSON.parse(error.body).message);
+            });
     }
 
 }

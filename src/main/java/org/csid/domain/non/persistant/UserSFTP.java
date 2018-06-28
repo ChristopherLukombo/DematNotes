@@ -1,4 +1,4 @@
-package org.csid.service.non.persistent;
+package org.csid.domain.non.persistant;
 
 import java.io.Serializable;
 import java.util.Objects;

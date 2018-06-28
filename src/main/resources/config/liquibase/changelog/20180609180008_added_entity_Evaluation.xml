@@ -25,6 +25,10 @@
                 <constraints nullable="false" />
             </column>
 
+            <column name="coefficient" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
             <column name="evaluation_date" type="timestamp">
                 <constraints nullable="false" />
             </column>

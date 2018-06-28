@@ -182,7 +182,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         }
 
         //QR code
-        final Image img = Image.getInstance(this.generateQrCode());
+        final Image img = Image.getInstance(this.generateQrCode(1L));
         cell.setColspan(1);
         cell.setPadding(5.0f);
         table.addCell(img);
@@ -312,11 +312,11 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         return table;
     }
 
-    private String generateQrCode() {
+    private String generateQrCode(Long idStudent) {
         String img = null;
 
         try {
-            String data = "Je suis Thierry et je suis gentil.";
+            String data = "http://localhost:8080/";
             int size = 50;
 
             // encode
@@ -542,7 +542,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         }
     }
 
-    private YearPeriod findYearPeriodForSchoolReport(LocalDate periodDate, School school, Classroom classroom) {
+    public YearPeriod findYearPeriodForSchoolReport(LocalDate periodDate, School school, Classroom classroom) {
         final List<AssignmentYearPeriod>  assignmentYearPeriods = this.assignmentYearPeriodRepository.findAllWithEagerRelationships();
 
         YearPeriod yearPeriod = null;
@@ -616,10 +616,12 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
         final Set<EvaluationDTO> evaluationList = new HashSet<>();
 
+        final ZonedDateTime dateTimeStart = yearPeriod.getStartDate().atStartOfDay(ZoneOffset.UTC);
+
         final ZonedDateTime dateTimeEnd = yearPeriod.getEndDate().atStartOfDay(ZoneOffset.UTC);
 
         for (Evaluation evaluation : evaluations) {
-            if (evaluation.getEvaluationDate().isBefore(dateTimeEnd) || evaluation.getEvaluationDate().isEqual(dateTimeEnd)) {
+            if ((evaluation.getEvaluationDate().isAfter(dateTimeStart)) && (evaluation.getEvaluationDate().isBefore(dateTimeEnd) || evaluation.getEvaluationDate().isEqual(dateTimeEnd))) {
                 evaluationList.add(evaluationMapper.toDto(evaluation));
             }
         }
@@ -627,21 +629,75 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         return evaluationList;
     }
 
-    private String getAverageFromEvaluation(final Long accountCode) {
+    /**
+     * Returns evaluations of a Student
+     * @param accountCode
+     * @return list of entities
+     */
+    private Set<EvaluationDTO> getEvaluationsByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end) {
+        final User user = userRepository.findOne(accountCode);
+
+        final Student student = studentRepository.findStudentByUser(user);
+
+
+        final ZonedDateTime pastDateTime = ZonedDateTime.now(TimeZone.getTimeZone("Europe/Madrid").toZoneId()).minusYears(1);
+
+        final List<Evaluation> evaluations = evaluationRepository.getEvaluationByStudentAndPeriod(student.getId(), pastDateTime);
+
+        final Set<EvaluationDTO> evaluationList = new HashSet<>();
+
+        final ZonedDateTime dateTimeStart = start;
+
+        final ZonedDateTime dateTimeEnd = end;
+
+        for (Evaluation evaluation : evaluations) {
+            if ((evaluation.getEvaluationDate().isAfter(dateTimeStart)) && (evaluation.getEvaluationDate().isBefore(dateTimeEnd) || evaluation.getEvaluationDate().isEqual(dateTimeEnd))) {
+                evaluationList.add(evaluationMapper.toDto(evaluation));
+            }
+        }
+
+        return evaluationList;
+    }
+
+    public String getAverageFromEvaluation(final Long accountCode) {
         final Set<Evaluation> evaluations = this.getEvaluationsByStudent(accountCode).stream().map(e -> evaluationMapper.toEntity(e)).collect(Collectors.toSet());
 
         double sum = 0;
         int nbTotal = 0;
+        double sumCoefficient = 0;
 
         final NumberFormat instance = DecimalFormat.getNumberInstance(new Locale("##.##"));
 
         for (final Evaluation evaluation : evaluations) {
-            sum += evaluation.getAverage();
+            sum += evaluation.getAverage() * evaluation.getCoefficient();
+            sumCoefficient += evaluation.getCoefficient();
             nbTotal++;
         }
 
-        return (nbTotal > 0) ? instance.format(sum / nbTotal) : "";
+        return (nbTotal > 0) ? instance.format(sum / sumCoefficient) : "";
     }
+
+   public double getAverageFromEvaluationByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end) throws Exception {
+       try {
+           final Set<Evaluation> evaluations = this.getEvaluationsByStudentAndPeriod(accountCode, start, end).stream().map(e -> evaluationMapper.toEntity(e)).collect(Collectors.toSet());
+
+           double sum = 0;
+           int nbTotal = 0;
+           double sumCoefficient = 0;
+
+           final NumberFormat instance = DecimalFormat.getNumberInstance(new Locale("##.##"));
+
+           for (final Evaluation evaluation : evaluations) {
+               sum += evaluation.getAverage() * evaluation.getCoefficient();
+               nbTotal++;
+           }
+
+           return (nbTotal > 0) ? Double.parseDouble(instance.format(sum / sumCoefficient)) : -1;
+       } catch (NumberFormatException e) {
+           LOGGER.error("Error during calculaing of averages " + e.getMessage());
+           throw new Exception("Error during calculaing of averages");
+       }
+   }
 
     /**
      * Returns manager according of User

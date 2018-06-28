@@ -4,7 +4,9 @@ import com.jcraft.jsch.*;
 import org.csid.domain.User;
 import org.csid.repository.UserRepository;
 import org.csid.service.ISettingsService;
-import org.csid.service.non.persistent.UserSFTP;
+import org.csid.domain.non.persistant.UserSFTP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,21 +17,34 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 @Service("ISettingsService")
 public class SettingsServiceImpl implements ISettingsService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SettingsServiceImpl.class);
+
     @Value("${path.upload}")
     private String path;
+
+    @Value("${base.url.file}")
+    private String baseUrlFile;
 
     @Autowired
     private UserRepository userRepository;
 
-    static ChannelSftp channelSftp = null;
-    static Session session = null;
-    static Channel channel = null;
+    private static ChannelSftp channelSftp = null;
+    private static Session session = null;
+    private static Channel channel = null;
 
+    /**
+     * Stores a image
+     * @param file
+     * @param idUser
+     */
     @Override
-    public void store(MultipartFile file, Long idUser) {
+    public void store(MultipartFile file, Long idUser) throws Exception {
         UserSFTP userSFTP = null;
 
         final Path rootLocation = Paths.get(path + "/settings/" + idUser);
@@ -49,32 +64,25 @@ public class SettingsServiceImpl implements ISettingsService {
             Files.copy(file.getInputStream(), rootLocation.resolve(file.getOriginalFilename()));
 
             final User user = userRepository.findOne(idUser);
-            user.setImageUrl("http://109.12.191.106/settings/" + idUser + "/" + file.getOriginalFilename());
+            user.setImageUrl(this.baseUrlFile + idUser + "/" + file.getOriginalFilename());
             this.userRepository.saveAndFlush(user);
-
         } catch (Exception e) {
             throw new RuntimeException("FAIL!");
         }
 
+        Scanner scanner = new Scanner(new File(".sftp.ser"));
+
         try {
-            File fichier =  new File(".sftp.ser") ;
-
-            // ouverture d'un flux sur un fichier
-            ObjectOutputStream oos =  new ObjectOutputStream(new FileOutputStream(fichier)) ;
-
             userSFTP = new UserSFTP();
-
-            userSFTP.setPassword("test");
-            userSFTP.setUsername("test");
-            userSFTP.setPort(22);
-            userSFTP.setServer("109.12.191.106");
-
-            oos.writeObject(userSFTP);
-
-
-        } catch (IOException e) {
+            userSFTP.setUsername(scanner.next());
+            userSFTP.setPassword(scanner.next());
+            userSFTP.setPort(Integer.parseInt(scanner.next()));
+            userSFTP.setServer(scanner.next());
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+
 
         try {
             final File f = new File(".sftp.ser");
@@ -125,7 +133,8 @@ public class SettingsServiceImpl implements ISettingsService {
             recursiveFolderUpload(LOCALDIRECTORY,SFTPWORKINGDIR);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Error during connexion " + ex.getMessage());
+            throw new Exception("Error during sending");
         } finally {
             if (channelSftp != null)
                 channelSftp.disconnect();
@@ -139,7 +148,6 @@ public class SettingsServiceImpl implements ISettingsService {
     }
 
     private void recursiveFolderUpload(String sourcePath, String destinationPath) throws SftpException, FileNotFoundException {
-
         File sourceFile = new File(sourcePath);
         if (sourceFile.isFile()) {
 
@@ -182,9 +190,14 @@ public class SettingsServiceImpl implements ISettingsService {
 
     }
 
+    /**
+     * Returns File in String
+     * @param idUser
+     * @return String
+     */
     @Override
     public String getFile(Long idUser) {
-        User user = userRepository.findOne(idUser);
+        final User user = userRepository.findOne(idUser);
         return user.getImageUrl();
     }
 

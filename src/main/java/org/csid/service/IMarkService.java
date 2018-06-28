@@ -1,7 +1,7 @@
 package org.csid.service;
 
 import org.csid.service.dto.*;
-import org.csid.service.non.persistent.ChartData;
+import org.csid.domain.non.persistant.ChartData;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,22 +10,75 @@ import java.util.List;
 public interface IMarkService {
 
     /**
-     * Return schools by idUser
+     * Returns schools by idUser
      * @param idUser
      * @return list of schools
      */
-    List<SchoolDTO> getSchoolsByCurrentTeacher(final Long idUser);
+    List<SchoolDTO> getSchoolsByCurrentTeacher(final Long idUser) throws Exception;
 
-    List<ClassroomDTO> getClassroomsByCurrentTeacher(final Long idUser, final Long idSchool);
+    /**
+     * Returns classrooms for Teacher
+     * @param idUser
+     * @param idSchool
+     * @return list of entities
+     */
+    List<ClassroomDTO> getClassroomsByCurrentTeacher(final Long idUser, final Long idSchool) throws Exception;
 
-    List<UserDTO> getStudentsByCurrentTeacher(final Long idUser, final Long idSchool, Long idClassroom);
+    /**
+     * Returns the students according to the teacher
+     * @param userId
+     * @param schoolId
+     * @param classroomId
+     * @return StudentsList
+     * @throws Exception
+     */
+    StudentsList getStudentsByTeacher(final Long userId, final Long schoolId, final Long classroomId) throws Exception;
 
-    StudentDTO getStudentByIdUser(Long idUser);
+    /**
+     * Returns students for teacher
+     * @param idUser
+     * @param idSchool
+     * @param idClassroom
+     * @return list of entities
+     */
+    List<UserDTO> getStudentsByCurrentTeacher(final Long idUser, final Long idSchool, Long idClassroom) throws Exception;
 
-    UserDTO getUserByIdUser(Long idUser);
+    /**
+     * Returns student by idUser
+     * @param idUser
+     * @return entity
+     */
+    StudentDTO getStudentByIdUser(Long idUser) throws Exception;
 
-    List<ChartData> getData(final Long idSchool, final Long idClassroom);
+    /**
+     * @param idUser
+     * @return list of entities
+     */
+    UserDTO getUserByIdUser(Long idUser) throws Exception;
 
-    List<ModuleDTO> getModules(final Long idUser);
+    /**
+     * Returns a list of chartdata
+     * @param idSchool
+     * @param idClassroom
+     * @return list of entities
+     */
+    List<ChartData> getData(final Long idSchool, final Long idClassroom) throws Exception;
+
+    /**
+     * Returns Modules with coefficieny by teacher
+     * @param userId
+     * @param schoolId
+     * @param classroomId
+     * @return
+     * @throws Exception
+     */
+    ModulesList getModules(final Long userId, final Long schoolId, final Long classroomId) throws Exception;
+
+    /**
+     * Saves evaluations by students
+     * @param marksListDTO
+     * @return Boolean
+     */
+    MarksListDTO saveEvaluations(MarksListDTO marksListDTO) throws Exception;
 
 }

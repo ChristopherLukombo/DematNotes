@@ -335,14 +335,14 @@ ui bootstrap tweaks
 }
 
 #fieldAverage {
-    border: none;
+    border: 1px solid grey;
     border-radius: 5px;
     width: 36px;
     text-align: center;
 }
 
 #fieldComment {
-    border: none;
+    border: 1px solid grey;
     border-radius: 5px;
     resize: none;
 }

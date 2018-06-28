@@ -26,6 +26,9 @@ public class Evaluation implements Serializable {
     @Column(name = "average", nullable = false)
     private Double average;
 
+    @Column(name = "coefficient")
+    private Float coefficient;
+
     @NotNull
     @Column(name = "evaluation_date", nullable = false)
     private ZonedDateTime evaluationDate;
@@ -69,6 +72,19 @@ public class Evaluation implements Serializable {
 
     public void setAverage(Double average) {
         this.average = average;
+    }
+
+    public Float getCoefficient() {
+        return coefficient;
+    }
+
+    public Evaluation coefficient(Float coefficient) {
+        this.coefficient = coefficient;
+        return this;
+    }
+
+    public void setCoefficient(Float coefficient) {
+        this.coefficient = coefficient;
     }
 
     public ZonedDateTime getEvaluationDate() {
@@ -188,6 +204,7 @@ public class Evaluation implements Serializable {
         return "Evaluation{" +
             "id=" + getId() +
             ", average=" + getAverage() +
+            ", coefficient=" + getCoefficient() +
             ", evaluationDate='" + getEvaluationDate() + "'" +
             ", comment='" + getComment() + "'" +
             ", validation='" + getValidation() + "'" +

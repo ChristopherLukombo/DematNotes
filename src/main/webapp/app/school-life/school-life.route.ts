@@ -6,7 +6,7 @@ export const schoolLifeRoute: Route = {
     path: 'schoolLife',
     component: SchoolLifeComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_STUDENT'],
         pageTitle: 'global.menu.schoolLife'
     },
     canActivate: [UserRouteAccessService]

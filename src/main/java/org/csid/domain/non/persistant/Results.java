@@ -1,4 +1,4 @@
-package org.csid.service.non.persistent;
+package org.csid.domain.non.persistant;
 
 import org.csid.domain.Evaluation;
 import org.csid.domain.User;

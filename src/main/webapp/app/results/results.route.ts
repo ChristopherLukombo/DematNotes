@@ -6,7 +6,7 @@ export const resultsRoute: Route = {
     path: 'results',
     component: ResultsComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_STUDENT', 'ROLE_ADMIN'],
         pageTitle: 'global.menu.results'
     },
     canActivate: [UserRouteAccessService]

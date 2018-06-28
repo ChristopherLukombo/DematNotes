@@ -54,6 +54,7 @@ entity Module {
 
 entity Evaluation {
     average Double required
+    coefficient Float
     evaluationDate ZonedDateTime required
     comment String
     validation String maxlength(10)

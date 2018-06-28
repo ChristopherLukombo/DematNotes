@@ -5,7 +5,7 @@ export const marksRoute: Route = {
     path: 'marks',
     component: MarksComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_ADMIN', 'ROLE_TEACHER'],
         pageTitle: 'global.menu.marks'
     },
     canActivate: [UserRouteAccessService]

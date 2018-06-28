@@ -49,6 +49,9 @@ public class EvaluationResourceIntTest {
     private static final Double DEFAULT_AVERAGE = 1D;
     private static final Double UPDATED_AVERAGE = 2D;
 
+    private static final Float DEFAULT_COEFFICIENT = 1F;
+    private static final Float UPDATED_COEFFICIENT = 2F;
+
     private static final ZonedDateTime DEFAULT_EVALUATION_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_EVALUATION_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
@@ -103,6 +106,7 @@ public class EvaluationResourceIntTest {
     public static Evaluation createEntity(EntityManager em) {
         Evaluation evaluation = new Evaluation()
             .average(DEFAULT_AVERAGE)
+            .coefficient(DEFAULT_COEFFICIENT)
             .evaluationDate(DEFAULT_EVALUATION_DATE)
             .comment(DEFAULT_COMMENT)
             .validation(DEFAULT_VALIDATION);
@@ -131,6 +135,7 @@ public class EvaluationResourceIntTest {
         assertThat(evaluationList).hasSize(databaseSizeBeforeCreate + 1);
         Evaluation testEvaluation = evaluationList.get(evaluationList.size() - 1);
         assertThat(testEvaluation.getAverage()).isEqualTo(DEFAULT_AVERAGE);
+        assertThat(testEvaluation.getCoefficient()).isEqualTo(DEFAULT_COEFFICIENT);
         assertThat(testEvaluation.getEvaluationDate()).isEqualTo(DEFAULT_EVALUATION_DATE);
         assertThat(testEvaluation.getComment()).isEqualTo(DEFAULT_COMMENT);
         assertThat(testEvaluation.getValidation()).isEqualTo(DEFAULT_VALIDATION);
@@ -206,6 +211,7 @@ public class EvaluationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(evaluation.getId().intValue())))
             .andExpect(jsonPath("$.[*].average").value(hasItem(DEFAULT_AVERAGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].coefficient").value(hasItem(DEFAULT_COEFFICIENT.doubleValue())))
             .andExpect(jsonPath("$.[*].evaluationDate").value(hasItem(sameInstant(DEFAULT_EVALUATION_DATE))))
             .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT.toString())))
             .andExpect(jsonPath("$.[*].validation").value(hasItem(DEFAULT_VALIDATION.toString())));
@@ -223,6 +229,7 @@ public class EvaluationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(evaluation.getId().intValue()))
             .andExpect(jsonPath("$.average").value(DEFAULT_AVERAGE.doubleValue()))
+            .andExpect(jsonPath("$.coefficient").value(DEFAULT_COEFFICIENT.doubleValue()))
             .andExpect(jsonPath("$.evaluationDate").value(sameInstant(DEFAULT_EVALUATION_DATE)))
             .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT.toString()))
             .andExpect(jsonPath("$.validation").value(DEFAULT_VALIDATION.toString()));
@@ -249,6 +256,7 @@ public class EvaluationResourceIntTest {
         em.detach(updatedEvaluation);
         updatedEvaluation
             .average(UPDATED_AVERAGE)
+            .coefficient(UPDATED_COEFFICIENT)
             .evaluationDate(UPDATED_EVALUATION_DATE)
             .comment(UPDATED_COMMENT)
             .validation(UPDATED_VALIDATION);
@@ -264,6 +272,7 @@ public class EvaluationResourceIntTest {
         assertThat(evaluationList).hasSize(databaseSizeBeforeUpdate);
         Evaluation testEvaluation = evaluationList.get(evaluationList.size() - 1);
         assertThat(testEvaluation.getAverage()).isEqualTo(UPDATED_AVERAGE);
+        assertThat(testEvaluation.getCoefficient()).isEqualTo(UPDATED_COEFFICIENT);
         assertThat(testEvaluation.getEvaluationDate()).isEqualTo(UPDATED_EVALUATION_DATE);
         assertThat(testEvaluation.getComment()).isEqualTo(UPDATED_COMMENT);
         assertThat(testEvaluation.getValidation()).isEqualTo(UPDATED_VALIDATION);

@@ -17,6 +17,7 @@
                 "title": "Evaluation"
             },
             "average": "Average",
+            "coefficient": "Coefficient",
             "evaluationDate": "Evaluation Date",
             "comment": "Comment",
             "validation": "Validation",

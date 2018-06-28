@@ -53,7 +53,7 @@ public class ResultsServiceImpl implements ResultsService {
         try {
             user = userRepository.findOne(idUser);
             student = studentRepository.findStudentByUser(user);
-            evaluations = evaluationRepository.getEvaluationByStudentAndPeriod(student.getId(), dateTimePast);
+            evaluations = evaluationRepository.findEvaluationsByStudentAndPeriod(student.getId(), dateTimePast);
 
             final Results results = new Results(user, evaluations);
 

@@ -166,7 +166,7 @@ public class MarkController {
             chartDatas = markService.getData(idSchool, idClassroom);
         } catch (Exception e) {
             LOGGER.error("Error during user collecting : " + e.getMessage());
-            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during data collecting");
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during data collecting", e);
         }
 
         if (chartDatas == null) {

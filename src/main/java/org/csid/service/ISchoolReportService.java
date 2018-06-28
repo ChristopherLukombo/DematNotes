@@ -17,7 +17,7 @@ public interface ISchoolReportService {
      * Generate School Report in pdf and returns it
      * @return File : School Report Generated
      */
-    File generateSchoolReport(final Long accountCode) throws Exception;
+    byte[] generateSchoolReport(final Long accountCode) throws Exception;
 
     /**
      * Returns schools for a manager according to accountCode
@@ -76,7 +76,7 @@ public interface ISchoolReportService {
      * @param accountCode
      * @return String
      */
-    String getAverageFromEvaluation(final Long accountCode);
+    double getAverageFromEvaluation(final Long accountCode);
 
     /**
      * Find yearPeriod for a schoolReport

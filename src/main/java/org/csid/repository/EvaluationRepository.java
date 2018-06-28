@@ -17,5 +17,5 @@ import java.util.List;
 @Repository
 public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
     @Query("select evaluation from Evaluation evaluation where evaluation.student.id=:idStudent and evaluation.evaluationDate>=:dateTimePeriod")
-    List<Evaluation> getEvaluationByStudentAndPeriod(@Param("idStudent") final Long idStudent, @Param("dateTimePeriod") final ZonedDateTime dateTimePeriod);
+    List<Evaluation> findEvaluationsByStudentAndPeriod(@Param("idStudent") final Long idStudent, @Param("dateTimePeriod") final ZonedDateTime dateTimePeriod);
 }

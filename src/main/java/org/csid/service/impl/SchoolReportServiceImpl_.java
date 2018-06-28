@@ -98,49 +98,25 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
      * @return File : School Report Generated
      */
     @Override
-    public File generateSchoolReport(final Long accountCode) throws Exception {
-        File pdfFile;
-        FileOutputStream fos = null;
-
+    public byte[] generateSchoolReport(final Long accountCode) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             final User user = userRepository.findOne(accountCode);
 
             final Document document = new Document(PageSize.A4, 20, 20, 20, 0);
-
-            // create the file in memory
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PdfWriter.getInstance(document, baos);
-
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
             document.open();
-
             fillSchoolReport(user, document);
 
             document.close();
-
-            pdfFile = File.createTempFile("bulletin", ".pdf");
-
-            fos = new FileOutputStream(pdfFile);
-            fos.write(baos.toByteArray());
-
-        } catch (FileNotFoundException e) {
-            LOGGER.error("File Not Found " + e.getMessage());
-            throw new Exception("File Not Found");
+            writer.close();
         } catch (DocumentException e) {
-            LOGGER.error("Error during creating document " + e.getMessage());
-            throw new Exception("Error during creating document");
+            throw new Exception("Error during creating document", e);
         } catch (IOException e) {
-            LOGGER.error("Error during creating file " + e.getMessage());
-            throw new Exception("Error during creating file" +
-                "");
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            throw new Exception("Error during creating file", e);
         }
 
-        return pdfFile;
+        return baos.toByteArray();
     }
 
     private void fillSchoolReport(User user, Document document) throws Exception {
@@ -612,7 +588,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
         final ZonedDateTime pastDateTime = ZonedDateTime.now(TimeZone.getTimeZone("Europe/Madrid").toZoneId()).minusYears(1);
 
-        final List<Evaluation> evaluations = evaluationRepository.getEvaluationByStudentAndPeriod(student.getId(), pastDateTime);
+        final List<Evaluation> evaluations = evaluationRepository.findEvaluationsByStudentAndPeriod(student.getId(), pastDateTime);
 
         final Set<EvaluationDTO> evaluationList = new HashSet<>();
 
@@ -642,7 +618,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
         final ZonedDateTime pastDateTime = ZonedDateTime.now(TimeZone.getTimeZone("Europe/Madrid").toZoneId()).minusYears(1);
 
-        final List<Evaluation> evaluations = evaluationRepository.getEvaluationByStudentAndPeriod(student.getId(), pastDateTime);
+        final List<Evaluation> evaluations = evaluationRepository.findEvaluationsByStudentAndPeriod(student.getId(), pastDateTime);
 
         final Set<EvaluationDTO> evaluationList = new HashSet<>();
 
@@ -659,45 +635,28 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         return evaluationList;
     }
 
-    public String getAverageFromEvaluation(final Long accountCode) {
+    public double getAverageFromEvaluation(final Long accountCode) {
         final Set<Evaluation> evaluations = this.getEvaluationsByStudent(accountCode).stream().map(e -> evaluationMapper.toEntity(e)).collect(Collectors.toSet());
-
-        double sum = 0;
-        int nbTotal = 0;
-        double sumCoefficient = 0;
-
-        final NumberFormat instance = DecimalFormat.getNumberInstance(new Locale("##.##"));
-
-        for (final Evaluation evaluation : evaluations) {
-            sum += evaluation.getAverage() * evaluation.getCoefficient();
-            sumCoefficient += evaluation.getCoefficient();
-            nbTotal++;
-        }
-
-        return (nbTotal > 0) ? instance.format(sum / sumCoefficient) : "";
+        return averages(evaluations);
     }
 
-   public double getAverageFromEvaluationByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end) throws Exception {
-       try {
-           final Set<Evaluation> evaluations = this.getEvaluationsByStudentAndPeriod(accountCode, start, end).stream().map(e -> evaluationMapper.toEntity(e)).collect(Collectors.toSet());
+   public double getAverageFromEvaluationByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end)  {
+       final Set<Evaluation> evaluations = this.getEvaluationsByStudentAndPeriod(accountCode, start, end).stream()
+           .map(e -> evaluationMapper.toEntity(e))
+           .collect(Collectors.toSet());
 
-           double sum = 0;
-           int nbTotal = 0;
-           double sumCoefficient = 0;
-
-           final NumberFormat instance = DecimalFormat.getNumberInstance(new Locale("##.##"));
-
-           for (final Evaluation evaluation : evaluations) {
-               sum += evaluation.getAverage() * evaluation.getCoefficient();
-               nbTotal++;
-           }
-
-           return (nbTotal > 0) ? Double.parseDouble(instance.format(sum / sumCoefficient)) : -1;
-       } catch (NumberFormatException e) {
-           LOGGER.error("Error during calculaing of averages " + e.getMessage());
-           throw new Exception("Error during calculaing of averages");
-       }
+       return averages(evaluations);
    }
+
+    private static double averages(Collection<Evaluation> evaluations) {
+        double sum = 0;
+        double sumCoefficient = 0;
+        for (Evaluation evaluation : evaluations) {
+            sum += evaluation.getAverage() * evaluation.getCoefficient();
+            sumCoefficient += evaluation.getCoefficient();
+        }
+        return (sumCoefficient  > 0)? sum / sumCoefficient : -1;
+    }
 
     /**
      * Returns manager according of User

@@ -333,8 +333,8 @@ public class MarkServiceImpl implements IMarkService {
 
             return averages;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of averages " + e.getMessage());
-            throw new Exception("Error during collecting of averages");
+            LOGGER.error("Error during collecting of averages ", e);
+            throw new Exception("Error during collecting of averages", e);
         }
     }
 

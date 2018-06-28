@@ -1,5 +1,6 @@
 package org.csid.web.rest;
 
+import com.itextpdf.text.pdf.qrcode.ByteArray;
 import org.csid.service.ISchoolReportService;
 import org.csid.service.dto.*;
 import org.slf4j.Logger;
@@ -27,34 +28,22 @@ public class SchoolReportController {
 
 
     @RequestMapping(value = "/schoolReport/export/{accountCode}", method = RequestMethod.GET, produces = "application/pdf")
-    public ResponseEntity<Object> downloadSchoolReport(final HttpServletResponse response, @PathVariable final Long accountCode) throws Exception {
+    public ResponseEntity<byte[]> downloadSchoolReport(final HttpServletResponse response, @PathVariable final Long accountCode) throws Exception {
 
         LOGGER.info("Call API Service export");
 
-        File fileSchoolReportPDF;
-
+        byte[] pdfData;
         try {
-            fileSchoolReportPDF = schoolReportService.generateSchoolReport(accountCode);
+            pdfData = schoolReportService.generateSchoolReport(accountCode);
         } catch(final Exception e) {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during retrieving file : " + e.getMessage());
         }
 
-        response.setHeader("Content-Disposition", "attachment; filename=" + fileSchoolReportPDF);
-        response.setHeader("Content-Length", String.valueOf(fileSchoolReportPDF.length()));
+        response.setHeader("Content-Disposition", "attachment; filename=" + "toto.pdf");
         response.setContentType("application/pdf");
 
-        try (InputStream inputStream = new BufferedInputStream(new FileInputStream(fileSchoolReportPDF))) {
-            FileCopyUtils.copy(inputStream, response.getOutputStream());
-            response.getOutputStream().flush();
-        } catch(final FileNotFoundException e) {
-            LOGGER.error("File not found", fileSchoolReportPDF.getPath());
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " File not found " + fileSchoolReportPDF.getPath());
-        } catch(final IOException e) {
-            LOGGER.error("Error during file copy", fileSchoolReportPDF.getPath());
-            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during copy " + fileSchoolReportPDF.getPath());
-        }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(pdfData, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/schoolReport/schools/{accountCode}", method = RequestMethod.GET)

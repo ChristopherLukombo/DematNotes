@@ -1,5 +1,7 @@
 <mat-tab-group>
-    <mat-tab label="Résultats" cdkScrollable style="overflow-y: auto;overflow-x: auto; height: 200px" *jhiHasAnyAuthority="['ROLE_STUDENT','ROLE_ADMIN']">
+    <!-- Vue teacher -->
+    <mat-tab label="Résultats" cdkScrollable style="overflow-y: auto;overflow-x: auto; height: 200px"
+             *jhiHasAnyAuthority="['ROLE_TEACHER','ROLE_ADMIN']">
         <span>Résultats</span>
         <!-- Listes déroulante -->
         <mat-form-field>
@@ -11,7 +13,7 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field *ngIf="schoolIndexSelected && this.classrooms !== null && this.classrooms.length > 0">
+        <mat-form-field>
             <mat-select name="classroomSelected" [(ngModel)]="classroomIndexSelected"
                         (ngModelChange)="this.getStudentsByTeacher()" placeholder="Classes">
                 <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
@@ -20,7 +22,7 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field *ngIf="this.classroomIndexSelected && this.users !== null && this.users.length > 0">
+        <mat-form-field>
             <mat-select name="userSelected" [(ngModel)]="this.userIndexSelected"
                         (ngModelChange)="this.getStudentByTeacher()" placeholder="Etudiants">
                 <mat-option *ngFor="let user of users" [value]="user.id">
@@ -29,28 +31,66 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-grid-list cols="2" rowHeight="2:1" *ngIf="this.userIndexSelected && results.user != null">
+        <mat-grid-list cols="2" rowHeight="2:1" *ngIf="this.results.user != null">
             <div class="caption">
                 <p>{{results.user.firstName}} {{results.user.lastName}}</p>
             </div>
             <mat-grid-tile>
                 <div class="thumbnail">
-                    <img [src]="this.results.user.imageUrl" *ngIf="this.results.user.imageUrl" alt="Lights" style="width:100%">
+                    <img [src]="this.results.user.imageUrl != '' ? this.currentUser.imageUrl : this.imgAvatar"
+                         class="img-responsive Lights" alt="avatar" height="100%" width="100%">
                 </div>
             </mat-grid-tile>
             <mat-grid-tile>
-                <table class="table table-striped tab">
+                <div *ngIf="this.results.evaluations.length == 0" jhiTranslate="results.noResults">Aucun résultats</div>
+                <table class="table table-striped tab" *ngIf="this.results.evaluations.length > 0">
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Moyenne</th>
-                        <th scope="col">Commentaire</th>
-                        <th scope="col">Module</th>
+                        <th scope="col" jhiTranslate="results.module">Module</th>
+                        <th scope="col" jhiTranslate="results.average">Moyenne</th>
+                        <th scope="col" jhiTranslate="results.comment">Commentaire</th>
                     </tr>
                     <tr *ngFor="let evaluation of this.results.evaluations">
                         <td scope="row"></td>
+                        <td>{{evaluation.module.entitled | uppercase}}</td>
                         <td>{{evaluation.average}}</td>
                         <td>{{evaluation.comment}}</td>
-                        <td>{{evaluation.module.entitled}}</td>
+                    </tr>
+                </table>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </mat-tab>
+
+    <!-- Vue student -->
+    <mat-tab label="Résultats" cdkScrollable style="overflow-y: auto;overflow-x: auto; height: 200px"
+             *jhiHasAnyAuthority="['ROLE_STUDENT','ROLE_ADMIN']">
+        <span>Résultats</span>
+
+        <mat-grid-list cols="2" rowHeight="2:1" *ngIf="this.resultsStudent.user != null">
+            <div class="caption">
+                <p>{{resultsStudent.user.firstName}} {{resultsStudent.user.lastName}}</p>
+            </div>
+            <mat-grid-tile>
+                <div class="thumbnail">
+                    <img
+                        [src]="this.resultsStudent.user.imageUrl != '' ? this.resultsStudent.user.imageUrl : this.imgAvatar"
+                        class="img-responsive Lights" alt="avatar" height="100%" width="100%">
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <div *ngIf="this.resultsStudent.evaluations.length == 0" jhiTranslate="results.noResults">Aucun résultats</div>
+                <table class="table table-striped tab" *ngIf="this.resultsStudent.evaluations.length > 0">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col" jhiTranslate="results.module">Module</th>
+                        <th scope="col" jhiTranslate="results.average">Moyenne</th>
+                        <th scope="col" jhiTranslate="results.comment">Commentaire</th>
+                    </tr>
+                    <tr *ngFor="let evaluation of this.resultsStudent.evaluations">
+                        <td scope="row"></td>
+                        <td>{{evaluation.module.entitled | uppercase}}</td>
+                        <td>{{evaluation.average}}</td>
+                        <td>{{evaluation.comment}}</td>
                     </tr>
                 </table>
             </mat-grid-tile>

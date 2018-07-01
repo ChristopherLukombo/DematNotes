@@ -165,5 +165,11 @@
         "startDate": "Date de début",
         "endDate" : "Date de fin"
 
+    },
+    "results":  {
+        "module" : "Module",
+        "average": "Moyenne",
+        "comment": "Commentaire",
+        "noResults": "Pas de résultats"
     }
 }

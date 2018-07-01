@@ -59,7 +59,7 @@ public class ResultsServiceImpl implements ResultsService {
 
             return resultsMapper.mapToDTO(results);
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of results " + e.getMessage());
+            LOGGER.error("Error during collecting of results ", e);
             throw new Exception("Error during collecting of results");
         }
     }

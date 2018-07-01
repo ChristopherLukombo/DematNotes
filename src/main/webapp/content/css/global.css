@@ -370,3 +370,7 @@ mat-form-field {
 .contentTab td {
     vertical-align: middle !important;
 }
+
+.mat-grid-tile .mat-figure {
+    align-items: normal !important;
+}

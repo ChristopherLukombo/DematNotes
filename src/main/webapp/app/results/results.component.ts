@@ -12,16 +12,19 @@ import {Services} from '../services';
     templateUrl: './results.component.html'
 })
 export class ResultsComponent implements OnInit {
-    currentUser: any;
+    currentUser: User;
 
     schools: School[] = [];
     classrooms: Classroom[] = [];
     users: User[] = [];
     results: Results = new Results();
+    resultsStudent: Results = new Results();
 
     schoolIndexSelected;
     classroomIndexSelected;
     userIndexSelected;
+
+    imgAvatar = require('../../content/images/avatar.png');
 
     constructor(
         private principal: Principal,
@@ -30,18 +33,12 @@ export class ResultsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.loadCurrentUser();
-    }
-
-    /**
-     * Load Current User logged in
-     */
-    private loadCurrentUser(): void {
         this.principal.identity().then((currentUser) => {
             this.currentUser = currentUser;
+        }).then((response) => {
             // As soon as we know current User
-            // We loaded Schools
-            this.getSchools(currentUser);
+            this.getSchools(this.currentUser);
+            this.getResults();
         });
     }
 
@@ -50,7 +47,7 @@ export class ResultsComponent implements OnInit {
             .subscribe((schools) => {
                 this.schools = schools;
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
             });
     }
 
@@ -60,24 +57,16 @@ export class ResultsComponent implements OnInit {
                 // this.reset();
                 this.classrooms = classrooms;
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
             });
     }
-
-    // /**
-    //  * Resets the selected indexes
-    //  */
-    // private reset(): void {
-    //     this.classroomIndexSelected = undefined;
-    //     this.userIndexSelected = undefined;
-    // }
 
     public getStudentByTeacher(): void {
         this.services.getResultsByStudent(this.userIndexSelected)
             .subscribe((results) => {
                 this.results = results;
             }, (error) => {
-                console.log(JSON.parse(error).message);
+                console.error(JSON.parse(error).message);
             });
     }
 
@@ -86,7 +75,18 @@ export class ResultsComponent implements OnInit {
             .subscribe((users) => {
                 this.users = users;
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
+            });
+    }
+
+    // Part Student
+
+    public getResults(): void {
+        this.services.getResultsByStudent(this.currentUser.id)
+            .subscribe((results) => {
+                this.resultsStudent = results;
+            }, (error) => {
+                console.error(JSON.parse(error).message);
             });
     }
 

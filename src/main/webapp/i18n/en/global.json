@@ -165,5 +165,11 @@
         "numberOfAbsences": "Number of absences",
         "startDate": "start Date",
         "endDate" : "end Date"
+    },
+    "results":  {
+        "module" : "Module",
+        "average": "Average",
+        "comment": "Comment",
+        "noResults": "No Résults"
     }
 }

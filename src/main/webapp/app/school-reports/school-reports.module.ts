@@ -12,7 +12,8 @@ import {
     MatMenuModule,
     MatSelectModule,
     MatTableModule,
-    MatTabsModule
+    MatTabsModule,
+    MatInputModule
 } from '@angular/material';
 import {MatListModule} from '@angular/material/list';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -35,7 +36,8 @@ import {Services} from '../services';
         MatDialogModule,
         MatAutocompleteModule,
         MatListModule,
-        MatGridListModule
+        MatGridListModule,
+        MatInputModule
     ],
     declarations: [
         SchoolReportsComponent,

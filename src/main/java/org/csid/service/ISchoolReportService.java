@@ -96,4 +96,10 @@ public interface ISchoolReportService {
      */
     double getAverageFromEvaluationByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end) throws Exception;
 
+    /**
+     * Returns SchoolReportList for a student
+     * @param accountCode
+     * @return entity
+     */
+    SchoolReportList getSchoolReportsByStudent(Long accountCode);
 }

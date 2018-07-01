@@ -170,6 +170,15 @@
         "module" : "Module",
         "average": "Average",
         "comment": "Comment",
-        "noResults": "No Résults"
+        "noResults": "No Results"
+    },
+    "schoolReports": {
+        "module" : "Module",
+        "average": "Average",
+        "comment": "Comment",
+        "noResults": "No Results",
+        "validationSuccess": "Validation has been saved",
+        "validationError": "Validation was not saved",
+        "gradeAword": "grade Aword"
     }
 }

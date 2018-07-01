@@ -21,6 +21,7 @@ import {MarksList} from './marks/marksList.model';
 import {StudentsList} from './marks/studentsList.model';
 import {ModulesList} from './marks/modulesList.model';
 import {DelayStudentSearch} from './school-life/model.delayStudentSearch';
+import {SchoolReportList} from './school-reports/model.schoolReportList';
 
 @Injectable()
 export class Services {
@@ -318,6 +319,15 @@ export class Services {
      */
     getEvaluationsByStudent(accountCode) {
         return this.http.get<Evaluation[]>(this.resourceUrl + '/schoolReport/evaluations/' + `${accountCode}`);
+    }
+
+    /**
+     * Returns schoolReportList of a Student
+     * @param accountCode
+     * @returns {Observable<SchoolReportList>}
+     */
+    getSchoolReportListByStudent(accountCode) {
+        return this.http.get<SchoolReportList>(this.resourceUrl + '/schoolReport/schoolReportsList/' + `${accountCode}`);
     }
 
     /**

@@ -7,7 +7,6 @@
     </mat-tab>
 
     <mat-tab label="Remplir Bulletin" *jhiHasAnyAuthority="['ROLE_MANAGER','ROLE_ADMIN']">
-        <span>Bulletin</span>
         <!-- Listes déroulante -->
         <mat-form-field>
             <mat-select name="schoolSelected" [(ngModel)]="schoolSelected"
@@ -18,7 +17,7 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field *ngIf="schoolSelected && this.classrooms.length > 0">
+        <mat-form-field>
             <mat-select name="classroomSelected" [(ngModel)]="classroomSelected"
                         (ngModelChange)="getStudentsByManager()" placeholder="Classes">
                 <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
@@ -27,47 +26,58 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field *ngIf="classroomSelected">
-            <mat-select name="userSelected" [(ngModel)]="userSelected" (ngModelChange)="getStudentByManager()"
-                        placeholder="Etudiants">
+        <mat-form-field>
+            <mat-select name="userSelected" [(ngModel)]="userSelected"
+                        (ngModelChange)="getSchoolReportListByStudent()" placeholder="Etudiants">
                 <mat-option *ngFor="let user of users" [value]="user.id">
                     {{ user.firstName }} - {{ user.lastName }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
-        <div *ngIf="userSelected">
+        <p>
+            <mat-form-field>
+                <input matInput placeholder="Récompense" [(ngModel)]="this.schoolReport.gradeAword">
+            </mat-form-field>
+        </p>
 
-            <p>
-                <label>Récompense</label>
-                <input type="text" name="gradeAword" [(ngModel)]="this.schoolReport.gradeAword"/>
-            </p>
+        <p>
+            <mat-form-field>
+                <textarea matInput placeholder="Commentaire" [(ngModel)]="this.schoolReport.comment"
+                          style="resize:none;"></textarea>
+            </mat-form-field>
+        </p>
 
-            <p>
-                <label>Commentaire</label>
-                <input type="text" name="comment" [(ngModel)]="this.schoolReport.comment"/>
-            </p>
+        <button type="submit" class="btn btn-warning" name="validate" (click)="saveSchoolReport()">Valider</button>
 
-            <button type="submit" class="btn btn-warning" name="validate" (click)="saveSchoolReport()">Valider</button>
-        </div>
+        <br/><br/><br/>
 
-        <table class="table table-striped tab" *ngIf="this.evaluations.length > 0">
+        <table class="table table-striped tab" *ngIf="this.schoolReportList.evaluations">
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Moyenne</th>
-                <th scope="col">Commentaire</th>
-                <th scope="col">Intitulé</th>
+                <th scope="col" jhiTranslate="schoolReports.module">Module</th>
+                <th scope="col" jhiTranslate="schoolReports.average">Moyenne</th>
+                <th scope="col" jhiTranslate="schoolReports.comment">Commentaire</th>
             </tr>
             </thead>
-            <tbody>
-            <tr *ngFor="let evaluation of this.evaluations">
+            <tbody *ngFor="let evaluation of this.schoolReportList.evaluations">
+            <tr *ngFor="let module of this.schoolReportList.modules">
                 <td scope="row"></td>
+                <td>{{module.entitled | uppercase}}</td>
                 <td>{{evaluation.average}}</td>
                 <td>{{evaluation.comment}}</td>
-                <td>{{evaluation.moduleId}}</td>
+
             </tr>
             </tbody>
         </table>
+        <div class="alert alert-success alertMessage" role="alert" jhiTranslate="schoolReports.validationSuccess"
+             *ngIf="this.stateSaved === 1">
+            La validation a été enregistrée
+        </div>
+        <div class="alert alert-danger alertMessage" role="alert" jhiTranslate="schoolReports.validationError"
+             *ngIf="this.stateSaved === -1">
+            La validation n'a pas été enregistrée
+        </div>
     </mat-tab>
 </mat-tab-group>

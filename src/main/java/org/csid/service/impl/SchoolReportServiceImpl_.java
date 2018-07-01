@@ -12,6 +12,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.csid.domain.*;
+import org.csid.domain.non.persistant.SchoolReportView;
 import org.csid.repository.*;
 import org.csid.service.ISchoolLifeService;
 import org.csid.service.ISchoolReportService;
@@ -24,9 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -93,8 +95,12 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
     @Autowired
     private AssignmentYearPeriodRepository assignmentYearPeriodRepository;
 
+    @Autowired
+    private SchoolReportViewMapper schoolReportViewMapper;
+
     /**
      * Generate School Report in pdf and returns it
+     *
      * @return File : School Report Generated
      */
     @Override
@@ -125,12 +131,12 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         final Student student = studentRepository.findStudentByUser(user);
         final List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(currentDate);
 
-        final SchoolReport schoolReport = this.schoolReportRepository.getSchoolReportByStudentWhereYearPeriodMax(student.getId()); // TODO tester le cas ou il y a rien
+        final SchoolReport schoolReport = this.schoolReportRepository.getSchoolReportByStudentWhereYearPeriodMax(student.getId());
 
         final Set<Evaluation> evaluations = schoolReport.getEvaluations();
 
         final String firstNameManager = schoolReport.getManager().getUser().getFirstName();
-        final String lastNameManager =  schoolReport.getManager().getUser().getLastName();
+        final String lastNameManager = schoolReport.getManager().getUser().getLastName();
 
         List<School> schools = this.getSchoolsByManager(schoolReport.getManager().getUser().getId())
             .stream()
@@ -149,8 +155,8 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         for (Inscription inscription : inscriptions) {
             for (Student s : inscription.getStudents()) {
                 if (s.equals(student)) {
-                    table.addCell(getPdfPCellCustomized(inscription.getSchool().getWording() + "\n"+ inscription.getSchool().getAddress() + "\n" + inscription.getSchool().getPostalCode() + " " +  inscription.getSchool().getCity() + "\n" + (schools.get(0).getPhoneNumber() != null ? schools.get(0).getPhoneNumber() : ""), null, 4, 5.0f, "left", true));
-                    table.addCell(getPdfPCellCustomized("Nom - Prénom : " + user.getLastName() + " " + user.getFirstName() + "\nNé(e) le : " + student.getDateOfBirth() + "\nClasse : " +  inscription.getClassroom().getEntitled() + " " + (inscription.getClassroom().getOption() != null ? inscription.getClassroom().getOption() : "") + "\nAnnée scolaire : " + inscription.getSchoolYear().getStartDate().getYear() + " - " +  inscription.getSchoolYear().getEndDate().getYear() + "", null, 4, 5.0f, "left", true));
+                    table.addCell(getPdfPCellCustomized(inscription.getSchool().getWording() + "\n" + inscription.getSchool().getAddress() + "\n" + inscription.getSchool().getPostalCode() + " " + inscription.getSchool().getCity() + "\n" + (schools.get(0).getPhoneNumber() != null ? schools.get(0).getPhoneNumber() : ""), null, 4, 5.0f, "left", true));
+                    table.addCell(getPdfPCellCustomized("Nom - Prénom : " + user.getLastName() + " " + user.getFirstName() + "\nNé(e) le : " + student.getDateOfBirth() + "\nClasse : " + inscription.getClassroom().getEntitled() + " " + (inscription.getClassroom().getOption() != null ? inscription.getClassroom().getOption() : "") + "\nAnnée scolaire : " + inscription.getSchoolYear().getStartDate().getYear() + " - " + inscription.getSchoolYear().getEndDate().getYear() + "", null, 4, 5.0f, "left", true));
                     break;
                 }
             }
@@ -179,9 +185,9 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
         for (Evaluation evaluation : evaluations) {
             //table moyennes
-            table.addCell(getPdfPCellCustomized(evaluation.getModule().getEntitled() + "\n\nM. " +  evaluation.getTeacher().getUser().getLastName(), fontContent, 3, 5.0f, "left", true));
+            table.addCell(getPdfPCellCustomized(evaluation.getModule().getEntitled() + "\n\nM. " + evaluation.getTeacher().getUser().getLastName(), fontContent, 3, 5.0f, "left", true));
             table.addCell(getPdfPCellCustomized(Double.toString(evaluation.getAverage()), null, 1, 15.0f, "center", true));
-            table.addCell(getPdfPCellCustomized("\n" + (evaluation.getComment() != null ? evaluation.getComment() : "")  + "\n\n", fontContent, 7, 5.0f, "left", true));
+            table.addCell(getPdfPCellCustomized("\n" + (evaluation.getComment() != null ? evaluation.getComment() : "") + "\n\n", fontContent, 7, 5.0f, "left", true));
 
         }
 
@@ -212,7 +218,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         table.addCell(getPdfPCellCustomized(schoolReport.getComment(), fontContent, 2, 5.0f, "left", true));
 
         //NOTE : Félicitation / Encouragements/ Avertissement de travail
-        table.addCell(getPdfPCellCustomized("\n"  + schoolReport.getGradeAword() +"\n\n", fontContent, 1, 5.0f, "left", true));
+        table.addCell(getPdfPCellCustomized("\n" + schoolReport.getGradeAword() + "\n\n", fontContent, 1, 5.0f, "left", true));
 
         table.addCell(getPdfPCellCustomized("\n" + firstNameManager + " " + lastNameManager + "\n\n", fontContent, 1, 5.0f, "left,", true));
         document.add(table);
@@ -337,6 +343,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     /**
      * Returns schools for a manager according to accountCode
+     *
      * @param accountCode
      * @return list of entities
      */
@@ -367,6 +374,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     /**
      * Returns classrooms for a manager according to accountCode
+     *
      * @param accountCode
      * @param idSchool
      * @return list of entities
@@ -416,6 +424,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     /**
      * Returns students for a manager according to accountCode
+     *
      * @param accountCode
      * @param idSchool
      * @param idClassroom
@@ -475,6 +484,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     /**
      * Returns student for a manager according to accountCode
+     *
      * @param accountCode
      * @return entity
      */
@@ -492,6 +502,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     /**
      * Save a schoolReport
+     *
      * @param schoolReportDTO
      * @return entity
      */
@@ -501,14 +512,14 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             schoolReportDTO.setCreationDate(LocalDate.now());
 
             final Student student = studentRepository.findOne(schoolReportDTO.getStudentId());
-            final  School school = schoolMapper.toEntity(getSchoolForStudent(student));
-            final Classroom classroom  = classroomMapper.toEntity(getClassroomForStudent(student));
+            final School school = schoolMapper.toEntity(getSchoolForStudent(student));
+            final Classroom classroom = classroomMapper.toEntity(getClassroomForStudent(student));
             final YearPeriod yearPeriod = findYearPeriodForSchoolReport(LocalDate.now(), school, classroom);
             schoolReportDTO.setYearPeriodId(yearPeriod.getId());
             SchoolReport schoolReport = schoolReportMapper.toEntity(schoolReportDTO);
             schoolReport.setEvaluations(this.getEvaluationsByStudent(student.getUser().getId())
                 .stream()
-                .map( e -> evaluationMapper.toEntity(e))
+                .map(e -> evaluationMapper.toEntity(e))
                 .collect(Collectors.toSet()));
 
             return this.schoolReportService.save(schoolReportMapper.toDto(schoolReport));
@@ -519,7 +530,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
     }
 
     public YearPeriod findYearPeriodForSchoolReport(LocalDate periodDate, School school, Classroom classroom) {
-        final List<AssignmentYearPeriod>  assignmentYearPeriods = this.assignmentYearPeriodRepository.findAllWithEagerRelationships();
+        final List<AssignmentYearPeriod> assignmentYearPeriods = this.assignmentYearPeriodRepository.findAllWithEagerRelationships();
 
         YearPeriod yearPeriod = null;
 
@@ -528,7 +539,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
                 if (assignmentYearPeriod.getClassrooms().contains(classroom)) {
 
                     for (YearPeriod y : assignmentYearPeriod.getYearPeriods()) {
-                        if (y.getEndDate().isBefore(periodDate) || y.getEndDate().equals(periodDate) ) {
+                        if (y.getEndDate().isBefore(periodDate) || y.getEndDate().equals(periodDate)) {
                             yearPeriod = y;
                         }
                     }
@@ -541,7 +552,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
     }
 
     private SchoolDTO getSchoolForStudent(Student student) {
-        List <Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(LocalDate.now());
+        List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(LocalDate.now());
 
         School school = null;
 
@@ -557,7 +568,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
     }
 
     private ClassroomDTO getClassroomForStudent(Student student) {
-        List <Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(LocalDate.now());
+        List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(LocalDate.now());
 
         Classroom classroom = null;
 
@@ -574,6 +585,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     /**
      * Returns evaluations of a Student
+     *
      * @param accountCode
      * @return list of entities
      */
@@ -582,8 +594,8 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
         final Student student = studentRepository.findStudentByUser(user);
 
-        final  School school = schoolMapper.toEntity(getSchoolForStudent(student));
-        final Classroom classroom  = classroomMapper.toEntity(getClassroomForStudent(student));
+        final School school = schoolMapper.toEntity(getSchoolForStudent(student));
+        final Classroom classroom = classroomMapper.toEntity(getClassroomForStudent(student));
         final YearPeriod yearPeriod = findYearPeriodForSchoolReport(LocalDate.now(), school, classroom);
 
         final ZonedDateTime pastDateTime = ZonedDateTime.now(TimeZone.getTimeZone("Europe/Madrid").toZoneId()).minusYears(1);
@@ -607,6 +619,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     /**
      * Returns evaluations of a Student
+     *
      * @param accountCode
      * @return list of entities
      */
@@ -640,13 +653,50 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         return averages(evaluations);
     }
 
-   public double getAverageFromEvaluationByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end)  {
-       final Set<Evaluation> evaluations = this.getEvaluationsByStudentAndPeriod(accountCode, start, end).stream()
-           .map(e -> evaluationMapper.toEntity(e))
-           .collect(Collectors.toSet());
+    public double getAverageFromEvaluationByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end) {
+        final Set<Evaluation> evaluations = this.getEvaluationsByStudentAndPeriod(accountCode, start, end).stream()
+            .map(e -> evaluationMapper.toEntity(e))
+            .collect(Collectors.toSet());
 
-       return averages(evaluations);
-   }
+        return averages(evaluations);
+    }
+
+    @Override
+    public SchoolReportList getSchoolReportsByStudent(Long accountCode) {
+        SchoolReportView schoolReportView = new SchoolReportView();
+
+        final User user = userRepository.findOne(accountCode);
+
+        final Student student = studentRepository.findStudentByUser(user);
+
+        final School school = schoolMapper.toEntity(getSchoolForStudent(student));
+        final Classroom classroom = classroomMapper.toEntity(getClassroomForStudent(student));
+        final YearPeriod yearPeriod = findYearPeriodForSchoolReport(LocalDate.now(), school, classroom);
+
+        final ZonedDateTime pastDateTime = ZonedDateTime.now(TimeZone.getTimeZone("Europe/Madrid").toZoneId()).minusYears(1);
+
+        final List<Evaluation> evaluations = evaluationRepository.findEvaluationsByStudentAndPeriod(student.getId(), pastDateTime);
+
+        final List<Evaluation> evaluationList = new ArrayList<>();
+
+        final List<Module> moduleList = new ArrayList<>();
+
+        final ZonedDateTime dateTimeStart = yearPeriod.getStartDate().atStartOfDay(ZoneOffset.UTC);
+
+        final ZonedDateTime dateTimeEnd = yearPeriod.getEndDate().atStartOfDay(ZoneOffset.UTC);
+
+        for (Evaluation evaluation : evaluations) {
+            if ((evaluation.getEvaluationDate().isAfter(dateTimeStart)) && (evaluation.getEvaluationDate().isBefore(dateTimeEnd) || evaluation.getEvaluationDate().isEqual(dateTimeEnd))) {
+                evaluationList.add(evaluation);
+                moduleList.add(evaluation.getModule());
+            }
+        }
+
+        schoolReportView.setEvaluations(evaluationList);
+        schoolReportView.setModules(moduleList);
+
+        return schoolReportViewMapper.mapToDTO(schoolReportView);
+    }
 
     private static double averages(Collection<Evaluation> evaluations) {
         double sum = 0;
@@ -655,11 +705,12 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             sum += evaluation.getAverage() * evaluation.getCoefficient();
             sumCoefficient += evaluation.getCoefficient();
         }
-        return (sumCoefficient  > 0)? sum / sumCoefficient : -1;
+        return (sumCoefficient > 0) ? sum / sumCoefficient : -1;
     }
 
     /**
      * Returns manager according of User
+     *
      * @param userDTO
      * @return ManagerDTO
      */

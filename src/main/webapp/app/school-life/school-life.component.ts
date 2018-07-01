@@ -10,14 +10,18 @@ import {Absence} from '../entities/absence';
 import {DelayStudent} from '../entities/delay-student';
 import {Services} from '../services';
 import {Module} from '../entities/module';
-import {AbsenceSearch} from './absenceSearch';
+import {AbsenceSearch} from './model.absenceSearch';
+import {DelayStudentSearch} from './model.delaySearch';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/Rx';
+import 'rxjs/add/observable/forkJoin';
 
 @Component({
     selector: 'jhi-school-life',
     templateUrl: './school-life.component.html'
 })
 export class SchoolLifeComponent implements OnInit {
-    currentUser: User = new User();
+    currentUser: any;
 
     schools: School[] = [];
     classrooms: Classroom[] = [];
@@ -26,16 +30,23 @@ export class SchoolLifeComponent implements OnInit {
 
     schoolSelected;
     classroomSelected;
-    userSelected;
     moduleSelected;
 
     absences: Absence[] = [];
     delayStudents: DelayStudent[] = [];
 
     imgUpload = require('../../content/images/upload.svg');
+    imgAvatar = require('../../content/images/avatar.png');
 
-    absencesSelected: number[] = Array<number>(this.users.length);
+    absencesSelected: boolean[] = Array<boolean>(this.users.length);
+    delaysSelected: boolean[] = Array<boolean>(this.users.length);
     absenceSearch: AbsenceSearch = new AbsenceSearch();
+    delaySearch: DelayStudentSearch = new DelayStudentSearch();
+
+    startDate: any;
+    endDate: any;
+
+    stateSaved = 0;
 
     constructor(
         private principal: Principal,
@@ -52,20 +63,14 @@ export class SchoolLifeComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loadCurrentUser();
-    }
-
-    /**
-     * Load Current User logged in
-     */
-    private loadCurrentUser(): void {
         this.principal.identity().then((currentUser) => {
             this.currentUser = currentUser;
+        }).then((response) => {
             // As soon as we know current User
             // We loaded All
-            this.getSchools(currentUser);
-            this.getAbsences(currentUser);
-            this.getDelayStudents(currentUser);
+            this.getSchools(this.currentUser);
+            this.getAbsences(this.currentUser);
+            this.getDelayStudents(this.currentUser);
         });
     }
 
@@ -76,18 +81,27 @@ export class SchoolLifeComponent implements OnInit {
             .subscribe((schools) => {
                 this.schools = schools;
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
             });
     }
 
     public getClassrooms(): void {
         this.services.getClassrooms(this.currentUser.id, this.schoolSelected)
             .subscribe((classrooms) => {
-                this.userSelected = undefined;
-                this.classroomSelected = undefined;
                 this.classrooms = classrooms;
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
+            });
+    }
+
+    public getStudents(): void {
+        this.services.getStudents(this.currentUser.id, this.schoolSelected, this.classroomSelected)
+            .subscribe((users) => {
+                this.users = users;
+            }, (error) => {
+                console.error(JSON.parse(error.body).message);
+            }, () => {
+                this.getModules();
             });
     }
 
@@ -96,17 +110,7 @@ export class SchoolLifeComponent implements OnInit {
             .subscribe((modules) => {
                 this.modules = modules;
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
-            });
-    }
-
-    public getStudents(): void {
-        this.services.getStudents(this.currentUser.id, this.schoolSelected, this.classroomSelected)
-            .subscribe((users) => {
-                this.users = users;
-                this.getModules();
-            }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
             });
     }
 
@@ -117,7 +121,7 @@ export class SchoolLifeComponent implements OnInit {
             .subscribe((absences) => {
                 this.absences = absences;
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
             });
     }
 
@@ -126,7 +130,7 @@ export class SchoolLifeComponent implements OnInit {
             .subscribe((delayStudents) => {
                 this.delayStudents = delayStudents;
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
             });
     }
 
@@ -139,30 +143,73 @@ export class SchoolLifeComponent implements OnInit {
             height: '800'
         });
         dialogRef.afterClosed().subscribe((response) => {
-            console.log('The dialog was closed');
             console.log(response);
         });
     }
 
-    public saveAbsences(): void {
-        const accountsCode = this.getAccountsCode();
-
+    public savePresences(): void {
+        this.absenceSearch.startDate = this.startDate;
+        this.absenceSearch.endDate = this.endDate;
         this.absenceSearch.moduleId = this.moduleSelected;
-        this.absenceSearch.accountsCode = accountsCode;
+        this.absenceSearch.accountsCode = this.getAccountsCodeFromAbsencesSelected();
 
-        this.services.saveAbsencesModules(this.absenceSearch).subscribe((response) => {
-            console.log('ok ' + response);
-        }, (error) => {
-            console.log(JSON.parse(error.body).message);
-        });
+        this.delaySearch.startDate = this.startDate;
+        this.delaySearch.endDate = this.endDate;
+        this.delaySearch.moduleId = this.moduleSelected;
+        this.delaySearch.accountsCode = this.getAccountsCodeFromDelaysSelected();
 
+        Observable.forkJoin(
+            [
+                this.services.saveAbsencesModules(this.absenceSearch),
+                this.services.saveDelaysStudents(this.delaySearch)
+            ])
+            .subscribe((response) => {
+                console.log(response);
+            }, (error) => {
+                console.error(JSON.parse(error.body).message);
+                this.stateSaved = -1;
+                setTimeout(() => {
+                    this.stateSaved = 0;
+                }, 2000);
+            }, () => {
+                this.stateSaved = 1;
+                this.resetForm();
+                setTimeout(() => {
+                    this.stateSaved = 0;
+                }, 2000);
+            });
     }
 
-    private getAccountsCode() {
+    private resetForm() {
+        this.absenceSearch = new AbsenceSearch();
+        this.absencesSelected = Array<boolean>(this.users.length);
+        this.delaysSelected = Array<boolean>(this.users.length);
+        this.startDate = undefined;
+        this.endDate = undefined;
+        this.schoolSelected = undefined;
+        this.classroomSelected = undefined;
+        this.moduleSelected = undefined;
+    }
+
+    private getAccountsCodeFromAbsencesSelected() {
         const accountsCode = [];
 
         for (let i = 0; i < this.absencesSelected.length; i++) {
-            if (this.absencesSelected[i] !== undefined) {
+            if (this.absencesSelected[i] !== undefined && this.absencesSelected[i] !== false) {
+                if (!accountsCode.includes(i)) {
+                    accountsCode.push(i);
+                }
+            }
+        }
+        return accountsCode;
+    }
+
+    private getAccountsCodeFromDelaysSelected() {
+        const accountsCode = [];
+
+        for (let i = 0; i < this.delaysSelected.length; i++) {
+            if (this.delaysSelected[i] !== undefined && this.delaysSelected[i] !== false) {
+                console.log(this.delaysSelected[i]);
                 if (!accountsCode.includes(i)) {
                     accountsCode.push(i);
                 }

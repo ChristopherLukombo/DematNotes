@@ -13,13 +13,14 @@ import {Absence} from './entities/absence';
 import {Document} from './entities/document';
 import {DelayStudent} from './entities/delay-student';
 import {JhiDateUtils} from 'ng-jhipster';
-import {AbsenceSearch} from './school-life/absenceSearch';
+import {AbsenceSearch} from './school-life/model.absenceSearch';
 import {SchoolReport} from './entities/school-report';
 import {Evaluation} from './entities/evaluation';
 import {Manager} from './entities/manager';
 import {MarksList} from './marks/marksList.model';
 import {StudentsList} from './marks/studentsList.model';
 import {ModulesList} from './marks/modulesList.model';
+import {DelayStudentSearch} from './school-life/model.delaySearch';
 
 @Injectable()
 export class Services {
@@ -176,18 +177,38 @@ export class Services {
      * @returns {Observable<Absence>}
      */
     saveAbsencesModules(absenceSearch) {
-        return this.http.post<Absence>(this.resourceUrl + '/schoolLife/AbsencesModules', this.convert(absenceSearch));
+        return this.http.post<AbsenceSearch>(this.resourceUrl + '/schoolLife/AbsencesModules', this.convertAbsenceSearch(absenceSearch));
+    }
+
+    /**
+     * Saves Delays of students in a module
+     * @returns {Observable<DelayStudent>}
+     */
+    saveDelaysStudents(delaySearch) {
+        return this.http.post<DelayStudentSearch>(this.resourceUrl + '/schoolLife/DelaysStudent', this.convertDelayStudentSearch(delaySearch));
     }
 
     /**
      * Convert a AbsenceSearch to a JSON which can be sent to the server.
      */
-    private convert(absenceSearch: AbsenceSearch): AbsenceSearch {
+    private convertAbsenceSearch(absenceSearch: AbsenceSearch): AbsenceSearch {
         const copy: Absence = Object.assign({}, absenceSearch);
 
         copy.startDate = this.dateUtils.toDate(absenceSearch.startDate);
 
         copy.endDate = this.dateUtils.toDate(absenceSearch.endDate);
+        return copy;
+    }
+
+    /**
+     * Convert a DelayStudentsSearch to a JSON which can be sent to the server.
+     */
+    private convertDelayStudentSearch(delayStudent: DelayStudent): DelayStudent {
+        const copy: DelayStudent = Object.assign({}, delayStudent);
+
+        copy.startDate = this.dateUtils.toDate(delayStudent.startDate);
+
+        copy.endDate = this.dateUtils.toDate(delayStudent.endDate);
         return copy;
     }
 

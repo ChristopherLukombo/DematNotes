@@ -103,7 +103,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
             return absenceDTOs;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of absences " + e.getMessage());
+            LOGGER.error("Error during collecting of absences ", e);
             throw new Exception("Error during collecting of absences");
         }
     }
@@ -136,7 +136,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
             return delayStudentDTOs;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of delays " + e.getMessage());
+            LOGGER.error("Error during collecting of delays ", e);
             throw new Exception("Error during collecting of delays");
         }
     }
@@ -180,7 +180,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
             return moduleDTOS;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of modules " + e.getMessage());
+            LOGGER.error("Error during collecting of modules " , e);
             throw new Exception("Error during collecting of modules");
         }
     }
@@ -197,10 +197,26 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
             absence.setEndDate(absenceSearchDTO.getEndDate());
             absence.setModule(moduleRepository.findOne(absenceSearchDTO.getModuleId()));
 
-            return absenceMapper.toDto(absenceRepository.save(absence));
+            return absenceMapper.toDto(absenceRepository.saveAndFlush(absence));
         } catch (Exception e) {
-            LOGGER.error("Error during saving of absences " + e.getMessage());
+            LOGGER.error("Error during saving of absences ", e);
             throw new Exception("Error during saving of absences");
+        }
+    }
+
+    @Override
+    public DelayStudentDTO saveDelaysStudentModules(DelayStudentSearchDTO delayStudentSearchDTO) throws Exception {
+        try {
+            DelayStudent delayStudent = new DelayStudent();
+            delayStudent.setStudents(this.findAllStudentByAccountsCode(delayStudentSearchDTO.getAccountsCode()));
+            delayStudent.setStartDate(delayStudentSearchDTO.getStartDate());
+            delayStudent.setEndDate(delayStudentSearchDTO.getEndDate());
+            delayStudent.setModule(moduleRepository.findOne(delayStudentSearchDTO.getModuleId()));
+
+            return delayStudentMapper.toDto(delayStudentRepository.saveAndFlush(delayStudent));
+        } catch (Exception e) {
+            LOGGER.error("Error during saving of delayStudent ", e);
+            throw new Exception("Error during saving of delayStudent");
         }
     }
 
@@ -220,7 +236,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
             return students;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of students " + e.getMessage());
+            LOGGER.error("Error during collecting of students ", e);
             throw new Exception("Error during collecting of students");
         }
     }
@@ -251,7 +267,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
             documentRepository.save(document);
         } catch (Exception e) {
-            LOGGER.error("Error during storing file " + e.getMessage());
+            LOGGER.error("Error during storing file ", e);
             throw new Exception("Error during storing file");
         }
     }
@@ -295,7 +311,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
             return documentDTOS;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting files " + e.getMessage());
+            LOGGER.error("Error during collecting files ", e);
             throw new Exception("Error during collecting files");
         }
     }
@@ -315,7 +331,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
             return content;
         } catch (Exception e) {
-            LOGGER.error("Error during downloading file " + e.getMessage());
+            LOGGER.error("Error during downloading file ", e);
             throw new Exception("Error during downloading file");
         }
     }
@@ -344,7 +360,7 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
 
             return isDeleted;
         } catch (Exception e) {
-            LOGGER.error("Error during deleting file " + e.getMessage());
+            LOGGER.error("Error during deleting file ", e);
             throw new Exception("Error during deleting file");
         }
     }

@@ -1,6 +1,8 @@
 package org.csid.service.impl;
 
 import org.csid.domain.*;
+import org.csid.domain.non.persistant.ChartData;
+import org.csid.domain.non.persistant.MarksList;
 import org.csid.domain.non.persistant.ModulesView;
 import org.csid.domain.non.persistant.StudentsView;
 import org.csid.repository.*;
@@ -8,8 +10,6 @@ import org.csid.service.IMarkService;
 import org.csid.service.ISchoolReportService;
 import org.csid.service.dto.*;
 import org.csid.service.mapper.*;
-import org.csid.domain.non.persistant.ChartData;
-import org.csid.domain.non.persistant.MarksList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +100,7 @@ public class MarkServiceImpl implements IMarkService {
             final Teacher teacher = teacherRepository.findByUser(user);
 
             for (final AssignmentModule assignmentModule : assignmentModules) {
-                if (assignmentModule.getTeachers().contains(teacher)) {
+                if (assignmentModule.getTeachers().contains(teacher) && !schoolDTOs.contains(schoolMapper.toDto(assignmentModule.getSchool()))) {
                     schoolDTOs.add(schoolMapper.toDto(assignmentModule.getSchool()));
                 }
             }
@@ -128,7 +128,7 @@ public class MarkServiceImpl implements IMarkService {
             final Teacher teacher = teacherRepository.findByUser(user);
 
             for (final AssignmentModule assignmentModule : assignmentModules) {
-                if (assignmentModule.getTeachers().contains(teacher) && assignmentModule.getSchool().getId().equals(idSchool)) {
+                if (assignmentModule.getTeachers().contains(teacher) && assignmentModule.getSchool().getId().equals(idSchool) && !classroomDTOs.contains(classroomMapper.toDto(assignmentModule.getClassroom()))) {
                     classroomDTOs.add(classroomMapper.toDto(assignmentModule.getClassroom()));
                 }
             }
@@ -421,7 +421,7 @@ public class MarkServiceImpl implements IMarkService {
 
             for (Evaluation evaluation : evaluations) {
                 if (evaluation.getAverage() != null) {
-                   evaluationRepository.save(evaluation);
+                    evaluationRepository.save(evaluation);
                 }
             }
 

@@ -13,6 +13,7 @@ public interface ISchoolLifeService {
 
     /**
      * Returns the absences of a student according to accountCode User
+     *
      * @param accountCode
      * @return the list of entities
      */
@@ -20,6 +21,7 @@ public interface ISchoolLifeService {
 
     /**
      * Returns the delays of a student according to accountCode User
+     *
      * @param accountCode
      * @return the list of entities
      */
@@ -27,6 +29,7 @@ public interface ISchoolLifeService {
 
     /**
      * Returns the modules of a Teacher link to the classroom
+     *
      * @param accountCode
      * @param idClassroom
      * @return the list of entities
@@ -35,12 +38,22 @@ public interface ISchoolLifeService {
 
     /**
      * Saves Absences of students in a module according to accountCode User
+     *
      * @return Absence
      */
     AbsenceDTO saveAbsencesModules(AbsenceSearchDTO absenceSearchDTO) throws Exception;
 
     /**
+     * Saves DelayStudents of students in a module according to accountCode User
+     *
+     * @param delayStudentSearchDTO
+     * @return DelayStudent
+     */
+    DelayStudentDTO saveDelaysStudentModules(DelayStudentSearchDTO delayStudentSearchDTO) throws Exception;
+
+    /**
      * Upload a file for student according to accountCode
+     *
      * @param file
      * @param accountCode
      */
@@ -48,6 +61,7 @@ public interface ISchoolLifeService {
 
     /**
      * Returns a list of all Files uploaded
+     *
      * @param accountCode
      * @return list of entities
      * @throws Exception
@@ -56,13 +70,15 @@ public interface ISchoolLifeService {
 
     /**
      * Returns a Map which contains type of file and the file
+     *
      * @param idDocument
-     * @return Map<String,File>
+     * @return Map<String   ,   File>
      */
-    Map<String,File> getFile(final Long idDocument) throws Exception;
+    Map<String, File> getFile(final Long idDocument) throws Exception;
 
     /**
      * Delete File and return true if it's deleting
+     *
      * @param idDocument
      * @return Boolean
      * @throws Exception

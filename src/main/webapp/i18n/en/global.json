@@ -153,5 +153,17 @@
         "emailexists": "Email is already in use!",
         "idexists": "A new {{ entityName }} cannot already have an ID"
     },
-    "footer": "Copyright 2017-2018 DematNotes"
+    "footer": "Copyright 2017-2018 DematNotes",
+    "schoolLife": {
+        "firstName" : "FirstName",
+        "lastName" : "LastName",
+        "absence" : "Absence",
+        "delay" : "Delay",
+        "validationSuccess": "Validation has been saved",
+        "validationError": "Validation was not saved",
+        "numberOfDelays" : "Number of delays",
+        "numberOfAbsences": "Number of absences",
+        "startDate": "start Date",
+        "endDate" : "end Date"
+    }
 }

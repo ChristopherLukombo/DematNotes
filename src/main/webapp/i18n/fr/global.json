@@ -152,5 +152,18 @@
         "emailexists": "Email déjà utilisé !",
         "idexists": "Une nouvelle entité {{entityName}} ne peut pas avoir d'ID !"
     },
-    "footer": "Copyright 2017-2018 DematNotes"
+    "footer": "Copyright 2017-2018 DematNotes",
+    "schoolLife": {
+        "firstName" : "Prénom",
+        "lastName" : "Nom",
+        "absence" : "Absence",
+        "delay" : "Retard",
+        "validationSuccess": "La validation a été enregistrée",
+        "validationError": "La validation n'a pas été enregistrée",
+        "numberOfDelays" : "Nombre de retards",
+        "numberOfAbsences": "Nombre d'absences",
+        "startDate": "Date de début",
+        "endDate" : "Date de fin"
+
+    }
 }

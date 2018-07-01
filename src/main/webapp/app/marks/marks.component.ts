@@ -3,11 +3,9 @@ import {Principal} from '../shared';
 import {User} from '../shared/user/user.model';
 import {School} from '../entities/school';
 import {Classroom} from '../entities/classroom';
-import {Module} from '../entities/module';
 import {Services} from '../services';
 import {Evaluation} from '../entities/evaluation';
 import {MarksList} from './marksList.model';
-import {TeacherService} from '../entities/teacher';
 import {StudentsList} from './studentsList.model';
 import {ModulesList} from './modulesList.model';
 
@@ -296,6 +294,7 @@ export class MarksComponent implements OnInit {
     getEvaluations(accountCode): void {
         this.services.getEvaluationsByStudent(accountCode)
             .subscribe((evaluations) => {
+                console.log('getEvaluations' + accountCode , this.evaluations , evaluations);
                 this.evaluations = evaluations;
             }, (error) => {
                 console.log(JSON.parse(error.body).message);

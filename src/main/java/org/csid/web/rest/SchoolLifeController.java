@@ -1,5 +1,6 @@
 package org.csid.web.rest;
 
+import org.csid.domain.DelayStudent;
 import org.csid.service.ISchoolLifeService;
 import org.csid.service.dto.*;
 import org.slf4j.Logger;
@@ -97,11 +98,27 @@ public class SchoolLifeController {
         try{
             absenceDTO = schoolLifeService.saveAbsencesModules(absenceSearchDTO);
         } catch (Exception e) {
-            LOGGER.error("Error during modules saving : " + e.getMessage());
-            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during modules saving");
+            LOGGER.error("Error saving absences saving : ", e);
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during absences saving");
         }
 
         return new ResponseEntity<>(absenceDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "schoolLife/DelaysStudent", method = RequestMethod.POST)
+    public ResponseEntity<Object> saveDelaysStudentModules(@RequestBody DelayStudentSearchDTO delayStudentSearchDTO) throws Exception {
+        LOGGER.info("Call API service saveAbsencesModules ...");
+
+        DelayStudentDTO delayStudentDTO;
+
+        try{
+            delayStudentDTO = schoolLifeService.saveDelaysStudentModules(delayStudentSearchDTO);
+        } catch (Exception e) {
+            LOGGER.error("Error during delaysStudent saving : ", e);
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during delaysStudent saving");
+        }
+
+        return new ResponseEntity<>(delayStudentDTO, HttpStatus.OK);
     }
 
     /**

@@ -355,3 +355,18 @@ mat-form-field {
     width: 300px;
     padding: 15px;
 }
+
+.alertMessage {
+    width: 20%;
+    text-align: center;
+    width: 30%;
+    float: right;
+}
+
+.avatar {
+    border-radius: 50%;
+}
+
+.contentTab td {
+    vertical-align: middle !important;
+}

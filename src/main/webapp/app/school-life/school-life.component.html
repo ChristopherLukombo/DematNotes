@@ -3,7 +3,7 @@
     <mat-tab label="Feuille d'appel" *jhiHasAnyAuthority="['ROLE_TEACHER','ROLE_ADMIN']">
         <span>Appel du : </span>
 
-        <form #f="ngForm" (ngSubmit)="saveAbsences()">
+        <form #f="ngForm" (ngSubmit)="savePresences()">
             <!-- Listes déroulante -->
             <mat-form-field>
                 <mat-select name="schoolSelected" [(ngModel)]="this.schoolSelected"
@@ -15,7 +15,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field *ngIf="schoolSelected && this.classrooms.length > 0">
+            <mat-form-field>
                 <mat-select name="classroomSelected" [(ngModel)]="this.classroomSelected"
                             (ngModelChange)="this.getStudents()"
                             placeholder="Classes">
@@ -25,7 +25,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field *ngIf="this.classroomSelected">
+            <mat-form-field>
                 <mat-select name="moduleSelected" [(ngModel)]="this.moduleSelected" #module="ngModel"
                             placeholder="Modules" required>
                     <mat-option *ngFor="let module of this.modules" [value]="module.id">
@@ -37,11 +37,11 @@
             <button type="submit" class="btn btn-warning" name="validate" [disabled]="!f.form.valid">Valider</button>
 
             <div class="form-group">
-                <label class="form-control-label" jhiTranslate="dematNotesApp.absence.startDate" for="field_startDate">Start
+                <label class="form-control-label" jhiTranslate="schoolLife.startDate" for="field_startDate">Start
                     Date</label>
                 <div class="d-flex">
                     <input id="field_startDate" type="datetime-local" class="form-control col-lg-6" name="startDate"
-                           [(ngModel)]="absenceSearch.startDate"
+                           [(ngModel)]="startDate"
                            required/>
                 </div>
                 <div [hidden]="!(f.controls.startDate?.dirty && f.controls.startDate?.invalid)">
@@ -57,11 +57,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-control-label" jhiTranslate="dematNotesApp.absence.endDate" for="field_endDate">End
+                <label class="form-control-label" jhiTranslate="schoolLife.endDate" for="field_endDate">End
                     Date</label>
                 <div class="d-flex">
                     <input id="field_endDate" type="datetime-local" class="form-control col-lg-6" name="endDate"
-                           [(ngModel)]="absenceSearch.endDate"
+                           [(ngModel)]="endDate"
                            required/>
                 </div>
                 <div [hidden]="!(f.controls.endDate?.dirty && f.controls.endDate?.invalid)">
@@ -78,59 +78,71 @@
             </div>
 
             <div *ngIf="classroomSelected">
-                <table class="table table-striped tab">
+                <table class="table table-striped tab contentTab">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Prénom</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Absence</th>
+                        <th scope="col"></th>
+                        <th scope="col" jhiTranslate="schoolLife.firstName">Prénom</th>
+                        <th scope="col" jhiTranslate="schoolLife.lastName">Nom</th>
+                        <th scope="col" jhiTranslate="schoolLife.absence">Absence</th>
+                        <th scope="col" jhiTranslate="schoolLife.delay">Retard</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let user of users">
-                        <td scope="row"></td>
-                        <td>{{user.firstName}}</td>
-                        <td>{{user.lastName}}</td>
+                        <td scope="row"><img [src]="user.imageUrl != '' ? user.imageUrl : this.imgAvatar"
+                                             class="avatar img-responsive" alt="avatar" height="100" width="100"></td>
+                        <td>{{user.firstName | uppercase}}</td>
+                        <td>{{user.lastName | uppercase}}</td>
                         <td>
                             <mat-checkbox [(ngModel)]="this.absencesSelected[this.user.id]"
-                                          [ngModelOptions]="{standalone: true}" required></mat-checkbox>
+                                          [ngModelOptions]="{standalone: true}"></mat-checkbox>
+                        </td>
+                        <td>
+                            <mat-checkbox [(ngModel)]="this.delaysSelected[this.user.id]"
+                                          [ngModelOptions]="{standalone: true}"></mat-checkbox>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </form>
-
+        <div class="alert alert-success alertMessage" role="alert" jhiTranslate="schoolLife.validationSuccess"
+             *ngIf="this.stateSaved === 1">
+            La validation a été enregistrée
+        </div>
+        <div class="alert alert-danger alertMessage" role="alert" jhiTranslate="schoolLife.validationError"
+             *ngIf="this.stateSaved === -1">
+            La validation n'a pas été enregistrée
+        </div>
     </mat-tab>
 
     <!-- Mon espace pour l'étudiant -->
-    <mat-tab label="Mon espace" *jhiHasAnyAuthority="['ROLE_STUDENT'||'ROLE_ADMIN']">
+    <mat-tab label="Mon espace" *jhiHasAnyAuthority="['ROLE_STUDENT','ROLE_ADMIN']">
         <span style="float:right;">
             <mat-icon svgIcon="upload" (click)="openDialog()" class="icon"></mat-icon>
         </span>
-        <span>Mon parcours :</span>
 
-        <table class="table table-striped tab" *ngIf="this.absences || this.delayStudents">
+        <table class="table table-striped tab contentTab" *ngIf="this.absences || this.delayStudents">
             <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Prénom</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Nombre d'absences</th>
-                <th scope="col">Nombre de retards</th>
+                <th scope="col"></th>
+                <th scope="col" jhiTranslate="schoolLife.firstName">Prénom</th>
+                <th scope="col" jhiTranslate="schoolLife.lastName">Nom</th>
+                <th scope="col" jhiTranslate="schoolLife.numberOfAbsences">Nombre d'absences</th>
+                <th scope="col" jhiTranslate="schoolLife.numberOfDelays">Nombre de retards</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td scope="row"></td>
-                <td>{{this.currentUser.firstName}}</td>
-                <td>{{this.currentUser.lastName}}</td>
+                <td scope="row"><img [src]="this.currentUser.imageUrl != '' ? this.currentUser.imageUrl : this.imgAvatar"
+                    class="avatar img-responsive" alt="avatar" height="100" width="100"></td>
+                <td>{{this.currentUser.firstName | uppercase}}</td>
+                <td>{{this.currentUser.lastName | uppercase}}</td>
                 <td>{{this.absences.length}}</td>
                 <td>{{this.delayStudents.length}}</td>
             </tr>
             </tbody>
         </table>
-
     </mat-tab>
 </mat-tab-group>

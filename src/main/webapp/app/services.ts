@@ -20,7 +20,7 @@ import {Manager} from './entities/manager';
 import {MarksList} from './marks/marksList.model';
 import {StudentsList} from './marks/studentsList.model';
 import {ModulesList} from './marks/modulesList.model';
-import {DelayStudentSearch} from './school-life/model.delaySearch';
+import {DelayStudentSearch} from './school-life/model.delayStudentSearch';
 
 @Injectable()
 export class Services {

@@ -11,7 +11,7 @@ import {DelayStudent} from '../entities/delay-student';
 import {Services} from '../services';
 import {Module} from '../entities/module';
 import {AbsenceSearch} from './model.absenceSearch';
-import {DelayStudentSearch} from './model.delaySearch';
+import {DelayStudentSearch} from './model.delayStudentSearch';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 import 'rxjs/add/observable/forkJoin';

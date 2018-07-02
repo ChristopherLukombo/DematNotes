@@ -10,7 +10,6 @@ import {StudentsList} from './studentsList.model';
 import {ModulesList} from './modulesList.model';
 import {Module} from '../entities/module';
 import {Teacher} from '../entities/teacher';
-import {ChartData} from './chartData.model';
 
 @Component({
     selector: 'jhi-marks',

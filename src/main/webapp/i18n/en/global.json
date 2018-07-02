@@ -180,5 +180,15 @@
         "validationSuccess": "Validation has been saved",
         "validationError": "Validation was not saved",
         "gradeAword": "grade Aword"
+    },
+    "marks": {
+        "average": "Average",
+        "comment": "Comment",
+        "noResults": "No Results",
+        "validationSuccess": "Validation has been saved",
+        "validationError": "Validation was not saved",
+        "firstName" : "FirstName",
+        "lastName" : "LastName",
+        "evaluationDate": "Date of the evaluation"
     }
 }

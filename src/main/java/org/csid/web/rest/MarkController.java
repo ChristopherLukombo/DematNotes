@@ -156,6 +156,27 @@ public class MarkController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/marks/getTeacherByIdUser/{idUser}", method = RequestMethod.GET)
+    public ResponseEntity<TeacherDTO> getTeacherByIdUser(@PathVariable final Long idUser) throws Exception {
+        LOGGER.info("Call API Service getTeacherByIdUser");
+
+        TeacherDTO teacherDTO;
+
+        try {
+            teacherDTO = markService.getTeacherByIdUser(idUser);
+        } catch (Exception e) {
+            LOGGER.error("Error during teacher collecting : ", e);
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during teacher collecting");
+        }
+
+        if (teacherDTO == null) {
+            LOGGER.info("Call API getTeacherByIdUser : No content !");
+            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
+        }
+
+        return new ResponseEntity<>(teacherDTO, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/marks/getData/{idSchool}/{idClassroom}", method = RequestMethod.GET)
     public ResponseEntity<List<ChartData>> getData(@PathVariable final Long idSchool, @PathVariable final Long idClassroom) throws Exception {
         LOGGER.info("Call API Service getData");

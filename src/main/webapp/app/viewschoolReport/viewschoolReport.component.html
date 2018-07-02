@@ -1,0 +1,14 @@
+<table class="table table-striped tab" *ngIf="this.resultsStudent.evaluations.length > 0">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col" jhiTranslate="results.module">Module</th>
+        <th scope="col" jhiTranslate="results.average">Moyenne</th>
+        <th scope="col" jhiTranslate="results.comment">Commentaire</th>
+    </tr>
+    <tr *ngFor="let evaluation of this.resultsStudent.evaluations">
+        <td scope="row"></td>
+        <td>{{evaluation.module.entitled | uppercase}}</td>
+        <td>{{evaluation.average}}</td>
+        <td>{{evaluation.comment}}</td>
+    </tr>
+</table>

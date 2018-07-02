@@ -61,10 +61,10 @@
                 <th scope="col" jhiTranslate="schoolReports.comment">Commentaire</th>
             </tr>
             </thead>
-            <tbody *ngFor="let evaluation of this.schoolReportList.evaluations">
-            <tr *ngFor="let module of this.schoolReportList.modules">
+            <tbody>
+            <tr *ngFor="let evaluation of this.schoolReportList.evaluations; let iteration = index">
                 <td scope="row"></td>
-                <td>{{module.entitled | uppercase}}</td>
+                <td>{{this.schoolReportList.modules[iteration].entitled | uppercase}}</td>
                 <td>{{evaluation.average}}</td>
                 <td>{{evaluation.comment}}</td>
 

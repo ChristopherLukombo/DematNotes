@@ -31,7 +31,7 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-grid-list cols="2" rowHeight="2:1" *ngIf="this.results.user != null">
+        <mat-grid-list cols="2" rowHeight="4:3" *ngIf="this.results.user != null">
             <div class="caption">
                 <p>{{results.user.firstName}} {{results.user.lastName}}</p>
             </div>
@@ -66,7 +66,7 @@
              *jhiHasAnyAuthority="['ROLE_STUDENT','ROLE_ADMIN']">
         <span>Résultats</span>
 
-        <mat-grid-list cols="2" rowHeight="2:1" *ngIf="this.resultsStudent.user != null">
+        <mat-grid-list cols="2" rowHeight="4:3" *ngIf="this.resultsStudent.user != null">
             <div class="caption">
                 <p>{{resultsStudent.user.firstName}} {{resultsStudent.user.lastName}}</p>
             </div>

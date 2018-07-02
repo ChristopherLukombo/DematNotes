@@ -4,7 +4,7 @@
         "browsehappy": "Vous utilisez un <strong>ancien</strong> navigateur. Veuillez <a href=\"http://browsehappy.com/?locale=fr\">mettre à jour votre navigateur</a> pour une meilleure expérience.",
         "menu": {
             "home": "Accueil",
-            "marks": "Notes",
+            "marks": "Moyennes",
             "schoolReports": "Bulletins",
             "results": "Résultats",
             "schoolLife": "Vie scolaire",
@@ -179,5 +179,15 @@
         "validationSuccess": "La validation a été enregistrée",
         "validationError": "La validation n'a pas été enregistrée",
         "gradeAword": "Récompense"
+    },
+    "marks": {
+        "average": "Moyenne",
+        "comment": "Commentaire",
+        "noResults": "Pas de résultats",
+        "validationSuccess": "La validation a été enregistrée",
+        "validationError": "La validation n'a pas été enregistrée",
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "evaluationDate": "Date de l'évaluation"
     }
 }

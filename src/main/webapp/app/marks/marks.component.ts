@@ -4,10 +4,13 @@ import {User} from '../shared/user/user.model';
 import {School} from '../entities/school';
 import {Classroom} from '../entities/classroom';
 import {Services} from '../services';
-import {Evaluation} from '../entities/evaluation';
+import {Evaluation} from './evaluation_.model';
 import {MarksList} from './marksList.model';
 import {StudentsList} from './studentsList.model';
 import {ModulesList} from './modulesList.model';
+import {Module} from '../entities/module';
+import {Teacher} from '../entities/teacher';
+import {ChartData} from './chartData.model';
 
 @Component({
     selector: 'jhi-marks',
@@ -15,16 +18,11 @@ import {ModulesList} from './modulesList.model';
 })
 export class MarksComponent implements OnInit {
     currentUser: User = new User();
-    currentUserReport: any;
     currentUserGraph: any;
 
     schools: School[] = [];
     classrooms: Classroom[] = [];
     users: User[] = [];
-
-    schoolsReport: School[] = [];
-    classroomsReport: Classroom[] = [];
-    usersReport: User[] = [];
 
     schoolsGraph: School[] = [];
     classroomsGraph: Classroom[] = [];
@@ -33,10 +31,6 @@ export class MarksComponent implements OnInit {
     schoolSelected;
     classroomSelected;
     userSelected;
-
-    schoolSelectedReport;
-    classroomSelectedReport;
-    userSelectedReport;
 
     schoolSelectedGraph;
     classroomSelectedGraph;
@@ -62,14 +56,20 @@ export class MarksComponent implements OnInit {
     modulesList: ModulesList = new ModulesList();
 
     idModule;
-    idStudent;
 
     evaluations: Evaluation[] = [];
 
     evals: Evaluation[] = Array<Evaluation>(this.users.length);
 
     studentsList: StudentsList = new StudentsList();
-    statusMessage = '';
+
+    imgAvatar = require('../../content/images/avatar.png');
+
+    stateSaved = 0;
+
+    evaluationDate: any;
+
+    teacher: Teacher;
 
     constructor(
         private principal: Principal,
@@ -78,39 +78,23 @@ export class MarksComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.onLoadCurrentUser();
-        this.onLoadCurrentUserReport();
+        this.principal.identity()
+            .then((account) => {
+                this.currentUser = account;
+            }).then((response) => {
+            this.services.getSchools(this.currentUser.id)
+                .subscribe((schools) => {
+                    this.schools = schools;
+                }, (error) => {
+                    console.error(JSON.parse(error.body).message);
+                });
+            this.onLoadTeacher();
+        });
         this.onLoadCurrentUserGraph();
     }
 
     onChartClick(event): void {
         console.log(event);
-    }
-
-    private onLoadCurrentUser(): void {
-        this.principal.identity()
-            .then((account) => {
-                this.currentUser = account;
-                this.services.getSchools(account.id).subscribe((schools) => {
-                    this.schools = schools;
-                }, (error) => {
-                    console.log(JSON.parse(error.body).message);
-                });
-            });
-    }
-
-    private onLoadCurrentUserReport(): void {
-        this.principal.identity().then((account) => {
-            this.currentUserReport = account;
-            this.services.getSchools(
-                account.id
-            ).subscribe(
-                (schools) => {
-                    this.schoolsReport = schools;
-                }, (error) => {
-                    console.log(JSON.parse(error.body).message);
-                });
-        });
     }
 
     private onLoadCurrentUserGraph(): void {
@@ -122,7 +106,7 @@ export class MarksComponent implements OnInit {
                 (schools) => {
                     this.schoolsGraph = schools;
                 }, (error) => {
-                    console.log(JSON.parse(error.body).message);
+                    console.error(JSON.parse(error.body).message);
                 });
         });
     }
@@ -136,7 +120,7 @@ export class MarksComponent implements OnInit {
                 this.containsData = true;
                 this.chartData = chartData as any [];
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
             }
         );
     }
@@ -151,20 +135,7 @@ export class MarksComponent implements OnInit {
             this.classrooms = classrooms;
             console.log(this.users);
         }, (error) => {
-            console.log(JSON.parse(error.body).message);
-        });
-    }
-
-    getClassroomsByCurrentUserTeacherReport(): void {
-        this.services.getClassrooms(
-            this.currentUserReport.id,
-            this.schoolSelectedReport
-        ).subscribe((classrooms) => {
-            this.userSelectedReport = undefined;
-            this.classroomSelectedReport = undefined;
-            this.classroomsReport = classrooms;
-        }, (error) => {
-            console.log(JSON.parse(error.body).message);
+            console.error(JSON.parse(error.body).message);
         });
     }
 
@@ -177,7 +148,7 @@ export class MarksComponent implements OnInit {
             this.classroomSelectedGraph = undefined;
             this.classroomsGraph = classrooms;
         }, (error) => {
-            console.log(JSON.parse(error.body).message);
+            console.error(JSON.parse(error.body).message);
         });
     }
 
@@ -194,26 +165,9 @@ export class MarksComponent implements OnInit {
             this.schoolSelected,
             this.classroomSelected)
             .then((studentsList) => {
-                if (studentsList == null) {
-                    this.statusMessage = 'Students are not presents';
-                } else {
-                    this.studentsList = studentsList;
-                }
+                this.studentsList = studentsList;
             }).catch((error) => {
-            this.statusMessage = 'Problem with the service, Please try after sometime';
             console.error(JSON.parse(error.body).message);
-        });
-    }
-
-    getStudentsUserByCurrentUserTeacherReport(): void {
-        this.services.getStudents(
-            this.currentUserReport.id,
-            this.schoolSelectedReport,
-            this.classroomSelectedReport
-        ).subscribe((user) => {
-            this.usersReport = user;
-        }, (error) => {
-            console.log(JSON.parse(error.body).message);
         });
     }
 
@@ -230,26 +184,6 @@ export class MarksComponent implements OnInit {
         });
     }
 
-    getStudentUserByCurrentUserTeacherReport(): void {
-        this.services.getStudentUserByIdUser(
-            this.userSelectedReport
-        ).subscribe((user) => {
-            this.usersReport = [];
-            this.usersReport.push(user);
-
-            this.services.getStudentByIdUser(user.id)
-                .subscribe((student) => {
-                    this.idStudent = student.id;
-                }, (error) => {
-                    console.error(JSON.parse(error.body).message);
-                }).unsubscribe();
-
-            this.getEvaluations(this.userSelectedReport);
-        }, (error) => {
-            console.log(JSON.parse(error.body).message);
-        });
-    }
-
     /**
      * Save marks
      */
@@ -261,14 +195,21 @@ export class MarksComponent implements OnInit {
             const evaluation = new Evaluation();
             evaluation.average = parseFloat(this.averages[i]);
             evaluation.comment = this.comments[i];
-            evaluation.moduleId = this.idModule;
+
+            const m = new Module();
+            m.id = this.idModule;
+            evaluation.module = m;
             evaluation.coefficient = this.modulesList.coefficients[0];
             evaluation.average = parseFloat(this.averages[i]);
-            evaluation.studentId = this.idStudent;
-            evaluation.teacherId = null;
+
+            const s = this.studentsList.students[i];
+            evaluation.student = s;
+
+            evaluation.evaluationDate = this.evaluationDate;
+
+            evaluation.teacher = this.teacher;
 
             this.evals.push(evaluation);
-            console.log(evaluation);
 
             if (this.studentsList.users.length - 1 === i) {
                 isFinished = true;
@@ -283,10 +224,20 @@ export class MarksComponent implements OnInit {
                 .subscribe((response) => {
                     if (response) {
                         this.evals = [];
+                        this.stateSaved = 1;
+                        this.resetForm();
+                        setTimeout(() => {
+                            this.stateSaved = 0;
+                        }, 2000);
                     }
                 }, (error) => {
                     console.log(JSON.parse(error.body).message);
                     this.evals = [];
+                    this.stateSaved = -1;
+                    this.resetForm();
+                    setTimeout(() => {
+                        this.stateSaved = 0;
+                    }, 2000);
                 });
         }
     }
@@ -294,11 +245,27 @@ export class MarksComponent implements OnInit {
     getEvaluations(accountCode): void {
         this.services.getEvaluationsByStudent(accountCode)
             .subscribe((evaluations) => {
-                console.log('getEvaluations' + accountCode , this.evaluations , evaluations);
                 this.evaluations = evaluations;
             }, (error) => {
-                console.log(JSON.parse(error.body).message);
+                console.error(JSON.parse(error.body).message);
             });
     }
 
+    private resetForm() {
+        this.idModule = undefined;
+        this.classroomSelected = undefined;
+        this.schoolSelected = undefined;
+        this.averages = Array<string>(this.users.length);
+        this.comments = Array<string>(this.users.length);
+        this.evaluationDate = undefined;
+    }
+
+    onLoadTeacher(): void {
+        this.services.getTeacherByIdUser(this.currentUser.id)
+            .subscribe((teacher) => {
+                this.teacher = teacher;
+            }, (error) => {
+                console.error(JSON.parse(error.body).message);
+            });
+    }
 }

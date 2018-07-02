@@ -1,58 +1,77 @@
 <mat-tab-group>
 
-    <!-- Saisie des notes -->
-    <mat-tab label="Saisie des notes">
-        <span>Saisie des notes</span>
-        <!-- Listes déroulante -->
-        <mat-form-field>
-            <mat-select name="schoolSelected" [(ngModel)]="this.schoolSelected"
-                        (ngModelChange)="getClassroomsByCurrentUserTeacher()" placeholder="Ecoles">
-                <mat-option *ngFor="let school of schools" [value]="school.id">
-                    {{ school.wording }} - {{school.city}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field *ngIf="this.schoolSelected && this.classrooms.length > 0">
-            <mat-select name="classroomSelected" [(ngModel)]="classroomSelected"
-                        (ngModelChange)="getStudentsUserByCurrentUserTeacher()" placeholder="Classes">
-                <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
-                    {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <div *ngIf="this.classroomSelected">
+    <!-- Saisie des moyennes -->
+    <mat-tab label="Saisie des moyennes">
+        <span>Saisie des moyennes</span>
+        <form #f="ngForm" (ngSubmit)="saveMarks()">
+            <!-- Listes déroulante -->
             <mat-form-field>
-                <mat-select name="Module" placeholder="Module" [(ngModel)]="this.idModule">
-                    <mat-option *ngFor="let module of this.modulesList.modules" [value]="module.id">
-                        {{ module.entitled }}
+                <mat-select name="schoolSelected" [(ngModel)]="this.schoolSelected"
+                            (ngModelChange)="getClassroomsByCurrentUserTeacher()" placeholder="Ecoles">
+                    <mat-option *ngFor="let school of schools" [value]="school.id">
+                        {{ school.wording | uppercase }} - {{school.city | uppercase}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <button type="submit" class="btn btn-warning" name="validate" (click)="saveMarks()">
-                Valider
-            </button>
-        </div>
+            <mat-form-field>
+                <mat-select name="classroomSelected" [(ngModel)]="classroomSelected"
+                            (ngModelChange)="getStudentsUserByCurrentUserTeacher()" placeholder="Classes">
+                    <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
+                        {{ classroom.entitled |uppercase }} - {{ classroom.option | uppercase }} - {{ classroom.division | uppercase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select name="Module" placeholder="Module" [(ngModel)]="this.idModule">
+                    <mat-option *ngFor="let module of this.modulesList.modules" [value]="module.id">
+                        {{ module.entitled | uppercase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <label class="form-control-label" jhiTranslate="marks.evaluationDate" for="field_evaluationDate">Date de
+                l'évaluation</label>
+                <input id="field_evaluationDate" type="datetime-local" class="col-lg-2" name="evaluationDate"
+                       [(ngModel)]="evaluationDate"
+                       required/>
+            <span [hidden]="!(f.controls.evaluationDate?.dirty && f.controls.evaluationDate?.invalid)">
+                <small class="form-text text-danger"
+                       [hidden]="!f.controls.evaluationDate?.errors?.required"
+                       jhiTranslate="entity.validation.required">
+                    This field is required.
+                </small>
+                <small class="form-text text-danger"
+                       [hidden]="!f.controls.evaluationDate?.errors?.ZonedDateTimelocal"
+                       jhiTranslate="f.validation.ZonedDateTimelocal">
+                    This field should be a date and time.
+                </small>
+            </span>
+
+            <div>
+                <button type="submit" class="btn btn-warning" name="validate">
+                    Valider
+                </button>
+            </div>
+            <br/>
+        </form>
 
         <div *ngIf="classroomSelected">
-            <div *ngIf="this.studentsList === null">
-                {{this.statusMessage }}
-            </div>
-            <table class="table table-striped tab" *ngIf="this.studentsList">
+            <table class="table table-striped tab contentTab" *ngIf="this.studentsList">
                 <thead>
                 <tr>
-                    <th scope="col"> #</th>
-                    <th scope="col">Prénom</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Moyenne</th>
-                    <th scope="col">Commentaire</th>
+                    <th scope="col"></th>
+                    <th scope="col" jhiTranslate="marks.firstName">Prénom</th>
+                    <th scope="col" jhiTranslate="marks.lastName">Nom</th>
+                    <th scope="col" jhiTranslate="marks.average">Moyenne</th>
+                    <th scope="col" jhiTranslate="marks.comment">Commentaire</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr *ngFor="let user of this.studentsList.users; let iteration = index">
-                    <td scope="row"></td>
+                <tbody *ngFor="let user of this.studentsList.users; let iteration = index" >
+                <tr>
+                    <td scope="row"><img [src]="user.imageUrl != '' ? user.imageUrl : this.imgAvatar"
+                                         class="avatar img-responsive" alt="avatar" height="100" width="100"></td>
                     <td> {{user.firstName}}</td>
                     <td> {{user.lastName}}</td>
                     <td><input type="text" name="mark" [(ngModel)]="this.averages[iteration]" id="fieldAverage"
@@ -62,80 +81,18 @@
                                   rows="2"></textarea>
                     </td>
                 </tr>
+
                 </tbody>
             </table>
         </div>
 
-    </mat-tab>
-
-    <!-- Relevé de notes -->
-    <mat-tab label="Relevé de notes">
-        <span>Relevé de notes</span>
-        <!-- Liste déroulante -->
-        <mat-form-field>
-            <mat-select name="schoolSelectedReport" [(ngModel)]="schoolSelectedReport"
-                        (ngModelChange)="getClassroomsByCurrentUserTeacherReport()" placeholder="Ecoles">
-                <mat-option *ngFor="let school of schoolsReport" [value]="school.id">
-                    {{ school.wording }} - {{school.city}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field *ngIf="schoolSelectedReport && this.classroomsReport.length > 0">
-            <mat-select name="classroomSelectedReport" [(ngModel)]="classroomSelectedReport"
-                        (ngModelChange)="getStudentsUserByCurrentUserTeacherReport()" placeholder="Classes">
-                <mat-option *ngFor="let classroom of classroomsReport" [value]="classroom.id">
-                    {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field *ngIf="classroomSelectedReport">
-            <mat-select name="userSelectedReport" [(ngModel)]="userSelectedReport"
-                        (ngModelChange)="getStudentUserByCurrentUserTeacherReport()" placeholder="Etudiants">
-                <mat-option *ngFor="let user of usersReport" [value]="user.id">
-                    {{ user.firstName }} - {{ user.lastName }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-
-        <div *ngIf="this.userSelectedReport">
-            <table class="table table-striped tab">
-                <thead>
-                <tr>
-                    <th scope="col"> #</th>
-                    <th scope="col"> Prénom</th>
-                    <th scope="col"> Nom</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let user of usersReport">
-                    <td scope="row"></td>
-                    <td>{{user.firstName}}</td>
-                    <td>{{user.lastName}}</td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="alert alert-success alertMessage" role="alert" jhiTranslate="marks.validationSuccess"
+             *ngIf="this.stateSaved === 1">
+            La validation a été enregistrée
         </div>
-
-        <div *ngIf="this.userSelectedReport && this.evaluations.length > 0 && this.evaluations !== null">
-            <table class="table table-striped tab">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Moyenne</th>
-                    <th scope="col">Commentaire</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let evaluation of this.evaluations">
-                    <td scope="row"></td>
-                    <td>{{evaluation.average}}</td>
-                    <td>{{evaluation.comment}}</td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="alert alert-danger alertMessage" role="alert" jhiTranslate="marks.validationError"
+             *ngIf="this.stateSaved === -1">
+            La validation n'a pas été enregistrée
         </div>
     </mat-tab>
 
@@ -151,9 +108,9 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field *ngIf="schoolSelectedGraph && this.classroomsGraph.length > 0">
+        <mat-form-field>
             <mat-select name="classroomSelected" [(ngModel)]="classroomSelectedGraph"
-                        (ngModelChange)="getStudentsUserByCurrentUserTeacherGraph() && this.loadChartData()"
+                        (ngModelChange)="getStudentsUserByCurrentUserTeacherGraph()"
                         placeholder="Classes">
                 <mat-option *ngFor="let classroom of classroomsGraph" [value]="classroom.id">
                     {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}

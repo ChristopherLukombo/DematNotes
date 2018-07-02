@@ -33,6 +33,7 @@ import {DematNotesSchoolReportsModule} from './school-reports/school-reports.mod
 import {DematNotesSchoolLifeModule} from './school-life/school-life.module';
 import {DematNotesResultsModule} from './results/results.module';
 import {DematNotesDialogModule} from './dialog/dialog.module';
+import {DematNotesViewSchoolReportsModule} from './viewschoolReport/viewschoolReport.module';
 
 @NgModule({
     imports: [
@@ -51,6 +52,7 @@ import {DematNotesDialogModule} from './dialog/dialog.module';
         DematNotesSchoolLifeModule,
         DematNotesResultsModule,
         DematNotesDialogModule,
+        DematNotesViewSchoolReportsModule
     ],
     declarations: [
         JhiMainComponent,

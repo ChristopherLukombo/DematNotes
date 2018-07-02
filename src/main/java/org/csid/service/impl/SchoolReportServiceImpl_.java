@@ -29,6 +29,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -98,6 +100,12 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
     @Autowired
     private SchoolReportViewMapper schoolReportViewMapper;
 
+    @Autowired
+    private ModuleRepository moduleRepository;
+
+    @Autowired
+    private TeacherRepository teacherRepository;
+
     /**
      * Generate School Report in pdf and returns it
      *
@@ -127,13 +135,17 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     private void fillSchoolReport(User user, Document document) throws Exception {
         final LocalDate currentDate = now();
+        final NumberFormat numberFormat = DecimalFormat.getInstance(new Locale("##.##"));
 
         final Student student = studentRepository.findStudentByUser(user);
         final List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(currentDate);
 
         final SchoolReport schoolReport = this.schoolReportRepository.getSchoolReportByStudentWhereYearPeriodMax(student.getId());
 
-        final Set<Evaluation> evaluations = schoolReport.getEvaluations();
+        final Set<Evaluation> evaluations = this.getEvaluationsByStudent(schoolReport.getStudent().getUser().getId())
+            .stream()
+            .map(e -> evaluationMapper.toEntity(e))
+            .collect(Collectors.toSet());
 
         final String firstNameManager = schoolReport.getManager().getUser().getFirstName();
         final String lastNameManager = schoolReport.getManager().getUser().getLastName();
@@ -164,7 +176,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         }
 
         //QR code
-        final Image img = Image.getInstance(this.generateQrCode(1L));
+        final Image img = Image.getInstance(this.generateQrCode(schoolReport.getStudent().getUser().getId()));
         cell.setColspan(1);
         cell.setPadding(5.0f);
         table.addCell(img);
@@ -184,15 +196,16 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         table.addCell(getPdfPCellCustomized("Apréciations générales", fontContent, 5, 10.0f, "center", true));
 
         for (Evaluation evaluation : evaluations) {
+            System.out.println(teacherRepository.findOne(evaluation.getTeacher().getId()).getUser().getLastName());
             //table moyennes
-            table.addCell(getPdfPCellCustomized(evaluation.getModule().getEntitled() + "\n\nM. " + evaluation.getTeacher().getUser().getLastName(), fontContent, 3, 5.0f, "left", true));
+            table.addCell(getPdfPCellCustomized(((evaluation.getModule() != null) ?  moduleRepository.findOne(evaluation.getModule().getId()).getEntitled() : "") + "\n\nM. " + ((evaluation.getTeacher()).getId() != null ? teacherRepository.findOne(evaluation.getTeacher().getId()).getUser().getLastName() : ""), fontContent, 3, 5.0f, "left", true));
             table.addCell(getPdfPCellCustomized(Double.toString(evaluation.getAverage()), null, 1, 15.0f, "center", true));
             table.addCell(getPdfPCellCustomized("\n" + (evaluation.getComment() != null ? evaluation.getComment() : "") + "\n\n", fontContent, 7, 5.0f, "left", true));
 
         }
 
         table.addCell(getPdfPCellCustomized("\nMoyenne générale\n\n\n", fontContent, 3, 5.0f, "", true));
-        table.addCell(getPdfPCellCustomized("\n" + this.getAverageFromEvaluation(user.getId()) + "\n", null, 1, 5.0f, "center", true));
+        table.addCell(getPdfPCellCustomized("\n" + numberFormat.format(this.getAverageFromEvaluation(user.getId())) + "\n", null, 1, 5.0f, "center", true));
         table.addCell(getPdfPCellCustomized(null, null, 7, 0, "", true));
 
         document.add(table);
@@ -200,8 +213,8 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         //Bloc 3 : Vie scolaire ------------------------------------------------------------
         table = initPdfPTable(9, 100);
 
-//        table.addCell(getPdfPCellCustomized("Vie scolaire\n\nMme Christine LUKOMBO", fontContent, 3, 5.0f, "left", true));
-        table.addCell(getPdfPCellCustomized("Abscence(s) :     " + schoolLifeService.getAbsences(user.getId()).size() + " Excusée(s).\n                             2 Non excusée(s).\n\nRetard(s) :             " + schoolLifeService.getDelayStudents(user.getId()).size(), fontContent, 6, 3.0f, "left", true));
+        table.addCell(getPdfPCellCustomized("Vie scolaire", fontContent, 3, 5.0f, "left", true));
+        table.addCell(getPdfPCellCustomized("Abscence(s) :     " + schoolLifeService.getAbsences(user.getId()).size() + "\n\nRetard(s) :           " + schoolLifeService.getDelayStudents(user.getId()).size(), fontContent, 6, 3.0f, "left", true));
 
         document.add(table);
 
@@ -294,11 +307,11 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         return table;
     }
 
-    private String generateQrCode(Long idStudent) {
+    private String generateQrCode(Long idUser) {
         String img = null;
 
         try {
-            String data = "http://localhost:8080/";
+            String data = "http://localhost:9000/viewschoolReport/" + idUser;
             int size = 50;
 
             // encode
@@ -537,13 +550,11 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         for (AssignmentYearPeriod assignmentYearPeriod : assignmentYearPeriods) {
             if (assignmentYearPeriod.getSchool().equals(school)) {
                 if (assignmentYearPeriod.getClassrooms().contains(classroom)) {
-
                     for (YearPeriod y : assignmentYearPeriod.getYearPeriods()) {
-                        if (y.getEndDate().isBefore(periodDate) || y.getEndDate().equals(periodDate)) {
+                        if (y.getEndDate().isBefore(periodDate) || y.getEndDate().equals(periodDate) || y.getEndDate().isAfter(periodDate)) {
                             yearPeriod = y;
                         }
                     }
-
                 }
             }
         }

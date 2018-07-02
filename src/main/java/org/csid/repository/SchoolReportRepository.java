@@ -14,6 +14,6 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface SchoolReportRepository extends JpaRepository<SchoolReport, Long> {
 
-    @Query(value = "select * from school_report inner join year_period on school_report.year_period_id=year_period.id where student_id=:idStudent order by end_date desc limit 1;", nativeQuery = true)
+    @Query(value = "select * from school_report inner join year_period on school_report.year_period_id=year_period.id where student_id=:idStudent order by creation_date desc,end_date desc,school_report.id desc  limit 1;", nativeQuery = true)
     SchoolReport getSchoolReportByStudentWhereYearPeriodMax(@Param("idStudent") Long idStudent);
 }

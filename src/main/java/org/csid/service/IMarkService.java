@@ -81,4 +81,10 @@ public interface IMarkService {
      */
     MarksListDTO saveEvaluations(MarksListDTO marksListDTO) throws Exception;
 
+    /**
+     * Returns TeacherByUser
+     * @param idUser
+     * @return Teacher
+     */
+    TeacherDTO getTeacherByIdUser(Long idUser);
 }

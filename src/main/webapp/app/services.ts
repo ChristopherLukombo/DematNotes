@@ -22,6 +22,7 @@ import {StudentsList} from './marks/studentsList.model';
 import {ModulesList} from './marks/modulesList.model';
 import {DelayStudentSearch} from './school-life/model.delayStudentSearch';
 import {SchoolReportList} from './school-reports/model.schoolReportList';
+import {Teacher} from './entities/teacher';
 
 @Injectable()
 export class Services {
@@ -86,6 +87,15 @@ export class Services {
     }
 
     /**
+     * Returns the teacher according User ID
+     * @param idUser
+     * @returns {Observable<Teacher>}
+     */
+    getTeacherByIdUser(idUser): Observable<Student> {
+        return this.http.get<Teacher>(this.resourceUrl + '/marks/getTeacherByIdUser/' + `${idUser}`);
+    }
+
+    /**
      * Returns the student according the teacher's User ID
      * @param idUser
      * @returns {Observable<User>}
@@ -102,7 +112,20 @@ export class Services {
      * @returns {Observable<MarksList>}
      */
     saveEvaluations(marksList: MarksList) {
-        return this.http.post<MarksList>(this.resourceUrl + '/marks/save/evaluations', marksList);
+        return this.http.post<MarksList>(this.resourceUrl + '/marks/save/evaluations', this.convertMarkList(marksList));
+    }
+
+    /**
+     * Convert a MarksList to a JSON which can be sent to the server.
+     */
+    private convertMarkList(marksList: MarksList): MarksList {
+        const copy: MarksList = Object.assign({}, marksList);
+
+        for (let i = 0; i < copy.evaluations.length; i++) {
+            copy.evaluations[i].evaluationDate = this.dateUtils.toDate(copy.evaluations[i].evaluationDate);
+        }
+
+        return copy;
     }
 
     /**

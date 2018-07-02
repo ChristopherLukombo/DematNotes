@@ -50,6 +50,9 @@ public class MarkServiceImpl implements IMarkService {
     private TeacherRepository teacherRepository;
 
     @Autowired
+    private TeacherMapper teacherMapper;
+
+    @Autowired
     private SchoolMapper schoolMapper;
 
     @Autowired
@@ -85,6 +88,9 @@ public class MarkServiceImpl implements IMarkService {
     @Autowired
     private StudentsViewMapper studentsViewMapper;
 
+    @Autowired
+    private ModuleRepository moduleRepository;
+
     /**
      * Returns schools by idUser
      *
@@ -107,7 +113,7 @@ public class MarkServiceImpl implements IMarkService {
 
             return schoolDTOs;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of schools " + e.getMessage());
+            LOGGER.error("Error during collecting of schools ", e);
             throw new Exception("Error during collecting of schools");
         }
     }
@@ -135,7 +141,7 @@ public class MarkServiceImpl implements IMarkService {
 
             return classroomDTOs;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of classrooms " + e.getMessage());
+            LOGGER.error("Error during collecting of classrooms ", e);
             throw new Exception("Error during collecting of classrooms");
         }
     }
@@ -169,7 +175,7 @@ public class MarkServiceImpl implements IMarkService {
 
             return userDTOs;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of users " + e.getMessage());
+            LOGGER.error("Error during collecting of users ", e);
             throw new Exception("Error during collecting of users");
         }
     }
@@ -210,7 +216,7 @@ public class MarkServiceImpl implements IMarkService {
 
             return studentsViewMapper.mapToDTO(studentsView);
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of students " + e.getMessage());
+            LOGGER.error("Error during collecting of students ", e);
             throw new Exception("Error during collecting of students");
         }
     }
@@ -230,7 +236,7 @@ public class MarkServiceImpl implements IMarkService {
 
             return studentsMap;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of students " + e.getMessage());
+            LOGGER.error("Error during collecting of students ", e);
             throw new Exception("Error during collecting of students");
         }
     }
@@ -252,7 +258,7 @@ public class MarkServiceImpl implements IMarkService {
 
             return userDTOs;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of users " + e.getMessage());
+            LOGGER.error("Error during collecting of users ", e);
             throw new Exception("Error during collecting of users");
         }
     }
@@ -286,7 +292,7 @@ public class MarkServiceImpl implements IMarkService {
         try {
             return userMapper.userToUserDTO(userRepository.findOne(idUser));
         } catch (Exception e) {
-            LOGGER.error("Error during getting of user " + e.getMessage());
+            LOGGER.error("Error during getting of user ", e);
             throw new Exception("Error during getting of user");
         }
     }
@@ -358,13 +364,13 @@ public class MarkServiceImpl implements IMarkService {
 
             return yearPeriods;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of yearPeriod " + e.getMessage());
+            LOGGER.error("Error during collecting of yearPeriod ", e);
             throw new Exception("Error during collecting of yearPeriod");
         }
     }
 
     /**
-     * Returns Modules with coefficieny by teacher
+     * Returns Modules with coefficients by teacher
      *
      * @param userId
      * @param schoolId
@@ -395,7 +401,7 @@ public class MarkServiceImpl implements IMarkService {
 
             return modulesViewMapper.mapToDTO(modulesView);
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of modules " + e.getMessage());
+            LOGGER.error("Error during collecting of modules ", e);
             throw new Exception("Error during collecting of modules");
         }
     }
@@ -417,10 +423,10 @@ public class MarkServiceImpl implements IMarkService {
 
             final List<Evaluation> evaluations = marksList.getEvaluations();
 
-            evaluations.stream().forEach(m -> m.setEvaluationDate(ZonedDateTime.now()));
-
             for (Evaluation evaluation : evaluations) {
                 if (evaluation.getAverage() != null) {
+                    evaluation.setModule(moduleRepository.findOne(evaluation.getModule().getId()));
+                    evaluation.setStudent(studentRepository.findOne(evaluation.getStudent().getId()));
                     evaluationRepository.save(evaluation);
                 }
             }
@@ -428,9 +434,20 @@ public class MarkServiceImpl implements IMarkService {
 
             return marksListMapper.mapToDTO(marksList);
         } catch (Exception e) {
-            LOGGER.error("Error during saving of evaluations " + e.getMessage());
+            LOGGER.error("Error during saving of evaluations ", e);
             throw new Exception("Error during saving of evaluations");
         }
+    }
+
+    /**
+     * Returns TeacherByUser
+     * @param idUser
+     * @return Teacher
+     */
+    @Override
+    public TeacherDTO getTeacherByIdUser(Long idUser) {
+        User user = userRepository.findOne(idUser);
+        return teacherMapper.toDto(teacherRepository.findByUser(user));
     }
 }
 

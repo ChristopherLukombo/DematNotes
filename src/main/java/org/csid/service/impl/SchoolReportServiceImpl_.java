@@ -11,6 +11,7 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import io.github.jhipster.config.JHipsterConstants;
 import org.csid.domain.*;
 import org.csid.domain.non.persistant.SchoolReportView;
 import org.csid.repository.*;
@@ -22,6 +23,7 @@ import org.csid.service.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,6 +107,9 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     @Autowired
     private TeacherRepository teacherRepository;
+
+    @Autowired
+    private Environment env;
 
     /**
      * Generate School Report in pdf and returns it
@@ -214,7 +219,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         table = initPdfPTable(9, 100);
 
         table.addCell(getPdfPCellCustomized("Vie scolaire", fontContent, 3, 5.0f, "left", true));
-        table.addCell(getPdfPCellCustomized("Abscence(s) :     " + schoolLifeService.getAbsences(user.getId()).size() + "\n\nRetard(s) :           " + schoolLifeService.getDelayStudents(user.getId()).size(), fontContent, 6, 3.0f, "left", true));
+        table.addCell(getPdfPCellCustomized("Absence(s) :     " + schoolLifeService.getAbsences(user.getId()).size() + "\n\nRetard(s) :           " + schoolLifeService.getDelayStudents(user.getId()).size(), fontContent, 6, 3.0f, "left", true));
 
         document.add(table);
 
@@ -311,7 +316,15 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         String img = null;
 
         try {
-            String data = "http://localhost:9000/viewschoolReport/" + idUser;
+            String data = null;
+            Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
+            if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)) {
+                data = "http://localhost:9000/viewschoolReport/" + idUser;
+            }
+            if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
+                data = "http://dematnotes-0.1/viewschoolReport/" + idUser;
+            }
+
             int size = 50;
 
             // encode

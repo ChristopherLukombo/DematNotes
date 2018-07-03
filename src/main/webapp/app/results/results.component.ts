@@ -38,7 +38,9 @@ export class ResultsComponent implements OnInit {
         }).then((response) => {
             // As soon as we know current User
             this.getSchools(this.currentUser);
-            this.getResults();
+            if (this.currentUser.authorities.includes('ROLE_STUDENT')) {
+                this.getResults();
+            }
         });
     }
 

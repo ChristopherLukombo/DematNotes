@@ -27,7 +27,7 @@ public class SchoolReportController {
     @RequestMapping(value = "/schoolReport/export/{accountCode}", method = RequestMethod.GET, produces = "application/pdf")
     public ResponseEntity<byte[]> downloadSchoolReport(final HttpServletResponse response, @PathVariable final Long accountCode) throws Exception {
 
-        LOGGER.info("Call API Service export");
+            LOGGER.info("Call API Service export");
 
         byte[] pdfData;
         try {
@@ -56,11 +56,6 @@ public class SchoolReportController {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during schools collecting");
         }
 
-        if (schools == null) {
-            LOGGER.info("Call API getSchoolsByManager : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
         return new ResponseEntity<>(schools, HttpStatus.OK);
     }
 
@@ -77,11 +72,6 @@ public class SchoolReportController {
         } catch (Exception e) {
             LOGGER.error("Error during classrooms collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during classrooms collecting");
-        }
-
-        if (classrooms == null) {
-            LOGGER.info("Call API getClassroomsByManager : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(classrooms, HttpStatus.OK);
@@ -102,33 +92,7 @@ public class SchoolReportController {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during students collecting");
         }
 
-        if (userDTOS == null) {
-            LOGGER.info("Call API getStudentsByManager : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/schoolReport/student/{accountCode}")
-    public ResponseEntity<UserDTO> getStudentByManager(@PathVariable final Long accountCode) throws Exception {
-        LOGGER.info("Call API service getStudentByManager ...");
-
-        UserDTO userDTO;
-
-        try {
-            userDTO = schoolReportService.getStudentByManager(accountCode);
-        } catch (Exception e) {
-            LOGGER.error("Error during students collecting : ", e);
-            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during student collecting");
-        }
-
-        if (userDTO == null) {
-            LOGGER.info("Call API getStudentByManager : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/schoolReport/save", method = RequestMethod.POST)
@@ -142,11 +106,6 @@ public class SchoolReportController {
         } catch (Exception e) {
             LOGGER.error("Error during schoolReport saving : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during schoolReport saving");
-        }
-
-        if (schoolReport == null) {
-            LOGGER.info("Call API saveSchoolReport : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(schoolReport, HttpStatus.OK);
@@ -165,11 +124,6 @@ public class SchoolReportController {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during Evaluations collecting");
         }
 
-        if (evaluationDTOS == null) {
-            LOGGER.info("Call API getEvaluationByStudent : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
         return new ResponseEntity<>(evaluationDTOS, HttpStatus.OK);
     }
 
@@ -186,16 +140,11 @@ public class SchoolReportController {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during schoolReportsList collecting");
         }
 
-        if (schoolReportList == null) {
-            LOGGER.info("Call API schoolReportsList : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
         return new ResponseEntity<>(schoolReportList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/schoolReport/manager", method = RequestMethod.POST)
-    public ResponseEntity<ManagerDTO> findByUser(@RequestBody UserDTO userDTO) throws Exception {
+    public ResponseEntity<ManagerDTO> findManagerByUser(@RequestBody UserDTO userDTO) throws Exception {
         LOGGER.info("Call API service findByUser ...");
 
         ManagerDTO managerDTO;
@@ -207,13 +156,17 @@ public class SchoolReportController {
             throw new Exception("Error during collecting of manager");
         }
 
-
-        if (managerDTO == null) {
-            LOGGER.info("Call API findByUser : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
         return new ResponseEntity<>(managerDTO, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/schoolReport/isAvailable/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> isAvailable(@PathVariable Long userId) {
+        LOGGER.info("Call API service isAvailable ...");
+
+        boolean isAvailable = this.schoolReportService.schoolReportIsAvailable(userId);
+
+        return new ResponseEntity<>(isAvailable, HttpStatus.OK);
+    }
+
 
 }

@@ -1,0 +1,18 @@
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (1651, 'compliments', 'bien', '2018-06-26', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (1801, 'compliments', 'bien', '2018-06-26', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (2201, null, null, '2018-06-27', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (4351, 'test', 'test', '2018-06-28', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (6301, 'félicitations', 'execellent', '2018-07-01', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (6302, 'félicitations', 'execellent', '2018-07-01', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (6401, null, null, '2018-07-01', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (6402, 'compliments', 'bien', '2018-07-01', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (6501, 'test', 'test', '2018-07-01', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (6502, 'bien', 'execellent', '2018-07-01', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (6503, null, null, '2018-07-01', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (7101, null, null, '2018-07-02', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (7151, 'bien', 'fff', '2018-07-02', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (7152, 'bien', 'fff', '2018-07-02', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (7251, 'scs', 'ccs', '2018-07-02', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (7351, 'frf', 'f', '2018-07-02', 1151, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (7401, 'ffrfr', 'frf', '2018-07-02', 1152, 1001, 1051);
+INSERT INTO public.school_report (id, grade_aword, jhi_comment, creation_date, year_period_id, student_id, manager_id) VALUES (10451, 'compliments', 'très bien', '2018-07-03', 1152, 27, 24);

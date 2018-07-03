@@ -2,7 +2,6 @@
     <!-- Vue teacher -->
     <mat-tab label="Résultats" cdkScrollable style="overflow-y: auto;overflow-x: auto; height: 200px"
              *jhiHasAnyAuthority="['ROLE_TEACHER','ROLE_ADMIN']">
-        <span>Résultats</span>
         <!-- Listes déroulante -->
         <mat-form-field>
             <mat-select name="schoolSelected" [(ngModel)]="schoolIndexSelected"
@@ -37,7 +36,7 @@
             </div>
             <mat-grid-tile>
                 <div class="thumbnail">
-                    <img [src]="this.results.user.imageUrl != '' ? this.currentUser.imageUrl : this.imgAvatar"
+                    <img [src]="this.results.user.imageUrl != '' && this.results.user.imageUrl != null ? this.results.user.imageUrl : this.imgAvatar"
                          class="img-responsive Lights" alt="avatar" height="100%" width="100%">
                 </div>
             </mat-grid-tile>
@@ -64,7 +63,6 @@
     <!-- Vue student -->
     <mat-tab label="Résultats" cdkScrollable style="overflow-y: auto;overflow-x: auto; height: 200px"
              *jhiHasAnyAuthority="['ROLE_STUDENT','ROLE_ADMIN']">
-        <span>Résultats</span>
 
         <mat-grid-list cols="2" rowHeight="4:3" *ngIf="this.resultsStudent.user != null">
             <div class="caption">
@@ -73,7 +71,7 @@
             <mat-grid-tile>
                 <div class="thumbnail">
                     <img
-                        [src]="this.resultsStudent.user.imageUrl != '' ? this.resultsStudent.user.imageUrl : this.imgAvatar"
+                        [src]="this.resultsStudent.user.imageUrl != '' && this.resultsStudent.user.imageUrl != null ? this.resultsStudent.user.imageUrl : this.imgAvatar"
                         class="img-responsive Lights" alt="avatar" height="100%" width="100%">
                 </div>
             </mat-grid-tile>

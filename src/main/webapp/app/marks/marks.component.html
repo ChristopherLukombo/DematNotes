@@ -18,7 +18,8 @@
                 <mat-select name="classroomSelected" [(ngModel)]="classroomSelected"
                             (ngModelChange)="getStudentsUserByCurrentUserTeacher()" placeholder="Classes">
                     <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
-                        {{ classroom.entitled |uppercase }} - {{ classroom.option | uppercase }} - {{ classroom.division | uppercase }}
+                        {{ classroom.entitled |uppercase }} - {{ classroom.option | uppercase }} - {{ classroom.division
+                        | uppercase }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -33,9 +34,9 @@
 
             <label class="form-control-label" jhiTranslate="marks.evaluationDate" for="field_evaluationDate">Date de
                 l'évaluation</label>
-                <input id="field_evaluationDate" type="datetime-local" class="col-lg-2" name="evaluationDate"
-                       [(ngModel)]="evaluationDate"
-                       required/>
+            <input id="field_evaluationDate" type="datetime-local" class="col-lg-2" name="evaluationDate"
+                   [(ngModel)]="evaluationDate"
+                   required/>
             <span [hidden]="!(f.controls.evaluationDate?.dirty && f.controls.evaluationDate?.invalid)">
                 <small class="form-text text-danger"
                        [hidden]="!f.controls.evaluationDate?.errors?.required"
@@ -68,12 +69,13 @@
                     <th scope="col" jhiTranslate="marks.comment">Commentaire</th>
                 </tr>
                 </thead>
-                <tbody *ngFor="let user of this.studentsList.users; let iteration = index" >
+                <tbody *ngFor="let user of this.studentsList.users; let iteration = index">
                 <tr>
-                    <td scope="row"><img [src]="user.imageUrl != '' ? user.imageUrl : this.imgAvatar"
-                                         class="avatar img-responsive" alt="avatar" height="100" width="100"></td>
-                    <td> {{user.firstName}}</td>
-                    <td> {{user.lastName}}</td>
+                    <td scope="row"><img
+                        [src]="user.imageUrl != '' && user.imageUrl != null ? user.imageUrl : this.imgAvatar"
+                        class="avatar img-responsive" alt="avatar" height="100" width="100"></td>
+                    <td> {{user.firstName | uppercase}}</td>
+                    <td> {{user.lastName | uppercase}}</td>
                     <td><input type="text" name="mark" [(ngModel)]="this.averages[iteration]" id="fieldAverage"
                                maxlength="2">
                     </td>
@@ -103,7 +105,7 @@
             <mat-select name="schoolSelected" [(ngModel)]="schoolSelectedGraph"
                         (ngModelChange)="getClassroomsByCurrentUserTeacherGraph()" placeholder="Ecoles">
                 <mat-option *ngFor="let school of schoolsGraph" [value]="school.id">
-                    {{ school.wording }} - {{school.city}}
+                    {{ school.wording | uppercase }} - {{school.city | uppercase}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -113,7 +115,8 @@
                         (ngModelChange)="getStudentsUserByCurrentUserTeacherGraph()"
                         placeholder="Classes">
                 <mat-option *ngFor="let classroom of classroomsGraph" [value]="classroom.id">
-                    {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
+                    {{ classroom.entitled | uppercase }} - {{ classroom.option | uppercase }} - {{ classroom.division |
+                    uppercase }}
                 </mat-option>
             </mat-select>
         </mat-form-field>

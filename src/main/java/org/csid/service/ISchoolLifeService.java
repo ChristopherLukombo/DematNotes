@@ -72,7 +72,7 @@ public interface ISchoolLifeService {
      * Returns a Map which contains type of file and the file
      *
      * @param idDocument
-     * @return Map<String   ,   File>
+     * @return Map<String ,   File>
      */
     Map<String, File> getFile(final Long idDocument) throws Exception;
 

@@ -18,13 +18,14 @@ export class SettingsComponent implements OnInit {
     selectedFiles: FileList;
     currentFileUpload: File;
     @Input() image: String;
+    imgAvatar = require('../../../content/images/avatar.png');
 
     constructor(
         private account: AccountService,
         private principal: Principal,
         private languageService: JhiLanguageService,
         private languageHelper: JhiLanguageHelper,
-        private settingsService: SettingsService
+        private settingsService: SettingsService,
     ) {
     }
 
@@ -76,11 +77,10 @@ export class SettingsComponent implements OnInit {
     upload() {
         this.principal.identity().then((account) => {
             this.currentFileUpload = this.selectedFiles.item(0);
-            if (! this.checkExtension(this.currentFileUpload)) {
+            if (!this.checkExtension(this.currentFileUpload)) {
                 alert('File not valid !');
             } else {
-                this.settingsService.uploadImage(this.currentFileUpload, (account != null) ? account.id : 1).
-                subscribe((event) => {
+                this.settingsService.uploadImage(this.currentFileUpload, (account != null) ? account.id : 1).subscribe((event) => {
                     if (event instanceof HttpResponse) {
                         console.log('File is completely uploaded!');
                         this.image = this.principal.getImageUrl();

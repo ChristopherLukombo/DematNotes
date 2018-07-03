@@ -10,7 +10,7 @@
                             (ngModelChange)="this.getClassrooms()"
                             placeholder="Ecoles">
                     <mat-option *ngFor="let school of this.schools" [value]="school.id">
-                        {{ school.wording }} - {{school.city}}
+                        {{ school.wording | uppercase }} - {{school.city | uppercase}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -20,7 +20,8 @@
                             (ngModelChange)="this.getStudents()"
                             placeholder="Classes">
                     <mat-option *ngFor="let classroom of this.classrooms" [value]="classroom.id">
-                        {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
+                        {{ classroom.entitled | uppercase }} - {{ classroom.option | uppercase }} - {{
+                        classroom.division | uppercase }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -29,7 +30,7 @@
                 <mat-select name="moduleSelected" [(ngModel)]="this.moduleSelected" #module="ngModel"
                             placeholder="Modules" required>
                     <mat-option *ngFor="let module of this.modules" [value]="module.id">
-                        {{ module.entitled }}
+                        {{ module.entitled | uppercase }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -90,8 +91,9 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let user of users">
-                        <td scope="row"><img [src]="user.imageUrl != '' ? user.imageUrl : this.imgAvatar"
-                                             class="avatar img-responsive" alt="avatar" height="100" width="100"></td>
+                        <td scope="row"><img
+                            [src]="user.imageUrl != '' && user.imageUrl != null  ? user.imageUrl : this.imgAvatar"
+                            class="avatar img-responsive" alt="avatar" height="100" width="100"></td>
                         <td>{{user.firstName | uppercase}}</td>
                         <td>{{user.lastName | uppercase}}</td>
                         <td>
@@ -135,7 +137,8 @@
             </thead>
             <tbody>
             <tr>
-                <td scope="row"><img [src]="this.currentUser.imageUrl != '' ? this.currentUser.imageUrl : this.imgAvatar"
+                <td scope="row"><img
+                    [src]="this.currentUser.imageUrl != '' && this.currentUser.imageUrl != null ? this.currentUser.imageUrl : this.imgAvatar"
                     class="avatar img-responsive" alt="avatar" height="100" width="100"></td>
                 <td>{{this.currentUser.firstName | uppercase}}</td>
                 <td>{{this.currentUser.lastName | uppercase}}</td>

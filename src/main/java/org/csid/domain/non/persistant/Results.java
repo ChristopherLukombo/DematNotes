@@ -14,6 +14,11 @@ public class Results {
         this.evaluations = evaluations;
     }
 
+    public Results() {
+    }
+
+
+
     public User getUser() {
         return user;
     }

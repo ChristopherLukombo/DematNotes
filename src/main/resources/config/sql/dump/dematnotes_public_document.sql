@@ -1,0 +1,3 @@
+INSERT INTO public.document (id, entitled, jhi_type, visible, url, student_id) VALUES (4401, 'bulletin (2).pdf', 'application/pdf', true, '1001/bulletin (2).pdf', 1001);
+INSERT INTO public.document (id, entitled, jhi_type, visible, url, student_id) VALUES (8501, 'g147.png', 'image/png', true, '8/g147.png', 8);
+INSERT INTO public.document (id, entitled, jhi_type, visible, url, student_id) VALUES (10251, 'g147.png', 'image/png', true, '27/g147.png', 27);

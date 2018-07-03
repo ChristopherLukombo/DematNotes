@@ -1,0 +1,1 @@
+INSERT INTO public.school_year (id, start_date, end_date) VALUES (1301, '2017-09-01', '2018-07-22');

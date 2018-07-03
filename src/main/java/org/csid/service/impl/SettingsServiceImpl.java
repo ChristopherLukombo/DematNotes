@@ -2,9 +2,9 @@ package org.csid.service.impl;
 
 import com.jcraft.jsch.*;
 import org.csid.domain.User;
+import org.csid.domain.non.persistant.UserSFTP;
 import org.csid.repository.UserRepository;
 import org.csid.service.ISettingsService;
-import org.csid.domain.non.persistant.UserSFTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
 
 @Service("ISettingsService")
 public class SettingsServiceImpl implements ISettingsService {
@@ -31,6 +31,19 @@ public class SettingsServiceImpl implements ISettingsService {
     @Value("${base.url.file}")
     private String baseUrlFile;
 
+    @Value("${sftp.host}")
+    private String sftpHost;
+
+    @Value("${sftp.port}")
+    private String sftpPort;
+
+    @Value("${sftp.user}")
+    private String sftpUser;
+
+    @Value("${sftp.pass}")
+    private String sftpPass;
+
+
     @Autowired
     private UserRepository userRepository;
 
@@ -40,12 +53,17 @@ public class SettingsServiceImpl implements ISettingsService {
 
     /**
      * Stores a image
+     *
      * @param file
      * @param idUser
      */
     @Override
     public void store(MultipartFile file, Long idUser) throws Exception {
-        UserSFTP userSFTP = null;
+        UserSFTP userSFTP = new UserSFTP();
+        userSFTP.setUsername(sftpUser);
+        userSFTP.setPassword(sftpPass);
+        userSFTP.setPort(Integer.parseInt(sftpPort));
+        userSFTP.setServer(sftpHost);
 
         final Path rootLocation = Paths.get(path + "/settings/" + idUser);
 
@@ -55,7 +73,7 @@ public class SettingsServiceImpl implements ISettingsService {
 
         final File fileTmp = new File(rootLocation + "/" + file.getOriginalFilename());
 
-        if(fileTmp.exists()) {
+        if (fileTmp.exists()) {
             FileSystemUtils.deleteRecursively(fileTmp);
 //            fileTmp.delete();
         }
@@ -70,35 +88,11 @@ public class SettingsServiceImpl implements ISettingsService {
             throw new RuntimeException("FAIL!");
         }
 
-        Scanner scanner = new Scanner(new File(".sftp.ser"));
-
-        try {
-            userSFTP = new UserSFTP();
-            userSFTP.setUsername(scanner.next());
-            userSFTP.setPassword(scanner.next());
-            userSFTP.setPort(Integer.parseInt(scanner.next()));
-            userSFTP.setServer(scanner.next());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-
-        try {
-            final File f = new File(".sftp.ser");
-            final ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-            userSFTP = (UserSFTP) ois.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-        String SFTPHOST =  userSFTP.getServer(); // SFTP Host Name or SFTP Host IP Address
+        String SFTPHOST = userSFTP.getServer(); // SFTP Host Name or SFTP Host IP Address
         int SFTPPORT = userSFTP.getPort(); // SFTP Port Number
         String SFTPUSER = userSFTP.getUsername(); // User Name
         String SFTPPASS = userSFTP.getPassword(); // Password
+
         String SFTPWORKINGDIR = "/var/www/html/settings"; // Source Directory on SFTP server
         String LOCALDIRECTORY = path + "/settings/" + idUser; // Local Target Directory
 
@@ -130,7 +124,7 @@ public class SettingsServiceImpl implements ISettingsService {
                 channelSftp.mkdir("" + idUser);
             }
 
-            recursiveFolderUpload(LOCALDIRECTORY,SFTPWORKINGDIR);
+            recursiveFolderUpload(LOCALDIRECTORY, SFTPWORKINGDIR);
 
         } catch (Exception ex) {
             LOGGER.error("Error during connexion " + ex.getMessage());
@@ -181,7 +175,7 @@ public class SettingsServiceImpl implements ISettingsService {
                     channelSftp.mkdir(sourceFile.getName());
                 }
 
-                for (File f: files) {
+                for (File f : files) {
                     recursiveFolderUpload(f.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
                 }
 
@@ -192,6 +186,7 @@ public class SettingsServiceImpl implements ISettingsService {
 
     /**
      * Returns File in String
+     *
      * @param idUser
      * @return String
      */
@@ -200,5 +195,4 @@ public class SettingsServiceImpl implements ISettingsService {
         final User user = userRepository.findOne(idUser);
         return user.getImageUrl();
     }
-
 }

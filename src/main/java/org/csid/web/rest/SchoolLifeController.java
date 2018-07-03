@@ -1,6 +1,5 @@
 package org.csid.web.rest;
 
-import org.csid.domain.DelayStudent;
 import org.csid.service.ISchoolLifeService;
 import org.csid.service.dto.*;
 import org.slf4j.Logger;
@@ -34,13 +33,8 @@ public class SchoolLifeController {
         try {
             absenceDTOS = schoolLifeService.getAbsences(accountCode);
         } catch (Exception e) {
-            LOGGER.error("Error during absences collecting : " + e.getMessage());
+            LOGGER.error("Error during absences collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during absences collecting");
-        }
-
-        if (absenceDTOS == null) {
-            LOGGER.info("Call API getAbsences : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(absenceDTOS, HttpStatus.OK);
@@ -55,13 +49,8 @@ public class SchoolLifeController {
         try {
             delayStudentDTOS = schoolLifeService.getDelayStudents(accountCode);
         } catch (Exception e) {
-            LOGGER.error("Error during delays collecting : " + e.getMessage());
+            LOGGER.error("Error during delays collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during delays collecting");
-        }
-
-        if (delayStudentDTOS == null) {
-            LOGGER.info("Call API getDelayStudents : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(delayStudentDTOS, HttpStatus.OK);
@@ -79,11 +68,6 @@ public class SchoolLifeController {
         } catch (Exception e) {
             LOGGER.error("Error during modules collecting : " + e.getMessage());
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during modules collecting");
-        }
-
-        if (moduleDTOS == null) {
-            LOGGER.info("Call API getModules : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(moduleDTOS, HttpStatus.OK);
@@ -136,8 +120,8 @@ public class SchoolLifeController {
             this.schoolLifeService.store(file, accountCode);
             message = "Successfully uploaded " + file.getOriginalFilename() + "!";
         } catch (Exception e) {
-            LOGGER.error(HttpStatus.INTERNAL_SERVER_ERROR + " FAIL to upload " + file.getOriginalFilename() + "!" + e.getMessage());
-            throw new RuntimeException(HttpStatus.INTERNAL_SERVER_ERROR + " FAIL to upload " + file.getOriginalFilename() + "!" + e.getMessage());
+            LOGGER.error(HttpStatus.INTERNAL_SERVER_ERROR + " FAIL to upload " + file.getOriginalFilename() + "!", e);
+            throw new RuntimeException(HttpStatus.INTERNAL_SERVER_ERROR + " FAIL to upload " + file.getOriginalFilename() + "!", e);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(message);
@@ -152,7 +136,7 @@ public class SchoolLifeController {
         try {
             documentDTOS = this.schoolLifeService.getAllFiles(accountCode);
         } catch (Exception e) {
-            LOGGER.error("Error during files uploading : " + e.getMessage());
+            LOGGER.error("Error during files uploading : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during files uploading");
         }
 
@@ -174,7 +158,7 @@ public class SchoolLifeController {
             file =  entry.getValue(); // File
 
         } catch(final Exception e) {
-            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during retrieving file : " + e.getMessage());
+            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during retrieving file : ", e);
         }
 
         response.setHeader("Content-Disposition", "attachment; filename=" + file);
@@ -200,12 +184,12 @@ public class SchoolLifeController {
     public ResponseEntity<Boolean> deleteFile(@PathVariable final Long idDocument) throws Exception {
         LOGGER.info("Call API Service deleteDocument");
 
-        Boolean isDeleted;
+        boolean isDeleted;
 
         try {
             isDeleted = schoolLifeService.deleteFile(idDocument);
         } catch (Exception e) {
-            LOGGER.error("Error during file deleting : " + e.getMessage());
+            LOGGER.error("Error during file deleting : " + e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during file deleting");
         }
 

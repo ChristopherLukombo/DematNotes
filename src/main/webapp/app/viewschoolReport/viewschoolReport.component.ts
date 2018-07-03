@@ -13,7 +13,6 @@ export class ViewschoolReportComponent implements OnInit {
 
     userIndexSelected;
 
-    imgAvatar = require('../../content/images/avatar.png');
     idUser: number;
 
     constructor(

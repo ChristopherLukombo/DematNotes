@@ -1,10 +1,11 @@
 package org.csid.service;
 
-import org.csid.domain.*;
+import org.csid.domain.Classroom;
+import org.csid.domain.School;
+import org.csid.domain.YearPeriod;
 import org.csid.service.dto.*;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -44,13 +45,6 @@ public interface ISchoolReportService {
     List<UserDTO> getStudentsByManager(Long accountCode, Long idSchool, Long idClassroom) throws Exception;
 
     /**
-     * Returns student for a manager according to accountCode
-     * @param accountCode
-     * @return entity
-     */
-    UserDTO getStudentByManager(Long accountCode) throws Exception;
-
-    /**
      * Saves a schoolReport
      * @param schoolReportDTO
      * @return entity
@@ -74,7 +68,7 @@ public interface ISchoolReportService {
     /**
      * Returns average total for a student
      * @param accountCode
-     * @return String
+     * @return double
      */
     double getAverageFromEvaluation(final Long accountCode);
 
@@ -92,7 +86,7 @@ public interface ISchoolReportService {
      * @param accountCode
      * @param start
      * @param end
-     * @return
+     * @return double
      */
     double getAverageFromEvaluationByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end) throws Exception;
 
@@ -102,4 +96,11 @@ public interface ISchoolReportService {
      * @return entity
      */
     SchoolReportList getSchoolReportsByStudent(Long accountCode);
+
+    /**
+     * Returns true if schoolReport is available
+     * @param userId
+     * @return boolean
+     */
+    boolean schoolReportIsAvailable(Long userId);
 }

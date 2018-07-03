@@ -1,0 +1,2 @@
+INSERT INTO public.school (id, wording, phone_number, address, city, postal_code, school_level) VALUES (1201, 'Lycée René Descartes', '0121334497', 'dfdfdf', 'Paris', '93100', 'public');
+INSERT INTO public.school (id, wording, phone_number, address, city, postal_code, school_level) VALUES (8951, 'L''école de France', '0121334497', 'dfdfdf', 'Paris', '93100', 'public');

@@ -51,12 +51,6 @@ public interface IMarkService {
     StudentDTO getStudentByIdUser(Long idUser) throws Exception;
 
     /**
-     * @param idUser
-     * @return list of entities
-     */
-    UserDTO getUserByIdUser(Long idUser) throws Exception;
-
-    /**
      * Returns a list of chartdata
      * @param idSchool
      * @param idClassroom

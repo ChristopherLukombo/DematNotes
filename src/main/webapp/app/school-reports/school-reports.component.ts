@@ -39,6 +39,8 @@ export class SchoolReportsComponent implements OnInit {
 
     stateSaved = 0;
 
+    isAvailable: boolean;
+
     constructor(
         private principal: Principal,
         private services: Services,
@@ -55,6 +57,11 @@ export class SchoolReportsComponent implements OnInit {
     ngOnInit(): void {
         this.principal.identity().then((account) => {
             this.currentUser = account;
+            this.services.isAvailable(this.currentUser.id).subscribe((response) => {
+                this.isAvailable = response;
+            }, (error) => {
+                console.error(JSON.parse(error.body).message);
+            });
         }).then((response) => {
             this.services.getSchoolsByManager(this.currentUser.id)
                 .subscribe((schools) => {

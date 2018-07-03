@@ -41,11 +41,6 @@ public class ResultsResource {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during results collecting");
         }
 
-        if (results == null) {
-            LOGGER.info("Call API getResults : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 }

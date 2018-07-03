@@ -1,0 +1,13 @@
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (1001, 5502);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (1001, 5503);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (1001, 5601);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (1001, 5603);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (1001, 5701);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (1001, 5705);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (2951, 5706);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (1001, 5706);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (2951, 5802);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (1001, 5802);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (2951, 5803);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (27, 9351);
+INSERT INTO public.delay_student_student (students_id, delay_students_id) VALUES (27, 10401);

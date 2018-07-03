@@ -168,9 +168,11 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
             for (AssignmentModule assignmentModule: assignmentModules) {
                 if (assignmentModule.getClassroom().equals(classroom)) {
                     for (Teacher t : assignmentModule.getTeachers()) {
-                        if (t.equals(teacher)) {
+                        if (t.equals(teacher) && !moduleDTOS.containsAll(assignmentModule.getModules().stream().map(module -> moduleMapper.toDto(module))
+                            .collect(Collectors.toSet()))) {
                             moduleDTOS.addAll(assignmentModule.getModules()
                                 .stream()
+                                .distinct()
                                 .map(module -> moduleMapper.toDto(module))
                                 .collect(Collectors.toList()));
                         }
@@ -220,25 +222,20 @@ public class SchoolLifeServiceImpl_ implements ISchoolLifeService {
         }
     }
 
-    private Set<Student> findAllStudentByAccountsCode(Set<Long> accountsCode) throws Exception {
+    private Set<Student> findAllStudentByAccountsCode(Set<Long> accountsCode) {
         Set<Student> students;
 
-        try {
-            List<Student> studentList = studentRepository.findAll();
+        List<Student> studentList = studentRepository.findAll();
 
-            students = new HashSet<>();
+        students = new HashSet<>();
 
-            for (Student student: studentList) {
-                if (accountsCode.contains(student.getUser().getId())) {
-                    students.add(student);
-                }
+        for (Student student: studentList) {
+            if (accountsCode.contains(student.getUser().getId())) {
+                students.add(student);
             }
-
-            return students;
-        } catch (Exception e) {
-            LOGGER.error("Error during collecting of students ", e);
-            throw new Exception("Error during collecting of students");
         }
+
+        return students;
     }
 
     /**

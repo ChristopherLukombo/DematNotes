@@ -1,8 +1,8 @@
 package org.csid.web.rest;
 
+import org.csid.domain.non.persistant.ChartData;
 import org.csid.service.IMarkService;
 import org.csid.service.dto.*;
-import org.csid.domain.non.persistant.ChartData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,20 +30,16 @@ public class MarkController {
         try {
             schoolsDTOS = markService.getSchoolsByCurrentTeacher(idUser);
         } catch (Exception e) {
-            LOGGER.error("Error during schools collecting : " + e.getMessage());
+            LOGGER.error("Error during schools collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during schools collecting");
-        }
-
-        if (schoolsDTOS == null) {
-            LOGGER.info("Call API getSchoolsByCurrentUserTeacher : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(schoolsDTOS, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/marks/displayClassrooms/{idUser}/{idSchool}", method = RequestMethod.GET)
-    public ResponseEntity<List<ClassroomDTO>> getClassroomsByCurrentUserTeacher(@PathVariable final Long idUser, @PathVariable final Long idSchool) throws Exception {
+    public ResponseEntity<List<ClassroomDTO>> getClassroomsByCurrentUserTeacher(@PathVariable final Long idUser,
+                                                                                @PathVariable final Long idSchool) throws Exception {
         LOGGER.info("Call API Service displayClassrooms");
 
         List<ClassroomDTO> classroomDTOS;
@@ -51,13 +47,8 @@ public class MarkController {
         try {
             classroomDTOS = markService.getClassroomsByCurrentTeacher(idUser, idSchool);
         } catch (Exception e) {
-            LOGGER.error("Error during classrooms collecting : " + e.getMessage());
+            LOGGER.error("Error during classrooms collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during classrooms collecting");
-        }
-
-        if (classroomDTOS == null) {
-            LOGGER.info("Call API displayClassrooms : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(classroomDTOS, HttpStatus.OK);
@@ -74,17 +65,8 @@ public class MarkController {
         try {
             studentsList = markService.getStudentsByTeacher(userId, schoolId, classroomId);
         } catch (Exception e) {
-            LOGGER.error("Error during students collecting : " + e.getMessage());
+            LOGGER.error("Error during students collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during students collecting");
-        }
-
-        if (studentsList == null) {
-            LOGGER.info("Call API getStudentsList : No content !");
-            try {
-                throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         return new ResponseEntity<>(studentsList, HttpStatus.OK);
@@ -102,13 +84,8 @@ public class MarkController {
         try {
             userDTOS = markService.getStudentsByCurrentTeacher(idUser, idSchool, idClassroom);
         } catch (Exception e) {
-            LOGGER.error("Error during students collecting : " + e.getMessage());
+            LOGGER.error("Error during students collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during students collecting");
-        }
-
-        if (userDTOS == null) {
-            LOGGER.info("Call API displayStudents : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
@@ -123,37 +100,11 @@ public class MarkController {
         try {
             studentDTO = markService.getStudentByIdUser(idUser);
         } catch (Exception e) {
-            LOGGER.error("Error during student collecting : " + e.getMessage());
+            LOGGER.error("Error during student collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during student collecting");
         }
 
-        if (studentDTO == null) {
-            LOGGER.info("Call API getStudentUser : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
         return new ResponseEntity<>(studentDTO, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/marks/getUser/{idUser}", method = RequestMethod.GET)
-    public ResponseEntity<UserDTO> getUserByIdUser(@PathVariable final Long idUser) throws Exception {
-        LOGGER.info("Call API Service getUserByIdUser");
-
-        UserDTO userDTO;
-
-        try {
-            userDTO = markService.getUserByIdUser(idUser);
-        } catch (Exception e) {
-            LOGGER.error("Error during user collecting : " + e.getMessage());
-            throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during user collecting");
-        }
-
-        if (userDTO == null) {
-            LOGGER.info("Call API getUserByIdUser : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/marks/getTeacherByIdUser/{idUser}", method = RequestMethod.GET)
@@ -169,11 +120,6 @@ public class MarkController {
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during teacher collecting");
         }
 
-        if (teacherDTO == null) {
-            LOGGER.info("Call API getTeacherByIdUser : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
         return new ResponseEntity<>(teacherDTO, HttpStatus.OK);
     }
 
@@ -186,13 +132,8 @@ public class MarkController {
         try {
             chartDatas = markService.getData(idSchool, idClassroom);
         } catch (Exception e) {
-            LOGGER.error("Error during user collecting : " + e.getMessage());
+            LOGGER.error("Error during user collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during data collecting", e);
-        }
-
-        if (chartDatas == null) {
-            LOGGER.info("Call API getData : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(chartDatas, HttpStatus.OK);
@@ -207,13 +148,8 @@ public class MarkController {
         try {
             modulesList = markService.getModules(userId, schoolId, classroomId);
         } catch (Exception e) {
-            LOGGER.error("Error during modules collecting : " + e.getMessage());
+            LOGGER.error("Error during modules collecting : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during modules collecting");
-        }
-
-        if (modulesList == null) {
-            LOGGER.info("Call API getModules : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
         }
 
         return new ResponseEntity<>(modulesList, HttpStatus.OK);
@@ -228,15 +164,9 @@ public class MarkController {
         try {
             marksListDTOResult = markService.saveEvaluations(marksListDTO);
         } catch (Exception e) {
-            LOGGER.error("Error during evaluations saving : " + e.getMessage());
+            LOGGER.error("Error during evaluations saving : ", e);
             throw new Exception(HttpStatus.INTERNAL_SERVER_ERROR.value() + " Error during evaluations saving");
         }
-
-        if (marksListDTOResult == null) {
-            LOGGER.info("Call API saveEvaluations : No content !");
-            throw new Exception(HttpStatus.NOT_FOUND.value() + " No content !");
-        }
-
 
         return new ResponseEntity<>(marksListDTOResult, HttpStatus.OK);
     }

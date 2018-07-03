@@ -1,0 +1,2 @@
+INSERT INTO public.assignment_manager_manager (managers_id, assignment_managers_id) VALUES (1051, 1451);
+INSERT INTO public.assignment_manager_manager (managers_id, assignment_managers_id) VALUES (24, 9151);

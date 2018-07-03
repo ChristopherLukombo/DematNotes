@@ -95,15 +95,6 @@ export class Services {
         return this.http.get<Teacher>(this.resourceUrl + '/marks/getTeacherByIdUser/' + `${idUser}`);
     }
 
-    /**
-     * Returns the student according the teacher's User ID
-     * @param idUser
-     * @returns {Observable<User>}
-     */
-    getStudentUserByIdUser(idUser): Observable<User> {
-        return this.http.get<User>(this.resourceUrl + '/marks/getUser/' + `${idUser}`);
-    }
-
     // Part Marks
 
     /**
@@ -318,15 +309,6 @@ export class Services {
     }
 
     /**
-     * Returns the student according the manager's User ID
-     * @param accountCode
-     * @returns {Observable<User>}
-     */
-    getStudentByManager(accountCode): Observable<User> {
-        return this.http.get<User>(this.resourceUrl + '/schoolReport/student/' + `${accountCode}`);
-    }
-
-    /**
      * Saves a SchoolReport of a student
      * @param {SchoolReport} schoolReport
      * @returns {Observable<SchoolReport>}
@@ -359,6 +341,13 @@ export class Services {
      */
     findManagerByUser(user) {
         return this.http.post<Manager>(this.resourceUrl + '/schoolReport/manager', user);
+    }
+
+    /**
+     * Returns true if schoolReport is available
+     */
+    isAvailable(userId) {
+        return this.http.get<boolean>(this.resourceUrl + '/schoolReport/isAvailable/' + `${userId}`);
     }
 
 }

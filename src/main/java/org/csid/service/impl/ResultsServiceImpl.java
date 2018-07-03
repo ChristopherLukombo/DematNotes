@@ -3,13 +3,13 @@ package org.csid.service.impl;
 import org.csid.domain.Evaluation;
 import org.csid.domain.Student;
 import org.csid.domain.User;
+import org.csid.domain.non.persistant.Results;
 import org.csid.repository.EvaluationRepository;
 import org.csid.repository.StudentRepository;
 import org.csid.repository.UserRepository;
 import org.csid.service.ResultsService;
 import org.csid.service.dto.ResultsDTO;
 import org.csid.service.mapper.ResultsMapper;
-import org.csid.domain.non.persistant.Results;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +54,10 @@ public class ResultsServiceImpl implements ResultsService {
             user = userRepository.findOne(idUser);
             student = studentRepository.findStudentByUser(user);
             evaluations = evaluationRepository.findEvaluationsByStudentAndPeriod(student.getId(), dateTimePast);
+
+            if (evaluations == null) {
+                return resultsMapper.mapToDTO(new Results());
+            }
 
             final Results results = new Results(user, evaluations);
 

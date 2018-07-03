@@ -1,9 +1,10 @@
 <mat-tab-group>
     <mat-tab label="Bulletin" *jhiHasAnyAuthority="['ROLE_STUDENT','ROLE_ADMIN']">
-        <span style="float:right;">
+        <span style="float:right;" *ngIf="this.isAvailable">
             <mat-icon svgIcon="download" (click)="downloadSchoolReport()" class="icon"></mat-icon>
         </span>
-        <span>Voici votre bulletin !</span>
+        <span *ngIf="this.isAvailable">Voici votre bulletin !</span>
+        <span *ngIf="!this.isAvailable">Pas de bulletin disponible</span>
     </mat-tab>
 
     <mat-tab label="Remplir Bulletin" *jhiHasAnyAuthority="['ROLE_MANAGER','ROLE_ADMIN']">
@@ -12,7 +13,7 @@
             <mat-select name="schoolSelected" [(ngModel)]="schoolSelected"
                         (ngModelChange)="getClassroomsByCurrentManager()" placeholder="Ecoles">
                 <mat-option *ngFor="let school of schools" [value]="school.id">
-                    {{ school.wording }} - {{school.city}}
+                    {{ school.wording | uppercase}} - {{school.city | uppercase}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -21,7 +22,8 @@
             <mat-select name="classroomSelected" [(ngModel)]="classroomSelected"
                         (ngModelChange)="getStudentsByManager()" placeholder="Classes">
                 <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">
-                    {{ classroom.entitled }} - {{ classroom.option }} - {{ classroom.division }}
+                    {{ classroom.entitled | uppercase }} - {{ classroom.option | uppercase }} - {{ classroom.division |
+                    uppercase }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -30,7 +32,7 @@
             <mat-select name="userSelected" [(ngModel)]="userSelected"
                         (ngModelChange)="getSchoolReportListByStudent()" placeholder="Etudiants">
                 <mat-option *ngFor="let user of users" [value]="user.id">
-                    {{ user.firstName }} - {{ user.lastName }}
+                    {{ user.firstName | uppercase }} - {{ user.lastName | uppercase }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -52,7 +54,12 @@
 
         <br/><br/><br/>
 
-        <table class="table table-striped tab" *ngIf="this.schoolReportList.evaluations">
+        <div *ngIf="this.schoolReportList.evaluations !== undefined && this.schoolReportList.evaluations.length === 0">
+            Aucun résultats
+        </div>
+
+        <table class="table table-striped tab"
+               *ngIf="this.schoolReportList.evaluations !== undefined && this.schoolReportList.evaluations.length > 0">
             <thead>
             <tr>
                 <th scope="col">#</th>

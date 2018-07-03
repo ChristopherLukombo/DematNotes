@@ -23,6 +23,7 @@ import org.csid.service.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +48,15 @@ import static java.time.LocalDate.now;
 public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SchoolReportServiceImpl_.class);
+
+    @Autowired
+    private Environment env;
+
+    @Value("${qrCode.url.dev}")
+    private String qrCodeUrlDev;
+
+    @Value("${qrCode.url.prod}")
+    private String qrCodeUrlProd;
 
     @Autowired
     private UserRepository userRepository;
@@ -108,8 +118,6 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
     @Autowired
     private TeacherRepository teacherRepository;
 
-    @Autowired
-    private Environment env;
 
     /**
      * Generate School Report in pdf and returns it
@@ -126,7 +134,6 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             PdfWriter writer = PdfWriter.getInstance(document, baos);
             document.open();
             fillSchoolReport(user, document);
-
             document.close();
             writer.close();
         } catch (DocumentException e) {
@@ -169,12 +176,14 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         Paragraph paragraph;//Bloc 1 : School & Student --------------------------------------------------------
         PdfPTable table = initPdfPTable(9, 100);
 
+        int i = 0;
+
         for (Inscription inscription : inscriptions) {
             for (Student s : inscription.getStudents()) {
-                if (s.equals(student)) {
+                if (s.equals(student) && i == 0) {
                     table.addCell(getPdfPCellCustomized(inscription.getSchool().getWording() + "\n" + inscription.getSchool().getAddress() + "\n" + inscription.getSchool().getPostalCode() + " " + inscription.getSchool().getCity() + "\n" + (schools.get(0).getPhoneNumber() != null ? schools.get(0).getPhoneNumber() : ""), null, 4, 5.0f, "left", true));
                     table.addCell(getPdfPCellCustomized("Nom - Prénom : " + user.getLastName() + " " + user.getFirstName() + "\nNé(e) le : " + student.getDateOfBirth() + "\nClasse : " + inscription.getClassroom().getEntitled() + " " + (inscription.getClassroom().getOption() != null ? inscription.getClassroom().getOption() : "") + "\nAnnée scolaire : " + inscription.getSchoolYear().getStartDate().getYear() + " - " + inscription.getSchoolYear().getEndDate().getYear() + "", null, 4, 5.0f, "left", true));
-                    break;
+                    i = 1;
                 }
             }
 
@@ -299,8 +308,8 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
     /**
      * Initialize a PdfPTable object
      *
-     * @param colums          int The number of colums of the table
-     * @param widthPercentage int The width of the table in percentage
+     * @param colums int number of colums of the table
+     * @param widthPercentage int width of the table in percentage
      * @return PdfPTable
      */
     private PdfPTable initPdfPTable(int colums, int widthPercentage) {
@@ -312,27 +321,24 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         return table;
     }
 
-    private String generateQrCode(Long idUser) {
-        String img = null;
+    private String generateQrCode(Long userId) throws Exception {
+        String img;
 
         try {
             String data = null;
+
             Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
             if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)) {
-                data = "http://localhost:9000/viewschoolReport/" + idUser;
-            }
-            if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
-                data = "http://dematnotes-0.1/viewschoolReport/" + idUser;
+                data = qrCodeUrlDev + userId;
+            } else if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
+                data = qrCodeUrlProd + userId;
             }
 
             int size = 50;
 
-            // encode
             BitMatrix bitMatrix = generateMatrix(data, size);
-            //create a temp file
             final File temp = File.createTempFile("temp-file-name", ".tmp");
             String imageFormat = "png";
-            //Get tempropary file path
             String absolutePath = temp.getAbsolutePath();
             String tempFilePath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
 
@@ -340,7 +346,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
             writeImage(img, imageFormat, bitMatrix);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new Exception("Error during QrCode generation ", e);
         }
 
         return img;
@@ -352,7 +358,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             MatrixToImageWriter.writeToStream(bitMatrix, imageFormat, fileOutputStream);
             fileOutputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error during writing of image ", e);
         }
     }
 
@@ -362,7 +368,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             bitMatrix = new QRCodeWriter().encode(data, BarcodeFormat.QR_CODE, size, size);
             return bitMatrix;
         } catch (WriterException e) {
-            e.printStackTrace();
+            LOGGER.error("Error during generation of matrix ", e);
         }
         return bitMatrix;
     }
@@ -428,7 +434,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
             return classroomDTOs;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of classrooms " + e.getMessage());
+            LOGGER.error("Error during collecting of classrooms ", e);
             throw new Exception("Error during collecting of classrooms");
         }
     }
@@ -440,7 +446,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         final List<Classroom> classrooms = new ArrayList<>();
 
         for (final AssignmentModule assignmentModule : assignmentModules) {
-            if (assignmentModule.getSchool().getId().equals(idSchool)) {
+            if (assignmentModule.getSchool().getId().equals(idSchool) && !classrooms.contains(assignmentModule.getClassroom())) {
                 classrooms.add(assignmentModule.getClassroom());
             }
         }
@@ -475,55 +481,34 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
                 i++;
             }
 
-            return userDTOs;
+            return userDTOs.stream().collect(Collectors.toList());
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of students " + e.getMessage());
+            LOGGER.error("Error during collecting of students ", e);
             throw new Exception("Error during collecting of students");
         }
     }
 
 
     private List<UserDTO> getUsersByManager(final Long idSchool, final Long idClassroom) throws Exception {
-        try {
-            final LocalDate currentDate = LocalDate.now();
+        final LocalDate currentDate = LocalDate.now();
 
-            final List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(currentDate);
+        final List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(currentDate);
 
-            final List<UserDTO> userDTOs = new ArrayList<>();
+        final List<UserDTO> userDTOs = new ArrayList<>();
 
-            for (final Inscription inscription : inscriptions) {
-                if (inscription.getSchool().getId().equals(idSchool) &&
-                    inscription.getClassroom().getId().equals(idClassroom)) {
-                    userDTOs.addAll(inscription.getStudents().stream().
-                        map(u -> userMapper.userToUserDTO(u.getUser())).
-                        collect(Collectors.toList()));
-                }
+        for (final Inscription inscription : inscriptions) {
+            if (inscription.getSchool().getId().equals(idSchool) &&
+                inscription.getClassroom().getId().equals(idClassroom) && !userDTOs.containsAll(inscription.getStudents().stream().
+                map(u -> userMapper.userToUserDTO(u.getUser())).
+                collect(Collectors.toList()))) {
+                userDTOs.addAll(inscription.getStudents().stream().
+                    map(u -> userMapper.userToUserDTO(u.getUser())).
+                    collect(Collectors.toList()));
+                break;
             }
-
-            return userDTOs;
-        } catch (Exception e) {
-            LOGGER.error("Error during collecting of students " + e.getMessage());
-            throw new Exception("Error during collecting of students");
         }
-    }
 
-
-    /**
-     * Returns student for a manager according to accountCode
-     *
-     * @param accountCode
-     * @return entity
-     */
-    @Override
-    public UserDTO getStudentByManager(Long accountCode) throws Exception {
-        try {
-            final User user = userRepository.findOne(accountCode);
-
-            return userMapper.userToUserDTO(user);
-        } catch (Exception e) {
-            LOGGER.error("Error during collecting of user " + e.getMessage());
-            throw new Exception("Error during collecting of user");
-        }
+        return userDTOs.stream().distinct().collect(Collectors.toList());
     }
 
     /**
@@ -550,7 +535,7 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
             return this.schoolReportService.save(schoolReportMapper.toDto(schoolReport));
         } catch (Exception e) {
-            LOGGER.error("Error during saving of user " + e.getMessage());
+            LOGGER.error("Error during saving of user ", e);
             throw new Exception("Error during saving of user");
         }
     }
@@ -565,7 +550,10 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
                 if (assignmentYearPeriod.getClassrooms().contains(classroom)) {
                     for (YearPeriod y : assignmentYearPeriod.getYearPeriods()) {
                         if (y.getEndDate().isBefore(periodDate) || y.getEndDate().equals(periodDate) || y.getEndDate().isAfter(periodDate)) {
-                            yearPeriod = y;
+                            if (yearPeriod == null || yearPeriod.getEndDate().isBefore(y.getEndDate())) {
+                                yearPeriod = y;
+                            }
+
                         }
                     }
                 }
@@ -643,8 +631,9 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
 
     /**
      * Returns evaluations of a Student
-     *
      * @param accountCode
+     * @param start
+     * @param end
      * @return list of entities
      */
     private Set<EvaluationDTO> getEvaluationsByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end) {
@@ -672,11 +661,23 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         return evaluationList;
     }
 
+    /**
+     * Returns average total for a student
+     * @param accountCode
+     * @return double
+     */
     public double getAverageFromEvaluation(final Long accountCode) {
         final Set<Evaluation> evaluations = this.getEvaluationsByStudent(accountCode).stream().map(e -> evaluationMapper.toEntity(e)).collect(Collectors.toSet());
         return averages(evaluations);
     }
 
+    /**
+     * Returns average for evaluation according a yearPeriod
+     * @param accountCode
+     * @param start
+     * @param end
+     * @return double
+     */
     public double getAverageFromEvaluationByStudentAndPeriod(final Long accountCode, ZonedDateTime start, ZonedDateTime end) {
         final Set<Evaluation> evaluations = this.getEvaluationsByStudentAndPeriod(accountCode, start, end).stream()
             .map(e -> evaluationMapper.toEntity(e))
@@ -685,6 +686,21 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         return averages(evaluations);
     }
 
+    private static double averages(Collection<Evaluation> evaluations) {
+        double sum = 0;
+        double sumCoefficient = 0;
+        for (Evaluation evaluation : evaluations) {
+            sum += evaluation.getAverage() * evaluation.getCoefficient();
+            sumCoefficient += evaluation.getCoefficient();
+        }
+        return (sumCoefficient > 0) ? sum / sumCoefficient : -1;
+    }
+
+    /**
+     * Returns SchoolReportList for a student
+     * @param accountCode
+     * @return entity
+     */
     @Override
     public SchoolReportList getSchoolReportsByStudent(Long accountCode) {
         SchoolReportView schoolReportView = new SchoolReportView();
@@ -722,19 +738,8 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
         return schoolReportViewMapper.mapToDTO(schoolReportView);
     }
 
-    private static double averages(Collection<Evaluation> evaluations) {
-        double sum = 0;
-        double sumCoefficient = 0;
-        for (Evaluation evaluation : evaluations) {
-            sum += evaluation.getAverage() * evaluation.getCoefficient();
-            sumCoefficient += evaluation.getCoefficient();
-        }
-        return (sumCoefficient > 0) ? sum / sumCoefficient : -1;
-    }
-
     /**
      * Returns manager according of User
-     *
      * @param userDTO
      * @return ManagerDTO
      */
@@ -745,6 +750,18 @@ public class SchoolReportServiceImpl_ implements ISchoolReportService {
             LOGGER.error("Error during collecting of manager " + e.getMessage());
             throw new Exception("Error during collecting of manager");
         }
+    }
+
+    /**
+     * Returns true if schoolReport is available
+     * @param userId
+     * @return boolean
+     */
+    public boolean schoolReportIsAvailable(Long userId) {
+        final User user = userRepository.findOne(userId);
+        final Student student = studentRepository.findStudentByUser(user);
+
+        return this.schoolReportRepository.getSchoolReportByStudentWhereYearPeriodMax(student.getId()) != null;
     }
 
 }

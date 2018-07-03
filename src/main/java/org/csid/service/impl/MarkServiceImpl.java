@@ -146,8 +146,6 @@ public class MarkServiceImpl implements IMarkService {
         }
     }
 
-    // TODO A supprimer
-
     /**
      * Returns students for teacher
      *
@@ -222,27 +220,22 @@ public class MarkServiceImpl implements IMarkService {
     }
 
     private Map<Student, User> getStudentsMapToUsers(final Long schoolId, final Long classroomId) throws Exception {
-        try {
-            final List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(currentDate);
-            final Map<Student, User> studentsMap = new HashMap<>();
+        final List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(currentDate);
+        final Map<Student, User> studentsMap = new HashMap<>();
 
-            for (final Inscription inscription : inscriptions) {
-                if (inscription.getSchool().getId().equals(schoolId) && inscription.getClassroom().getId().equals(classroomId)) {
-                    for (Student student : inscription.getStudents()) {
-                        studentsMap.put(student, student.getUser());
-                    }
+        for (final Inscription inscription : inscriptions) {
+            if (inscription.getSchool().getId().equals(schoolId) && inscription.getClassroom().getId().equals(classroomId)) {
+                for (Student student : inscription.getStudents()) {
+                    studentsMap.put(student, student.getUser());
                 }
             }
-
-            return studentsMap;
-        } catch (Exception e) {
-            LOGGER.error("Error during collecting of students ", e);
-            throw new Exception("Error during collecting of students");
         }
+
+        return studentsMap;
     }
 
 
-    private List<UserDTO> getUsersByTeacher(final Long idSchool, final Long idClassroom) throws Exception { //TODO implémenter une nouvelle classe pour la méthode
+    private List<UserDTO> getUsersByTeacher(final Long idSchool, final Long idClassroom) throws Exception {
         try {
             final List<Inscription> inscriptions = inscriptionRepository.findAllByCurrentSchoolYear(currentDate);
             final List<UserDTO> userDTOs = new ArrayList<>();
@@ -253,10 +246,11 @@ public class MarkServiceImpl implements IMarkService {
                     userDTOs.addAll(inscription.getStudents().stream().
                         map(u -> userMapper.userToUserDTO(u.getUser())).
                         collect(Collectors.toList()));
+                    break;
                 }
             }
 
-            return userDTOs;
+            return userDTOs.stream().distinct().collect(Collectors.toList());
         } catch (Exception e) {
             LOGGER.error("Error during collecting of users ", e);
             throw new Exception("Error during collecting of users");
@@ -282,22 +276,6 @@ public class MarkServiceImpl implements IMarkService {
     }
 
     /**
-     * Returns User by IdUser
-     *
-     * @param idUser
-     * @return list of entities
-     */
-    @Override
-    public UserDTO getUserByIdUser(final Long idUser) throws Exception {
-        try {
-            return userMapper.userToUserDTO(userRepository.findOne(idUser));
-        } catch (Exception e) {
-            LOGGER.error("Error during getting of user ", e);
-            throw new Exception("Error during getting of user");
-        }
-    }
-
-    /**
      * Returns a list of chartdata
      *
      * @param idSchool
@@ -318,7 +296,7 @@ public class MarkServiceImpl implements IMarkService {
 
             return chartDatas;
         } catch (Exception e) {
-            LOGGER.error("Error during collecting of datas " + e.getMessage());
+            LOGGER.error("Error during collecting of datas ", e);
             throw new Exception("Error during collecting of datas");
         }
     }
@@ -393,7 +371,7 @@ public class MarkServiceImpl implements IMarkService {
                         .stream()
                         .filter(m -> m.equals(teacher.getSpecialModule()))
                         .distinct().collect(Collectors.toSet()));
-                    Double coefficient = new Double(assignmentModule.getCoefficient());
+                    double coefficient = assignmentModule.getCoefficient();
                     modulesView.addCoefficient(coefficient);
                     break;
                 }
@@ -421,6 +399,10 @@ public class MarkServiceImpl implements IMarkService {
                 marksList = marksListMapper.mapToEntity(marksListDTO);
             }
 
+            if (marksList == null) {
+                return null;
+            }
+
             final List<Evaluation> evaluations = marksList.getEvaluations();
 
             for (Evaluation evaluation : evaluations) {
@@ -431,7 +413,6 @@ public class MarkServiceImpl implements IMarkService {
                 }
             }
 
-
             return marksListMapper.mapToDTO(marksList);
         } catch (Exception e) {
             LOGGER.error("Error during saving of evaluations ", e);
@@ -441,6 +422,7 @@ public class MarkServiceImpl implements IMarkService {
 
     /**
      * Returns TeacherByUser
+     *
      * @param idUser
      * @return Teacher
      */

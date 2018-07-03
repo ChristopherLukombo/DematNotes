@@ -78,7 +78,7 @@
                         <option *ngFor="let language of languages" [value]="language">{{language | findLanguageFromKey}}</option>
                     </select>
                 </div>
-                <img [src]="this.image" class="img-circle" alt="avatar" height="100" width="100" />
+                <img [src]="this.image != null && this.image != '' ? this.image : this.imgAvatar" class="img-circle" alt="avatar" height="100" width="100" />
 
                 <label class="btn btn-default">
                     <input type="file" (change)="this.selectFile($event)">
